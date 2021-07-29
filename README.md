@@ -17,6 +17,8 @@ The version files are stored in JSON format and contain information to identify 
 
 `compression_method`: The compression method. This can be either `yaz0` or `zlib`.
 
+`cic`: The Bootrom version used by the game. (possible values: `6101`, `6102`, `6103`, `6105`(default), `6106`).
+
 `identifier.build_team`: The build team. e.g. `zelda@srd44`.
 
 `identifier.build_date`: The build date. e.g. `00-03-31 02:22:11`.
