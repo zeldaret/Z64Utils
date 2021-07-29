@@ -1,0 +1,7645 @@
+{
+  "version_name": "Majora\u0027s mask PAL 1.1 Debug",
+  "version_game": "Mm",
+  "compression_method": "Yaz0",
+  "cic": 6105,
+  "identifier": {
+    "build_team": "zelda@srd44",
+    "build_date": "00-09-29 09:29:05"
+  },
+  "memory": {
+    "code": "800B6AC0",
+    "actor_table": "801F7510",
+    "gamestate_table": "80206820",
+    "effect_table": "801F69E0",
+    "kaleido_mgr_table": "80212080",
+    "fbdemo_table": "802120C0"
+  },
+  "files": [
+    {
+      "vrom": "00000000",
+      "name": "makerom",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00001060",
+      "name": "boot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00024F60",
+      "name": "dmadata",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0002B2D0",
+      "name": "Audiobank",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "000516C0",
+      "name": "Audioseq",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "000A2B40",
+      "name": "Audiotable",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "005EB2B0",
+      "name": "link_animetion",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00984000",
+      "name": "icon_item_field_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00999000",
+      "name": "icon_item_dungeon_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0099E000",
+      "name": "icon_item_gameover_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009A2000",
+      "name": "map_name_static_en",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009AA000",
+      "name": "map_name_static_de",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009B2000",
+      "name": "map_name_static_fr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009BA000",
+      "name": "map_name_static_es",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009C2000",
+      "name": "icon_item_vtx_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009C3000",
+      "name": "kaleido_map_grand_static2_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009C4310",
+      "name": "map_grand_static2_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009CD660",
+      "name": "item_name_static_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A02F20",
+      "name": "map_name_static_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A09E70",
+      "name": "icon_item_static_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A4F140",
+      "name": "icon_item_24_static_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A5F000",
+      "name": "schedule_dma_static_test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A65A10",
+      "name": "schedule_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A6D000",
+      "name": "story_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A93000",
+      "name": "do_action_static_en",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A97000",
+      "name": "do_action_static_de",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A9B000",
+      "name": "do_action_static_fr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A9F000",
+      "name": "do_action_static_es",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00AA3000",
+      "name": "message_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00AA9000",
+      "name": "message_texture_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00AAB000",
+      "name": "nes_font_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00AB0000",
+      "name": "nes_message_data_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00B1A000",
+      "name": "ger_message_data_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00B8F000",
+      "name": "fra_message_data_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00C01000",
+      "name": "esp_message_data_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00C70000",
+      "name": "staff_message_data_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00C95000",
+      "name": "code",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E12600",
+      "name": "ovl_title",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E13420",
+      "name": "ovl_select",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E16E00",
+      "name": "ovl_file_choose",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E2C6A0",
+      "name": "ovl_kaleido_scope",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E46460",
+      "name": "ovl_player_actor",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E7FF20",
+      "name": "En_Test",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E80DF0",
+      "name": "En_GirlA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E830C0",
+      "name": "En_Part",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E837C0",
+      "name": "En_Light",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E84750",
+      "name": "En_Door",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E85CB0",
+      "name": "En_Box",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E88360",
+      "name": "En_Pametfrog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E8CBF0",
+      "name": "En_Okuta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E8FFE0",
+      "name": "En_Bom",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E93B30",
+      "name": "En_Wallmas",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E95E70",
+      "name": "En_Dodongo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E99250",
+      "name": "En_Firefly",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00E9B570",
+      "name": "En_Horse",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EAB1D0",
+      "name": "En_Arrow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EAD7C0",
+      "name": "En_Elf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EB28B0",
+      "name": "En_Niw",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EB5320",
+      "name": "En_Tite",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EB9040",
+      "name": "En_Peehat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EBBF30",
+      "name": "En_Holl",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EBCE50",
+      "name": "En_Dinofos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC16E0",
+      "name": "En_Hata",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC1C00",
+      "name": "En_Zl1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC1C90",
+      "name": "En_Viewer",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC23E0",
+      "name": "En_Bubble",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC3A50",
+      "name": "Door_Shutter",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC5940",
+      "name": "En_Boom",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC6760",
+      "name": "En_Torch2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC6D20",
+      "name": "En_Minifrog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EC8AC0",
+      "name": "En_St",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ECB760",
+      "name": "Obj_Wturn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ECBDC0",
+      "name": "En_River_Sound",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ECC160",
+      "name": "En_Ossan",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ED13F0",
+      "name": "En_Famos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ED3830",
+      "name": "En_Bombf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ED4DF0",
+      "name": "En_Am",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00ED67A0",
+      "name": "En_Dekubaba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EDAE30",
+      "name": "En_M_Fire1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EDB020",
+      "name": "En_M_Thunder",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EDD190",
+      "name": "Bg_Breakwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EDE700",
+      "name": "Door_Warp1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EE2920",
+      "name": "Obj_Syokudai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EE3800",
+      "name": "Item_B_Heart",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EE3D10",
+      "name": "En_Dekunuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EE6110",
+      "name": "En_Bbfall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EE82B0",
+      "name": "Arms_Hook",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EE9160",
+      "name": "En_Bb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EEB210",
+      "name": "Bg_Keikoku_Spr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EEB4B0",
+      "name": "En_Wood02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EEC990",
+      "name": "En_Death",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EF24C0",
+      "name": "En_Minideath",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EF4960",
+      "name": "En_Vm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EF60E0",
+      "name": "Demo_Effect",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EF71A0",
+      "name": "Demo_Kankyo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EF9620",
+      "name": "En_Floormas",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00EFD440",
+      "name": "En_Rd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F010E0",
+      "name": "Bg_F40_Flift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F01510",
+      "name": "Obj_Mure",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F02990",
+      "name": "En_Sw",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F062B0",
+      "name": "Object_Kankyo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F08DB0",
+      "name": "En_Horse_Link_Child",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0AC80",
+      "name": "Door_Ana",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0B3D0",
+      "name": "En_Encount1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0BB30",
+      "name": "Demo_Tre_Lgt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0C430",
+      "name": "En_Encount2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0D050",
+      "name": "En_Fire_Rock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0D0E0",
+      "name": "Bg_Ctower_Rot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0D750",
+      "name": "Mir_Ray",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F0F210",
+      "name": "En_Sb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F10500",
+      "name": "En_Bigslime",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F1D580",
+      "name": "En_Karebaba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F1F8D0",
+      "name": "En_In",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F242A0",
+      "name": "En_Bom_Chu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F25B00",
+      "name": "En_Horse_Game_Check",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F27030",
+      "name": "En_Rr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F29B10",
+      "name": "En_Fr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F29E50",
+      "name": "Obj_Oshihiki",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F2BA50",
+      "name": "Eff_Dust",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F2D040",
+      "name": "Bg_Umajump",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F2DAB0",
+      "name": "En_Insect",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F2F4C0",
+      "name": "En_Butte",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F30CA0",
+      "name": "En_Fish",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F339F0",
+      "name": "Item_Etcetera",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F33F60",
+      "name": "Arrow_Fire",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F361D0",
+      "name": "Arrow_Ice",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F38200",
+      "name": "Arrow_Light",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F3A200",
+      "name": "Obj_Kibako",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F3B7E0",
+      "name": "Obj_Tsubo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F3DE80",
+      "name": "En_Ik",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F41070",
+      "name": "Demo_Shd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F41100",
+      "name": "En_Dns",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F42EB0",
+      "name": "Elf_Msg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F43860",
+      "name": "En_Honotrap",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F46090",
+      "name": "En_Tubo_Trap",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F46F40",
+      "name": "Obj_Ice_Poly",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F47FF0",
+      "name": "En_Fz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F4A900",
+      "name": "En_Kusa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F4CDA0",
+      "name": "Obj_Bean",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F4FDF0",
+      "name": "Obj_Bombiwa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F51960",
+      "name": "Obj_Switch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F548F0",
+      "name": "Obj_Lift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F55520",
+      "name": "Obj_Hsblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F55CB0",
+      "name": "En_Okarina_Tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F56330",
+      "name": "En_Goroiwa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F5B5D0",
+      "name": "En_Daiku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F5C550",
+      "name": "En_Nwc",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F5DAF0",
+      "name": "Item_Inbox",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F5DCC0",
+      "name": "En_Ge1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F5EF90",
+      "name": "Obj_Blockstop",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F5F230",
+      "name": "En_Sda",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F609A0",
+      "name": "En_Clear_Tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F66C30",
+      "name": "En_Gm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F6B9C0",
+      "name": "En_Ms",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F6C0D0",
+      "name": "En_Hs",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F6D0B0",
+      "name": "Bg_Ingate",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F6E1C0",
+      "name": "En_Kanban",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F71AD0",
+      "name": "En_Attack_Niw",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F72DD0",
+      "name": "En_Mk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F741D0",
+      "name": "En_Owl",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F77A30",
+      "name": "En_Ishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F7A2E0",
+      "name": "Obj_Hana",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F7A400",
+      "name": "Obj_Lightswitch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F7B8A0",
+      "name": "Obj_Mure2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F7C400",
+      "name": "En_Fu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F808E0",
+      "name": "En_Stream",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F80F50",
+      "name": "En_Mm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F81920",
+      "name": "En_Weather_Tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F83160",
+      "name": "En_Ani",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F84180",
+      "name": "En_Js",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F86E70",
+      "name": "En_Okarina_Effect",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F871A0",
+      "name": "En_Mag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F8AE20",
+      "name": "Elf_Msg2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F8B6A0",
+      "name": "Bg_F40_Swlift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F8BB80",
+      "name": "En_Kakasi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F8EC50",
+      "name": "Obj_Makeoshihiki",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F8F100",
+      "name": "Oceff_Spot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F90170",
+      "name": "En_Torch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F90280",
+      "name": "Shot_Sun",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F90940",
+      "name": "Obj_Roomtimer",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F90C50",
+      "name": "En_Ssh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F93740",
+      "name": "Oceff_Wipe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F94580",
+      "name": "ovl_Effect_Ss_Dust",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F94E40",
+      "name": "ovl_Effect_Ss_Kirakira",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F95590",
+      "name": "ovl_Effect_Ss_Bomb2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F95F40",
+      "name": "ovl_Effect_Ss_Blast",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F96350",
+      "name": "ovl_Effect_Ss_G_Spk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F969A0",
+      "name": "ovl_Effect_Ss_D_Fire",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F96EE0",
+      "name": "ovl_Effect_Ss_Bubble",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F97530",
+      "name": "ovl_Effect_Ss_G_Ripple",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F981F0",
+      "name": "ovl_Effect_Ss_Lightning",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F989B0",
+      "name": "ovl_Effect_Ss_Dt_Bubble",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F98FB0",
+      "name": "ovl_Effect_Ss_Hahen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F99710",
+      "name": "ovl_Effect_Ss_Stick",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F99AA0",
+      "name": "ovl_Effect_Ss_Sibuki",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9A1F0",
+      "name": "ovl_Effect_Ss_Stone1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9A630",
+      "name": "ovl_Effect_Ss_Hitmark",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9ABD0",
+      "name": "ovl_Effect_Ss_Fhg_Flash",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9B740",
+      "name": "ovl_Effect_Ss_K_Fire",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9BC60",
+      "name": "l_Effect_Ss_Solder_Srch_Ball",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9C190",
+      "name": "ovl_Effect_Ss_Kakera",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9D3D0",
+      "name": "ovl_Effect_Ss_Ice_Piece",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9D8B0",
+      "name": "ovl_Effect_Ss_En_Ice",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9E150",
+      "name": "ovl_Effect_Ss_Fire_Tail",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9E8E0",
+      "name": "ovl_Effect_Ss_En_Fire",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9F040",
+      "name": "ovl_Effect_Ss_Extra",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9F490",
+      "name": "ovl_Effect_Ss_Dead_Db",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9F950",
+      "name": "ovl_Effect_Ss_Dead_Dd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00F9FF90",
+      "name": "ovl_Effect_Ss_Dead_Ds",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA04D0",
+      "name": "Oceff_Storm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA2410",
+      "name": "Obj_Demo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA2870",
+      "name": "En_Minislime",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA4EF0",
+      "name": "En_Nutsball",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA5620",
+      "name": "Oceff_Wipe2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA6E90",
+      "name": "Oceff_Wipe3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FA86D0",
+      "name": "En_Dg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FAC520",
+      "name": "En_Si",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FACA20",
+      "name": "Obj_Comb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FAE4B0",
+      "name": "Obj_Kibako2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FAEFD0",
+      "name": "En_Hs2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FAF0F0",
+      "name": "Obj_Mure3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FAF9D0",
+      "name": "En_Tg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FB0720",
+      "name": "En_Wf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FB51F0",
+      "name": "En_Skb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FB8AC0",
+      "name": "En_Gs",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FBBCE0",
+      "name": "Obj_Sound",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FBBF40",
+      "name": "En_Crow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FBD880",
+      "name": "En_Cow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FBEF80",
+      "name": "Oceff_Wipe4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC0070",
+      "name": "En_Zo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC1210",
+      "name": "ovl_Effect_Ss_Ice_Smoke",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC1600",
+      "name": "Obj_Makekinsuta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC1B50",
+      "name": "En_Ge3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC2E50",
+      "name": "Obj_Hamishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC3C90",
+      "name": "En_Zl4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC4260",
+      "name": "En_Mm2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC4EA0",
+      "name": "Door_Spiral",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC58A0",
+      "name": "Obj_Pzlblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC6940",
+      "name": "Obj_Toge",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC7760",
+      "name": "Obj_Armos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC88B0",
+      "name": "Obj_Boyo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FC8EB0",
+      "name": "En_Grasshopper",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FCC140",
+      "name": "Obj_Grass",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FCE110",
+      "name": "Obj_Grass_Carry",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FCF340",
+      "name": "Obj_Grass_Unit",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FCFC70",
+      "name": "Bg_Fire_Wall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FD0700",
+      "name": "En_Bu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FD0970",
+      "name": "En_Encount3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FD1460",
+      "name": "En_Jso",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FD5580",
+      "name": "Obj_Chikuwa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FD6290",
+      "name": "En_Knight",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE3E60",
+      "name": "En_Warp_tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE4950",
+      "name": "En_Aob_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE7A80",
+      "name": "En_Boj_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE7B10",
+      "name": "En_Boj_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE7BA0",
+      "name": "En_Boj_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE7C30",
+      "name": "En_Encount4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FE8560",
+      "name": "En_Bom_Bowl_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FEA5A0",
+      "name": "En_Syateki_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FEDED0",
+      "name": "Bg_Icicle",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FEE960",
+      "name": "En_Syateki_Crow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FEF900",
+      "name": "En_Boj_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FEF990",
+      "name": "En_Cne_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FF0A00",
+      "name": "En_Bba_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FF1A20",
+      "name": "En_Bji_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FF2D90",
+      "name": "Bg_Spdweb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FF4440",
+      "name": "En_Mt_tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FF5820",
+      "name": "Boss_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00FFE870",
+      "name": "Boss_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01004E10",
+      "name": "Boss_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0100C5D0",
+      "name": "Boss_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0100EC50",
+      "name": "Boss_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01012CC0",
+      "name": "Boss_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010150E0",
+      "name": "Boss_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0102B7D0",
+      "name": "Bg_Dy_Yoseizo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0102DA10",
+      "name": "En_Boj_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0102DAA0",
+      "name": "En_Sob1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01032EB0",
+      "name": "En_Go",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01039610",
+      "name": "En_Raf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0103C340",
+      "name": "Obj_Funen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0103C5D0",
+      "name": "Obj_Raillift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0103D440",
+      "name": "Bg_Numa_Hana",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0103E5A0",
+      "name": "Obj_Flowerpot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01040CF0",
+      "name": "Obj_Spinyroll",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01042BB0",
+      "name": "Dm_Hina",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01043760",
+      "name": "En_Syateki_Wf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01044CD0",
+      "name": "Obj_Skateblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01046C20",
+      "name": "ovl_Effect_En_Ice_Block",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01047090",
+      "name": "Obj_Iceblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0104BBF0",
+      "name": "En_Bigpamet",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0104E700",
+      "name": "Bg_Dblue_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01050DB0",
+      "name": "En_Syateki_Dekunuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01052190",
+      "name": "Elf_Msg3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01052A70",
+      "name": "En_Fg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01054280",
+      "name": "Dm_Ravine",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01054470",
+      "name": "Dm_Sa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010549E0",
+      "name": "En_Slime",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01058330",
+      "name": "En_Pr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01059ED0",
+      "name": "Obj_Toudai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0105AC90",
+      "name": "Obj_Entotu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0105BC70",
+      "name": "Obj_Bell",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0105CA50",
+      "name": "En_Syateki_Okuta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0105EC50",
+      "name": "Obj_Shutter",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0105EFE0",
+      "name": "Dm_Zl",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0105F990",
+      "name": "En_Ru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01060840",
+      "name": "En_Elfgrp",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01061FF0",
+      "name": "Dm_Tsg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01062460",
+      "name": "En_Baguo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01063B40",
+      "name": "Obj_Vspinyroll",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010651D0",
+      "name": "Obj_Smork",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01066000",
+      "name": "En_Test2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01066520",
+      "name": "En_Test3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0106A150",
+      "name": "En_Test4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0106BA30",
+      "name": "En_Bat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0106D3B0",
+      "name": "En_Sekihi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0106DCB0",
+      "name": "En_Wiz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01071CE0",
+      "name": "En_Wiz_Brock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01072500",
+      "name": "En_Wiz_Fire",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010757E0",
+      "name": "Eff_Change",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01075DE0",
+      "name": "Dm_Statue",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01075F00",
+      "name": "Obj_Fireshield",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01077030",
+      "name": "Bg_Ladder",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01077660",
+      "name": "En_Mkk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010795C0",
+      "name": "Demo_Getitem",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01079A10",
+      "name": "En_Dnb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0107AC70",
+      "name": "En_Dnh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0107B570",
+      "name": "En_Dnk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0107C8C0",
+      "name": "En_Dnq",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0107DD30",
+      "name": "Bg_Keikoku_Saku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0107E290",
+      "name": "Obj_Hugebombiwa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01080B40",
+      "name": "En_Firefly2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01080BD0",
+      "name": "En_Rat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010835E0",
+      "name": "En_Water_Effect",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01086390",
+      "name": "En_Kusa2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0108AA60",
+      "name": "Bg_Spout_Fire",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0108B380",
+      "name": "En_Dy_Extra",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0108B9F0",
+      "name": "En_Bal",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0108EA30",
+      "name": "En_Ginko_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01090930",
+      "name": "En_Warp_Uzu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01090DF0",
+      "name": "Obj_Driftice",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010922F0",
+      "name": "En_Look_Nuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010933A0",
+      "name": "En_Mushi2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01097110",
+      "name": "En_Fall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0109A1F0",
+      "name": "En_Mm3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0109BA30",
+      "name": "Bg_Crace_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0109C6B0",
+      "name": "En_Dno",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0109F850",
+      "name": "En_Pr2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010A19B0",
+      "name": "En_Prz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010A31C0",
+      "name": "En_Jso2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010A8010",
+      "name": "Obj_Etcetera",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010A8F90",
+      "name": "En_Egol",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010ADE60",
+      "name": "Obj_Mine",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010B1DA0",
+      "name": "Obj_Purify",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010B2B40",
+      "name": "En_Tru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010B9300",
+      "name": "En_Trt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010BE8E0",
+      "name": "En_Test5",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010BECB0",
+      "name": "En_Test6",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010C3630",
+      "name": "En_Az",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010C9050",
+      "name": "En_Estone",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010CA090",
+      "name": "Bg_Hakugin_Post",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010CD710",
+      "name": "Dm_Opstage",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010CDC00",
+      "name": "Dm_Stk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010D3B00",
+      "name": "Dm_Char00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010D6A70",
+      "name": "Dm_Char01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010D9960",
+      "name": "Dm_Char02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010DA090",
+      "name": "Dm_Char03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010DA970",
+      "name": "Dm_Char04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010DB410",
+      "name": "Dm_Char05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010DDA00",
+      "name": "Dm_Char06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010DDE40",
+      "name": "Dm_Char07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010DE5D0",
+      "name": "Dm_Char08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010E1690",
+      "name": "Dm_Char09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010E2110",
+      "name": "Obj_Tokeidai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010E4D00",
+      "name": "En_Mnk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010EB280",
+      "name": "En_Egblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010EBDD0",
+      "name": "En_Guard_Nuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010ECE90",
+      "name": "Bg_Hakugin_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010EE210",
+      "name": "Obj_Tokei_Tobira",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010EE900",
+      "name": "Bg_Hakugin_Elvpole",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010EEEC0",
+      "name": "En_Ma4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010F1E30",
+      "name": "En_Twig",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010F2920",
+      "name": "En_Po_Fusen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010F3680",
+      "name": "En_Door_Etc",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010F3FE0",
+      "name": "En_Bigokuta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010F65D0",
+      "name": "Bg_Icefloe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FAB90",
+      "name": "ovl_Effect_Ss_Sbn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FB660",
+      "name": "Obj_Ocarinalift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FC2B0",
+      "name": "En_Time_Tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FD0B0",
+      "name": "Bg_Open_Shutter",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FD880",
+      "name": "Bg_Open_Spot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FDB70",
+      "name": "Bg_Fu_Kaiten",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FDF40",
+      "name": "Obj_Aqua",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "010FEEE0",
+      "name": "En_Elforg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01100E00",
+      "name": "En_Elfbub",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01101590",
+      "name": "En_Fu_Mato",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01102D20",
+      "name": "En_Fu_Kago",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01104070",
+      "name": "En_Osn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01106670",
+      "name": "Bg_Ctower_Gear",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01107010",
+      "name": "En_Trt2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01109D80",
+      "name": "Obj_Tokei_Step",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0110ABA0",
+      "name": "Bg_Lotus",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0110B2F0",
+      "name": "En_Kame",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0110DBD0",
+      "name": "Obj_Takaraya_Wall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0110EF50",
+      "name": "Bg_Fu_Mizu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0110F340",
+      "name": "En_Sellnuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01112B60",
+      "name": "Bg_Dkjail_Ivy",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01113530",
+      "name": "Obj_Visiblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011136A0",
+      "name": "En_Takaraya",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01114A10",
+      "name": "En_Tsn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01116660",
+      "name": "En_Ds2n",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01116CD0",
+      "name": "En_Fsn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0111BAD0",
+      "name": "En_Shn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0111CF20",
+      "name": "En_Stop_heishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0111E880",
+      "name": "Obj_Bigicicle",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0111F850",
+      "name": "En_Lift_Nuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011226A0",
+      "name": "En_Tk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011268D0",
+      "name": "Bg_Market_Step",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01126A10",
+      "name": "Obj_Lupygamelift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01127170",
+      "name": "En_Test7",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112A600",
+      "name": "Obj_Lightblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112AE10",
+      "name": "Mir_Ray2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112B300",
+      "name": "En_Wdhand",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112D9A0",
+      "name": "En_Gamelupy",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112E1D0",
+      "name": "Bg_Danpei_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112EB80",
+      "name": "En_Snowwd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112F1A0",
+      "name": "En_Pm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01134550",
+      "name": "En_Gakufu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011350E0",
+      "name": "Elf_Msg4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01135B20",
+      "name": "Elf_Msg5",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011360D0",
+      "name": "En_Col_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01137090",
+      "name": "En_Talk_Gibud",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0113A720",
+      "name": "En_Giant",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0113BD20",
+      "name": "Obj_Snowball",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0113E660",
+      "name": "Boss_Hakugin",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011497C0",
+      "name": "En_Gb2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0114C410",
+      "name": "En_Onpuman",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0114CAA0",
+      "name": "Bg_Tobira01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0114CFE0",
+      "name": "En_Tag_Obj",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0114D110",
+      "name": "Obj_Dhouse",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0114EC10",
+      "name": "Obj_Hakaisi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011505D0",
+      "name": "Bg_Hakugin_Switch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01151D00",
+      "name": "En_Snowman",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011555B0",
+      "name": "TG_Sw",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01155A50",
+      "name": "En_Po_Sisters",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01159AC0",
+      "name": "En_Pp",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0115DB10",
+      "name": "En_Hakurock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0115EEE0",
+      "name": "En_Hanabi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01160240",
+      "name": "Obj_Dowsing",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01160430",
+      "name": "Obj_Wind",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01161090",
+      "name": "En_Racedog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01162FF0",
+      "name": "En_Kendo_Js",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01165030",
+      "name": "Bg_Botihasira",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01165430",
+      "name": "En_Fish2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01168D70",
+      "name": "En_Pst",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01169D90",
+      "name": "En_Poh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0116D7C0",
+      "name": "Obj_Spidertent",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0116F4E0",
+      "name": "En_Zoraegg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01172690",
+      "name": "En_Kbt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01173A30",
+      "name": "En_Gg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01175F10",
+      "name": "En_Maruta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01177F90",
+      "name": "Obj_Snowball2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01179FF0",
+      "name": "En_Gg2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0117B860",
+      "name": "Obj_Ghaka",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0117C1B0",
+      "name": "En_Dnp",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0117DA10",
+      "name": "En_Dai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0117FF30",
+      "name": "Bg_Goron_Oyu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01180850",
+      "name": "En_Kgy",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01183E30",
+      "name": "En_Invadepoh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01193110",
+      "name": "En_Gk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011969D0",
+      "name": "En_An",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0119E080",
+      "name": "En_Bee",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0119ED40",
+      "name": "En_Ot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011A2990",
+      "name": "En_Dragon",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011A4E00",
+      "name": "Obj_Dora",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011A5A80",
+      "name": "En_Bigpo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011AA1E0",
+      "name": "Obj_Kendo_Kanban",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011AB920",
+      "name": "Obj_Hariko",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011ABD50",
+      "name": "En_Sth",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B2AF0",
+      "name": "Bg_Sinkai_Kabe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B30E0",
+      "name": "Bg_Haka_Curtain",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B3630",
+      "name": "Bg_Kin2_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B3F30",
+      "name": "Bg_Kin2_Fence",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B48D0",
+      "name": "Bg_Kin2_Picture",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B55D0",
+      "name": "Bg_Kin2_Shelf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B64C0",
+      "name": "En_Rail_Skb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011B9BB0",
+      "name": "En_Jg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011BC460",
+      "name": "En_Tru_Mt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011BDF20",
+      "name": "Obj_Um",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011C3760",
+      "name": "En_Neo_Reeba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011C5BA0",
+      "name": "Bg_Mbar_Chair",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011C5D20",
+      "name": "Bg_Ikana_Block",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011C6C70",
+      "name": "Bg_Ikana_Mirror",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011C79C0",
+      "name": "Bg_Ikana_Rotaryroom",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011CA080",
+      "name": "Bg_Dblue_Balance",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011CBCF0",
+      "name": "Bg_Dblue_Waterfall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011CD8D0",
+      "name": "En_Kaizoku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011D3C30",
+      "name": "En_Ge2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011D5CE0",
+      "name": "En_Ma_Yts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011D7510",
+      "name": "En_Ma_Yto",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011DB200",
+      "name": "Obj_Tokei_Turret",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011DB550",
+      "name": "Bg_Dblue_Elevator",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011DC270",
+      "name": "Obj_Warpstone",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011DCBF0",
+      "name": "En_Zog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011DFB20",
+      "name": "Obj_Rotlift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011DFF70",
+      "name": "Obj_Jg_Gakki",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E0210",
+      "name": "Bg_Inibs_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E0430",
+      "name": "En_Zot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E4570",
+      "name": "Obj_Tree",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E4C80",
+      "name": "Obj_Y2lift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E5020",
+      "name": "Obj_Y2shutter",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E5680",
+      "name": "Obj_Boat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E5ED0",
+      "name": "Obj_Taru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E6E00",
+      "name": "Obj_Hunsui",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E8C00",
+      "name": "En_Jc_Mato",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011E9130",
+      "name": "Mir_Ray3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011EA550",
+      "name": "En_Zob",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011EC950",
+      "name": "Elf_Msg6",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011EDC50",
+      "name": "Obj_Nozoki",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011EF100",
+      "name": "En_Toto",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011F1290",
+      "name": "En_Railgibud",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011F4BD0",
+      "name": "En_Baba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011F6D80",
+      "name": "En_Suttari",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011FBC50",
+      "name": "En_Zod",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011FD8E0",
+      "name": "En_Kujiya",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "011FE890",
+      "name": "En_Geg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01201DA0",
+      "name": "Obj_Kinoko",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012022A0",
+      "name": "Obj_Yasi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01202620",
+      "name": "En_Tanron1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01204140",
+      "name": "En_Tanron2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01205FE0",
+      "name": "En_Tanron3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012074A0",
+      "name": "Obj_Chan",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01208B90",
+      "name": "En_Zos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0120ACF0",
+      "name": "En_S_Goro",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0120E510",
+      "name": "En_Nb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012103B0",
+      "name": "En_Ja",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01212990",
+      "name": "Bg_F40_Block",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012139A0",
+      "name": "Bg_F40_Switch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01214200",
+      "name": "En_Po_Composer",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01216240",
+      "name": "En_Guruguru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012172C0",
+      "name": "Oceff_Wipe5",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01218B50",
+      "name": "En_Stone_heishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0121A0F0",
+      "name": "Oceff_Wipe6",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0121A850",
+      "name": "En_Scopenuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0121CF30",
+      "name": "En_Scopecrow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0121DD00",
+      "name": "Oceff_Wipe7",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0121EC60",
+      "name": "Eff_Kamejima_Wave",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0121F440",
+      "name": "En_Hg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012207C0",
+      "name": "En_Hgo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012218D0",
+      "name": "En_Zov",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01223410",
+      "name": "En_Ah",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01224DC0",
+      "name": "Obj_Hgdoor",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012255D0",
+      "name": "Bg_Ikana_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012263E0",
+      "name": "Bg_Ikana_Ray",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01226760",
+      "name": "Bg_Ikana_Shutter",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01227040",
+      "name": "Bg_Haka_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012278D0",
+      "name": "Bg_Haka_Tomb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01227D20",
+      "name": "En_Sc_Ruppe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01228480",
+      "name": "Bg_Iknv_Doukutu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01229490",
+      "name": "Bg_Iknv_Obj",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01229E70",
+      "name": "En_Pamera",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0122CB10",
+      "name": "Obj_HsStump",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0122D1E0",
+      "name": "En_Hidden_Nuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0122E660",
+      "name": "En_Zow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012308C0",
+      "name": "En_Talk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01230AF0",
+      "name": "En_Al",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01233240",
+      "name": "En_Tab",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01234D40",
+      "name": "En_Nimotsu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01235200",
+      "name": "En_Hit_Tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012354A0",
+      "name": "En_Ruppecrow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01236FE0",
+      "name": "En_Tanron4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01237E50",
+      "name": "En_Tanron5",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01239750",
+      "name": "En_Tanron6",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01239920",
+      "name": "En_Daiku2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123B690",
+      "name": "En_Muto",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123C180",
+      "name": "En_Baisen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123CCE0",
+      "name": "En_Heishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123D380",
+      "name": "En_Demo_heishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123DAA0",
+      "name": "En_Dt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123F6F0",
+      "name": "En_Cha",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123FBC0",
+      "name": "Obj_Dinner",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0123FE00",
+      "name": "Eff_Lastday",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012406E0",
+      "name": "Bg_Ikana_Dharma",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012411F0",
+      "name": "En_Akindonuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012457C0",
+      "name": "Eff_Stk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01245C70",
+      "name": "En_Ig",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012488B0",
+      "name": "En_Rg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0124B040",
+      "name": "En_Osk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0124CB40",
+      "name": "En_Sth2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0124F930",
+      "name": "En_Yb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01250F70",
+      "name": "En_Rz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01252E60",
+      "name": "En_Scopecoin",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012532A0",
+      "name": "En_Bjt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012542B0",
+      "name": "En_Bomjima",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012573A0",
+      "name": "En_Bomjimb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01259DD0",
+      "name": "En_Bombers",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125B390",
+      "name": "En_Bombers2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125C670",
+      "name": "En_Bombal",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125D2B0",
+      "name": "Obj_Moon_Stone",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125D9D0",
+      "name": "Obj_Mu_Pict",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125E110",
+      "name": "Bg_Ikninside",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125E880",
+      "name": "Eff_Zoraband",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125ED60",
+      "name": "Obj_Kepn_Koya",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125EF10",
+      "name": "Obj_Usiyane",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125FB20",
+      "name": "En_Nnh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0125FF80",
+      "name": "Obj_Kzsaku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012604B0",
+      "name": "Obj_Milk_Bin",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012607B0",
+      "name": "En_Kitan",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012617C0",
+      "name": "Bg_Astr_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01262270",
+      "name": "Bg_Iknin_Susceil",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01262F70",
+      "name": "En_Bsb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012683B0",
+      "name": "En_Recepgirl",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01268CC0",
+      "name": "En_Thiefbird",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0126C3A0",
+      "name": "En_Jgame_Tsn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0126E040",
+      "name": "Obj_Jgame_Light",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0126F0E0",
+      "name": "Obj_Yado",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0126F400",
+      "name": "Demo_Syoten",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01270D70",
+      "name": "Demo_Moonend",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012715F0",
+      "name": "Bg_Lbfshot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01271770",
+      "name": "Bg_Last_Bwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012721C0",
+      "name": "En_And",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01272A00",
+      "name": "En_Invadepoh_Demo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01274F30",
+      "name": "Obj_Danpeilift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01275930",
+      "name": "En_Fall2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01276130",
+      "name": "Dm_Al",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012768E0",
+      "name": "Dm_An",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01277B20",
+      "name": "Dm_Ah",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01278770",
+      "name": "Dm_Nb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01278BC0",
+      "name": "En_Drs",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01279120",
+      "name": "En_Ending_Hero",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01279550",
+      "name": "Dm_Bal",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127A060",
+      "name": "En_Paper",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127AAD0",
+      "name": "En_Hint_Skb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127D530",
+      "name": "Dm_Tag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127E040",
+      "name": "En_Bh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127E5A0",
+      "name": "En_Ending_Hero2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127E840",
+      "name": "En_Ending_Hero3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127EAE0",
+      "name": "En_Ending_Hero4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127ED80",
+      "name": "En_Ending_Hero5",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127F2F0",
+      "name": "En_Ending_Hero6",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0127FB90",
+      "name": "Dm_Gm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01280DD0",
+      "name": "Obj_Swprize",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "012813D0",
+      "name": "En_Invisible_Ruppe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01281790",
+      "name": "Obj_Ending",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01281950",
+      "name": "En_Rsn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01282000",
+      "name": "gameplay_keep",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01315000",
+      "name": "gameplay_feild_keep",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0131F000",
+      "name": "gameplay_dangeon_keep",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01344000",
+      "name": "object_link_boy",
+      "type": "Object"
+    },
+    {
+      "vrom": "01352000",
+      "name": "object_link_child",
+      "type": "Object"
+    },
+    {
+      "vrom": "01371000",
+      "name": "object_link_goron",
+      "type": "Object"
+    },
+    {
+      "vrom": "01389000",
+      "name": "object_link_zora",
+      "type": "Object"
+    },
+    {
+      "vrom": "0139C000",
+      "name": "object_link_nuts",
+      "type": "Object"
+    },
+    {
+      "vrom": "013A8000",
+      "name": "object_mask_kaeton",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013A9000",
+      "name": "object_link_mask_rabit",
+      "type": "Object"
+    },
+    {
+      "vrom": "013AB000",
+      "name": "object_mask_captain",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013AD000",
+      "name": "object_mask_truth",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013AF000",
+      "name": "object_mask_gibdo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013B0000",
+      "name": "object_mask_garo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013B2000",
+      "name": "object_mask_kafei",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013B4000",
+      "name": "object_mask_greatfairy",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013B8000",
+      "name": "object_mask_giant",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013B9000",
+      "name": "object_mask_romani",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013BB000",
+      "name": "object_mask_postman",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013BC000",
+      "name": "object_mask_circusleader",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013BE000",
+      "name": "object_mask_stone",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013C0000",
+      "name": "object_mask_bremen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013C2000",
+      "name": "object_mask_dongero",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013C5000",
+      "name": "object_mask_allnight",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013C7000",
+      "name": "object_mask_couple",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013C9000",
+      "name": "object_mask_kamaro",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013CB000",
+      "name": "object_link_mask_bakuretu",
+      "type": "Object"
+    },
+    {
+      "vrom": "013CD000",
+      "name": "object_mask_scents",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013CF000",
+      "name": "object_mask_goron",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013D1000",
+      "name": "object_mask_zora",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013D3000",
+      "name": "object_link_mask_nuts",
+      "type": "Object"
+    },
+    {
+      "vrom": "013D6000",
+      "name": "object_mask_fiercedeity",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013D9000",
+      "name": "object_En_Box",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013E2000",
+      "name": "object_En_Okuta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013E7000",
+      "name": "object_En_Wallmas",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "013F2000",
+      "name": "object_Bg_Dy_Yoseizo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0140F000",
+      "name": "object_En_Firefly",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01411000",
+      "name": "object_En_Dodongo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0141B000",
+      "name": "object_En_Niw",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0141E000",
+      "name": "object_En_Tite",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01422000",
+      "name": "object_En_Peehat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01424000",
+      "name": "object_En_Dinofos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01432000",
+      "name": "object_En_Zl1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01447000",
+      "name": "object_En_Bubble",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01449000",
+      "name": "object_En_Test3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01459000",
+      "name": "object_En_Famos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0145D000",
+      "name": "object_En_St",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01463000",
+      "name": "object_En_Thiefbird",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0146A000",
+      "name": "object_En_Bombf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0146C000",
+      "name": "object_En_Am",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01472000",
+      "name": "object_En_Dekubaba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01476000",
+      "name": "object_Door_Warp1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0147F000",
+      "name": "object_b_heart",
+      "type": "Object"
+    },
+    {
+      "vrom": "01480000",
+      "name": "object_En_Dekunuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01484000",
+      "name": "object_En_Bbfall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01486000",
+      "name": "object_En_Death",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01493000",
+      "name": "object_En_Hata",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01496000",
+      "name": "object_En_Wood02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014A0000",
+      "name": "object_Obj_Toge",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014A3000",
+      "name": "object_En_Vm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014A7000",
+      "name": "object_En_Fire_Rock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014A9000",
+      "name": "object_En_Rd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014BF000",
+      "name": "object_En_Horse_Link_Child",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014CE000",
+      "name": "object_Obj_Syokudai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014D2000",
+      "name": "object_efc_tw",
+      "type": "Object"
+    },
+    {
+      "vrom": "014D4000",
+      "name": "object_gi_key",
+      "type": "Object"
+    },
+    {
+      "vrom": "014D5000",
+      "name": "object_Mir_Ray",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014D6000",
+      "name": "object_Bg_Ctower_Rot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014EF000",
+      "name": "object_bdoor",
+      "type": "Object"
+    },
+    {
+      "vrom": "014F7000",
+      "name": "object_En_Sb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "014FA000",
+      "name": "object_gi_melody",
+      "type": "Object"
+    },
+    {
+      "vrom": "014FB000",
+      "name": "object_gi_heart",
+      "type": "Object"
+    },
+    {
+      "vrom": "014FC000",
+      "name": "object_gi_compass",
+      "type": "Object"
+    },
+    {
+      "vrom": "014FD000",
+      "name": "object_gi_bosskey",
+      "type": "Object"
+    },
+    {
+      "vrom": "014FF000",
+      "name": "object_gi_nuts",
+      "type": "Object"
+    },
+    {
+      "vrom": "01501000",
+      "name": "object_Item_B_Heart",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01503000",
+      "name": "object_gi_arrowcase",
+      "type": "Object"
+    },
+    {
+      "vrom": "01504000",
+      "name": "object_gi_bombpouch",
+      "type": "Object"
+    },
+    {
+      "vrom": "01505000",
+      "name": "object_En_In",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01522000",
+      "name": "object_os_anime",
+      "type": "Object"
+    },
+    {
+      "vrom": "01525000",
+      "name": "object_gi_bottle",
+      "type": "Object"
+    },
+    {
+      "vrom": "01526000",
+      "name": "object_gi_stick",
+      "type": "Object"
+    },
+    {
+      "vrom": "01527000",
+      "name": "object_gi_map",
+      "type": "Object"
+    },
+    {
+      "vrom": "01529000",
+      "name": "object_En_Go",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0153E000",
+      "name": "object_En_Ru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0154E000",
+      "name": "object_gi_magicpot",
+      "type": "Object"
+    },
+    {
+      "vrom": "01550000",
+      "name": "object_gi_bomb_1",
+      "type": "Object"
+    },
+    {
+      "vrom": "01551000",
+      "name": "object_En_Ma_Yto",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01568000",
+      "name": "object_gi_purse",
+      "type": "Object"
+    },
+    {
+      "vrom": "0156A000",
+      "name": "object_En_Rr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0156B000",
+      "name": "object_gi_arrow",
+      "type": "Object"
+    },
+    {
+      "vrom": "0156D000",
+      "name": "object_gi_bomb_2",
+      "type": "Object"
+    },
+    {
+      "vrom": "0156E000",
+      "name": "object_gi_shield_2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01570000",
+      "name": "object_gi_hookshot",
+      "type": "Object"
+    },
+    {
+      "vrom": "01572000",
+      "name": "object_gi_ocarina",
+      "type": "Object"
+    },
+    {
+      "vrom": "01573000",
+      "name": "object_gi_milk",
+      "type": "Object"
+    },
+    {
+      "vrom": "01575000",
+      "name": "object_En_Ma4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01591000",
+      "name": "object_Obj_Mine",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01594000",
+      "name": "object_En_Minifrog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "015A0000",
+      "name": "object_gi_bow",
+      "type": "Object"
+    },
+    {
+      "vrom": "015A2000",
+      "name": "object_gi_glasses",
+      "type": "Object"
+    },
+    {
+      "vrom": "015A4000",
+      "name": "object_gi_liquid",
+      "type": "Object"
+    },
+    {
+      "vrom": "015A6000",
+      "name": "object_En_Ani",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "015B2000",
+      "name": "object_gi_shield_3",
+      "type": "Object"
+    },
+    {
+      "vrom": "015B4000",
+      "name": "object_gi_bean",
+      "type": "Object"
+    },
+    {
+      "vrom": "015B5000",
+      "name": "object_gi_fish",
+      "type": "Object"
+    },
+    {
+      "vrom": "015B6000",
+      "name": "object_gi_longsword",
+      "type": "Object"
+    },
+    {
+      "vrom": "015B7000",
+      "name": "object_En_Zo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "015C9000",
+      "name": "object_umajump",
+      "type": "Object"
+    },
+    {
+      "vrom": "015CB000",
+      "name": "object_mastergolon",
+      "type": "Object"
+    },
+    {
+      "vrom": "015CC000",
+      "name": "object_masterzoora",
+      "type": "Object"
+    },
+    {
+      "vrom": "015CD000",
+      "name": "object_En_Aob_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "015D5000",
+      "name": "object_En_Ik",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "015E9000",
+      "name": "object_ahg",
+      "type": "Object"
+    },
+    {
+      "vrom": "015EF000",
+      "name": "object_cne",
+      "type": "Object"
+    },
+    {
+      "vrom": "015F2000",
+      "name": "object_En_Bji_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "015F8000",
+      "name": "object_En_Baba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01603000",
+      "name": "object_En_An",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01617000",
+      "name": "object_En_Ginko_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0162B000",
+      "name": "object_En_Fz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0162F000",
+      "name": "object_bob",
+      "type": "Object"
+    },
+    {
+      "vrom": "01634000",
+      "name": "object_En_Ge1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01641000",
+      "name": "object_yabusame_point",
+      "type": "Object"
+    },
+    {
+      "vrom": "01642000",
+      "name": "object_Obj_Hsblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01644000",
+      "name": "object_Obj_Lift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01647000",
+      "name": "object_Obj_Bean",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0164A000",
+      "name": "object_En_Goroiwa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01655000",
+      "name": "object_En_Muto",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0165D000",
+      "name": "object_En_Daiku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0166B000",
+      "name": "object_En_Nwc",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0166E000",
+      "name": "object_En_Ms",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01672000",
+      "name": "object_En_Hs",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01679000",
+      "name": "object_Obj_Lightswitch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0167C000",
+      "name": "object_kusa",
+      "type": "Object"
+    },
+    {
+      "vrom": "0167D000",
+      "name": "object_tsubo",
+      "type": "Object"
+    },
+    {
+      "vrom": "0167F000",
+      "name": "object_En_Kanban",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01681000",
+      "name": "object_En_Owl",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01692000",
+      "name": "object_En_Mk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01699000",
+      "name": "object_En_Guruguru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016A0000",
+      "name": "object_gi_ki_tan_mask",
+      "type": "Object"
+    },
+    {
+      "vrom": "016A1000",
+      "name": "object_gi_skj_mask",
+      "type": "Object"
+    },
+    {
+      "vrom": "016A3000",
+      "name": "object_gi_rabit_mask",
+      "type": "Object"
+    },
+    {
+      "vrom": "016A4000",
+      "name": "object_gi_truth_mask",
+      "type": "Object"
+    },
+    {
+      "vrom": "016A6000",
+      "name": "object_En_Stream",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016A7000",
+      "name": "object_En_Mm3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016B5000",
+      "name": "object_En_Kendo_Js",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016BC000",
+      "name": "object_En_Bom_Bowl_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016CD000",
+      "name": "object_gi_soldout",
+      "type": "Object"
+    },
+    {
+      "vrom": "016CE000",
+      "name": "object_En_Mag",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016F0000",
+      "name": "object_gi_golonmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "016F2000",
+      "name": "object_gi_zoramask",
+      "type": "Object"
+    },
+    {
+      "vrom": "016F4000",
+      "name": "object_En_Kakasi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "016FD000",
+      "name": "object_zg",
+      "type": "Object"
+    },
+    {
+      "vrom": "016FF000",
+      "name": "object_gi_m_arrow",
+      "type": "Object"
+    },
+    {
+      "vrom": "01700000",
+      "name": "object_ds2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01705000",
+      "name": "object_fish",
+      "type": "Object"
+    },
+    {
+      "vrom": "0171B000",
+      "name": "object_gi_sutaru",
+      "type": "Object"
+    },
+    {
+      "vrom": "0171C000",
+      "name": "object_En_Ssh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01723000",
+      "name": "object_En_Pametfrog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01737000",
+      "name": "object_En_Takaraya",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01749000",
+      "name": "object_Obj_Bombiwa",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01750000",
+      "name": "object_En_Hidden_Nuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01754000",
+      "name": "object_rs",
+      "type": "Object"
+    },
+    {
+      "vrom": "0175E000",
+      "name": "object_En_Ge2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01769000",
+      "name": "object_En_Ge3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01775000",
+      "name": "object_En_Dg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0177E000",
+      "name": "object_Obj_Kibako2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01780000",
+      "name": "object_En_Dns",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01784000",
+      "name": "object_En_Look_Nuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01787000",
+      "name": "object_gi_insect",
+      "type": "Object"
+    },
+    {
+      "vrom": "01788000",
+      "name": "object_gi_ghost",
+      "type": "Object"
+    },
+    {
+      "vrom": "01789000",
+      "name": "object_gi_soul",
+      "type": "Object"
+    },
+    {
+      "vrom": "0178A000",
+      "name": "object_Bg_F40_Flift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0178F000",
+      "name": "object_gi_rupy",
+      "type": "Object"
+    },
+    {
+      "vrom": "01790000",
+      "name": "object_En_Po_Composer",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0179A000",
+      "name": "object_En_Fu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017A6000",
+      "name": "object_En_Wf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017B1000",
+      "name": "object_En_Skb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017B8000",
+      "name": "object_En_Gs",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017B9000",
+      "name": "object_En_Gb2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017C1000",
+      "name": "object_bwall",
+      "type": "Object"
+    },
+    {
+      "vrom": "017C3000",
+      "name": "object_En_Crow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017C5000",
+      "name": "object_En_Cow",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017CA000",
+      "name": "object_gi_sword_1",
+      "type": "Object"
+    },
+    {
+      "vrom": "017CC000",
+      "name": "object_Dm_Zl",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017F1000",
+      "name": "object_En_Grasshopper",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017F7000",
+      "name": "object_Obj_Boyo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017F8000",
+      "name": "object_Demo_Shd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "017FE000",
+      "name": "object_En_Jso",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0180A000",
+      "name": "object_En_Knight",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0182D000",
+      "name": "object_Bg_Icicle",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0182F000",
+      "name": "object_Bg_Spdweb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01832000",
+      "name": "object_Boss_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01856000",
+      "name": "object_Boss_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0186B000",
+      "name": "object_Boss_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0187A000",
+      "name": "object_Boss_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0187F000",
+      "name": "object_Boss_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01887000",
+      "name": "object_Boss_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018D2000",
+      "name": "object_En_Raf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018D6000",
+      "name": "object_Obj_Funen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018D7000",
+      "name": "object_Obj_Raillift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018DF000",
+      "name": "object_Bg_Numa_Hana",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018F4000",
+      "name": "object_Obj_Flowerpot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018F6000",
+      "name": "object_Obj_Spinyroll",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018F7000",
+      "name": "object_Obj_Iceblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018F9000",
+      "name": "object_Dm_Ravine",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01907000",
+      "name": "object_En_Slime",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01909000",
+      "name": "object_En_Pr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0190E000",
+      "name": "object_Obj_Bell",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01910000",
+      "name": "object_Obj_Toudai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01914000",
+      "name": "object_kibako",
+      "type": "Object"
+    },
+    {
+      "vrom": "01916000",
+      "name": "object_Obj_Warpstone",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0191B000",
+      "name": "object_En_Baguo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0191E000",
+      "name": "object_En_Bat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0191F000",
+      "name": "object_sekihil",
+      "type": "Object"
+    },
+    {
+      "vrom": "01923000",
+      "name": "object_sekihig",
+      "type": "Object"
+    },
+    {
+      "vrom": "01927000",
+      "name": "object_sekihid",
+      "type": "Object"
+    },
+    {
+      "vrom": "0192B000",
+      "name": "object_sekihiz",
+      "type": "Object"
+    },
+    {
+      "vrom": "0192D000",
+      "name": "object_En_Wiz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01939000",
+      "name": "object_Bg_Ladder",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0193B000",
+      "name": "object_En_Mkk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0193C000",
+      "name": "object_Bg_Keikoku_Spr",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01942000",
+      "name": "object_Bg_Ingate",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01945000",
+      "name": "object_dekucity_ana_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01947000",
+      "name": "object_En_Rat",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01949000",
+      "name": "object_En_Water_Effect",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0194E000",
+      "name": "object_Bg_Dblue_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01967000",
+      "name": "object_En_Bal",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01975000",
+      "name": "object_En_Warp_Uzu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01978000",
+      "name": "object_Obj_Driftice",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0197A000",
+      "name": "object_fall",
+      "type": "Object"
+    },
+    {
+      "vrom": "01985000",
+      "name": "object_En_Dnb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0198A000",
+      "name": "object_Bg_Crace_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0198B000",
+      "name": "object_En_Dnq",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0199B000",
+      "name": "object_Obj_Tokeidai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "019AD000",
+      "name": "object_En_Egol",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "019C1000",
+      "name": "object_En_Tru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "019DD000",
+      "name": "object_En_Trt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "019ED000",
+      "name": "object_Bg_Hakugin_Post",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "019FE000",
+      "name": "object_En_Horse_Game_Check",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A02000",
+      "name": "object_En_Zl4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A20000",
+      "name": "object_En_Mnk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A3E000",
+      "name": "object_gi_bottle_red",
+      "type": "Object"
+    },
+    {
+      "vrom": "01A3F000",
+      "name": "object_Obj_Tokei_Tobira",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A41000",
+      "name": "object_En_Az",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A5C000",
+      "name": "object_En_Twig",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A5F000",
+      "name": "object_dekucity_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01A64000",
+      "name": "object_En_Po_Fusen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A67000",
+      "name": "object_racetsubo",
+      "type": "Object"
+    },
+    {
+      "vrom": "01A69000",
+      "name": "object_ha",
+      "type": "Object"
+    },
+    {
+      "vrom": "01A7F000",
+      "name": "object_En_Bigokuta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A86000",
+      "name": "object_Dm_Tsg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A98000",
+      "name": "object_Bg_Fu_Kaiten",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01A9C000",
+      "name": "object_En_Fu_Mato",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AA0000",
+      "name": "object_Dm_Char01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AB2000",
+      "name": "object_Dm_Char03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AD3000",
+      "name": "object_Obj_Tokei_Step",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AD4000",
+      "name": "object_Bg_Lotus",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AD5000",
+      "name": "object_En_Bigpamet",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01ADE000",
+      "name": "object_Bg_Dkjail_Ivy",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AE0000",
+      "name": "object_Obj_Visiblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AE1000",
+      "name": "object_En_Tsn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AEB000",
+      "name": "object_En_Ds2n",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01AF4000",
+      "name": "object_En_Fsn",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B09000",
+      "name": "object_En_Syateki_Man",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B1B000",
+      "name": "object_Obj_Bigicicle",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B1E000",
+      "name": "object_gi_bottle_15",
+      "type": "Object"
+    },
+    {
+      "vrom": "01B20000",
+      "name": "object_En_Tk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B2C000",
+      "name": "object_Bg_Market_Step",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B4D000",
+      "name": "object_Obj_Moon_Stone",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B4F000",
+      "name": "object_gi_kenrisyo",
+      "type": "Object"
+    },
+    {
+      "vrom": "01B51000",
+      "name": "object_Obj_Lightblock",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B52000",
+      "name": "object_Obj_Takaraya_Wall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B53000",
+      "name": "object_En_Wdhand",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B55000",
+      "name": "object_En_Stop_heishi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B63000",
+      "name": "object_En_Snowwd",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B66000",
+      "name": "object_En_Giant",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B7E000",
+      "name": "object_Obj_Comb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B80000",
+      "name": "object_Obj_Hana",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B81000",
+      "name": "object_Boss_Hakugin",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01B98000",
+      "name": "object_meganeana_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01B9A000",
+      "name": "object_gi_nutsmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01B9C000",
+      "name": "object_Dm_Char02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BD7000",
+      "name": "object_Bg_Tobira01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BD9000",
+      "name": "object_danpei_object",
+      "type": "Object"
+    },
+    {
+      "vrom": "01BDD000",
+      "name": "object_Obj_Dhouse",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BE6000",
+      "name": "object_Obj_Hakaisi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BE9000",
+      "name": "object_En_Poh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BEF000",
+      "name": "object_En_Snowman",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BF7000",
+      "name": "object_En_Po_Sisters",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01BFE000",
+      "name": "object_En_Pp",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C11000",
+      "name": "object_Bg_Hakugin_Switch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C14000",
+      "name": "object_Dm_Char00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C29000",
+      "name": "object_Bg_Botihasira",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C2B000",
+      "name": "object_gi_bigbomb",
+      "type": "Object"
+    },
+    {
+      "vrom": "01C2D000",
+      "name": "object_En_Pst",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C2F000",
+      "name": "object_Dm_Hina",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C3C000",
+      "name": "object_Obj_Spidertent",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C3F000",
+      "name": "object_En_Zoraegg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C45000",
+      "name": "object_En_Kbt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C55000",
+      "name": "object_En_Gg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C66000",
+      "name": "object_En_Maruta",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C69000",
+      "name": "object_Obj_Ghaka",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C6D000",
+      "name": "object_Bg_Goron_Oyu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C6E000",
+      "name": "object_En_Dnp",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C81000",
+      "name": "object_En_Dai",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01C95000",
+      "name": "object_En_Kgy",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CA6000",
+      "name": "object_En_Fish2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CAD000",
+      "name": "object_taisou",
+      "type": "Object"
+    },
+    {
+      "vrom": "01CB5000",
+      "name": "object_En_Gk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CC7000",
+      "name": "object_Bg_Haka_Curtain",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CCF000",
+      "name": "object_En_Sellnuts",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CDB000",
+      "name": "object_Dm_Char06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CE2000",
+      "name": "object_Bg_Icefloe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CE3000",
+      "name": "object_gi_gold_dust",
+      "type": "Object"
+    },
+    {
+      "vrom": "01CE5000",
+      "name": "object_gi_bottle_16",
+      "type": "Object"
+    },
+    {
+      "vrom": "01CE7000",
+      "name": "object_gi_bottle_22",
+      "type": "Object"
+    },
+    {
+      "vrom": "01CE9000",
+      "name": "object_Dm_Char09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CEB000",
+      "name": "object_En_Ot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CF0000",
+      "name": "object_En_Dragon",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CF5000",
+      "name": "object_Obj_Dora",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01CFB000",
+      "name": "object_gi_loach",
+      "type": "Object"
+    },
+    {
+      "vrom": "01CFD000",
+      "name": "object_gi_seahorse",
+      "type": "Object"
+    },
+    {
+      "vrom": "01CFF000",
+      "name": "object_En_Bigpo",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D05000",
+      "name": "object_Obj_Hariko",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D06000",
+      "name": "object_En_Dno",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D15000",
+      "name": "object_Bg_Sinkai_Kabe",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D16000",
+      "name": "object_Bg_Kin2_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D1F000",
+      "name": "object_ishi",
+      "type": "Object"
+    },
+    {
+      "vrom": "01D20000",
+      "name": "object_hakugin_demo",
+      "type": "Object"
+    },
+    {
+      "vrom": "01D24000",
+      "name": "object_En_Jg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D40000",
+      "name": "object_gi_sword_2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01D42000",
+      "name": "object_gi_sword_3",
+      "type": "Object"
+    },
+    {
+      "vrom": "01D44000",
+      "name": "object_gi_sword_4",
+      "type": "Object"
+    },
+    {
+      "vrom": "01D46000",
+      "name": "object_Obj_Um",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D60000",
+      "name": "object_En_Neo_Reeba",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D62000",
+      "name": "object_Bg_Mbar_Chair",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D64000",
+      "name": "object_Bg_Ikana_Mirror",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D7A000",
+      "name": "object_En_Kaizoku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D8A000",
+      "name": "object_Obj_Tokei_Turret",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01D8E000",
+      "name": "object_En_Zog",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01DB8000",
+      "name": "object_Obj_Rotlift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01DBD000",
+      "name": "object_posthouse_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01DC0000",
+      "name": "object_gi_jsonmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01DC2000",
+      "name": "object_gi_bigelfmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01DC4000",
+      "name": "object_gi_gibudomask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01DC6000",
+      "name": "object_Bg_Inibs_Movebg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01DD5000",
+      "name": "object_Obj_Tree",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01DD7000",
+      "name": "object_Obj_Y2lift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01DE3000",
+      "name": "object_gi_inn_key",
+      "type": "Object"
+    },
+    {
+      "vrom": "01DE5000",
+      "name": "object_gi_c_letter",
+      "type": "Object"
+    },
+    {
+      "vrom": "01DE7000",
+      "name": "object_En_Zob",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01DF9000",
+      "name": "object_Dm_Char07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E0B000",
+      "name": "object_Dm_Char05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E10000",
+      "name": "object_gi_pendant",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E11000",
+      "name": "object_En_Zod",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E1F000",
+      "name": "object_kumo30",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E23000",
+      "name": "object_Obj_Yasi",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E26000",
+      "name": "object_tanron2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E28000",
+      "name": "object_tanron2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E2A000",
+      "name": "object_gi_mushroom2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E2B000",
+      "name": "object_Obj_Chan",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E2F000",
+      "name": "object_gi_romanimask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E31000",
+      "name": "object_En_Zos",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E48000",
+      "name": "object_an2",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E4D000",
+      "name": "object_an3",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E50000",
+      "name": "object_Bg_F40_Switch",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E51000",
+      "name": "object_lod_moon",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E55000",
+      "name": "object_En_Dnh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E58000",
+      "name": "object_gi_posthat",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E59000",
+      "name": "object_gi_giantmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E5B000",
+      "name": "object_gi_syatoromani",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E5D000",
+      "name": "object_gi_picturebox",
+      "type": "Object"
+    },
+    {
+      "vrom": "01E5F000",
+      "name": "object_Dm_Char08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E74000",
+      "name": "object_En_Nb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E7D000",
+      "name": "object_En_Hg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01E94000",
+      "name": "object_En_Zov",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EAB000",
+      "name": "object_En_Ah",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EB5000",
+      "name": "object_Obj_Hgdoor",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EB7000",
+      "name": "object_dor01",
+      "type": "Object"
+    },
+    {
+      "vrom": "01EB9000",
+      "name": "object_dor02",
+      "type": "Object"
+    },
+    {
+      "vrom": "01EBB000",
+      "name": "object_dor03",
+      "type": "Object"
+    },
+    {
+      "vrom": "01EBD000",
+      "name": "object_dor04",
+      "type": "Object"
+    },
+    {
+      "vrom": "01EBF000",
+      "name": "object_Bg_Last_Bwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EC4000",
+      "name": "object_redead_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01EC5000",
+      "name": "object_Bg_Ikninside",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01ED3000",
+      "name": "object_Bg_Iknv_Doukutu",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EE7000",
+      "name": "object_En_Pamera",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EF6000",
+      "name": "object_Obj_HsStump",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01EF8000",
+      "name": "object_En_Toto",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F05000",
+      "name": "object_En_Al",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F13000",
+      "name": "object_En_Tab",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F1C000",
+      "name": "object_secom_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F1F000",
+      "name": "object_En_Dt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F2B000",
+      "name": "object_gi_yusyamask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F2D000",
+      "name": "object_En_Cha",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F2F000",
+      "name": "object_Obj_Dinner",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F32000",
+      "name": "object_gi_sokutatsu",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F34000",
+      "name": "object_Eff_Lastday",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F37000",
+      "name": "object_En_Baisen",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F40000",
+      "name": "object_En_Osk",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F4E000",
+      "name": "object_gi_fieldmap",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F50000",
+      "name": "object_En_Encount3",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F51000",
+      "name": "object_Obj_Hunsui",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F53000",
+      "name": "object_uch",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F58000",
+      "name": "object_En_Tanron4",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F59000",
+      "name": "object_En_Tanron6",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F5B000",
+      "name": "object_En_Gm",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F68000",
+      "name": "object_En_Yb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F6E000",
+      "name": "object_En_Rz",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F7C000",
+      "name": "object_En_Bjt",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F7F000",
+      "name": "object_Obj_Taru",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F81000",
+      "name": "object_moonston",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F83000",
+      "name": "object_gi_techo",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F85000",
+      "name": "object_gi_stonemask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F87000",
+      "name": "object_Eff_Zoraband",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F88000",
+      "name": "object_Obj_Kepn_Koya",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F91000",
+      "name": "object_Obj_Usiyane",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F94000",
+      "name": "object_gi_kerfaymask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F96000",
+      "name": "object_gi_zachomask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F98000",
+      "name": "object_gi_breemask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01F9A000",
+      "name": "object_En_Nnh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F9D000",
+      "name": "object_Obj_Kzsaku",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01F9F000",
+      "name": "object_Obj_Milk_Bin",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FA1000",
+      "name": "object_random_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "01FA3000",
+      "name": "object_En_Kujiya",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FAA000",
+      "name": "object_En_Kitan",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FB2000",
+      "name": "object_gi_yofukashimask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01FB4000",
+      "name": "object_gi_ge_romask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01FB6000",
+      "name": "object_Bg_Astr_Bombwall",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FB9000",
+      "name": "object_En_Bsb",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FC7000",
+      "name": "object_En_Fall2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FD0000",
+      "name": "object_sth",
+      "type": "Object"
+    },
+    {
+      "vrom": "01FD4000",
+      "name": "object_gi_sunmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01FD6000",
+      "name": "object_Dm_Statue",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FD8000",
+      "name": "object_gi_bakuretsumask",
+      "type": "Object"
+    },
+    {
+      "vrom": "01FDA000",
+      "name": "object_Obj_Yado",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FDC000",
+      "name": "object_Demo_Syoten",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FE1000",
+      "name": "object_Demo_Moonend",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01FF4000",
+      "name": "object_En_Js",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0200C000",
+      "name": "object_gi_fairy",
+      "type": "Object"
+    },
+    {
+      "vrom": "0200E000",
+      "name": "object_En_And",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02021000",
+      "name": "object_Obj_Danpeilift",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02022000",
+      "name": "object_En_Drs",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02028000",
+      "name": "object_msmo",
+      "type": "Object"
+    },
+    {
+      "vrom": "0202A000",
+      "name": "object_an4",
+      "type": "Object"
+    },
+    {
+      "vrom": "02033000",
+      "name": "object_wdor01",
+      "type": "Object"
+    },
+    {
+      "vrom": "02035000",
+      "name": "object_wdor02",
+      "type": "Object"
+    },
+    {
+      "vrom": "02037000",
+      "name": "object_wdor03",
+      "type": "Object"
+    },
+    {
+      "vrom": "02039000",
+      "name": "object_wdor04",
+      "type": "Object"
+    },
+    {
+      "vrom": "0203B000",
+      "name": "object_wdor05",
+      "type": "Object"
+    },
+    {
+      "vrom": "0203D000",
+      "name": "object_stk3",
+      "type": "Object"
+    },
+    {
+      "vrom": "02043000",
+      "name": "object_kinsta1_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "02045000",
+      "name": "object_kinsta2_obj",
+      "type": "Object"
+    },
+    {
+      "vrom": "02047000",
+      "name": "object_En_Bh",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02049000",
+      "name": "object_gi_dancermask",
+      "type": "Object"
+    },
+    {
+      "vrom": "0204B000",
+      "name": "object_gi_buusanmask",
+      "type": "Object"
+    },
+    {
+      "vrom": "0204D000",
+      "name": "object_Bg_Lbfshot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0204F000",
+      "name": "object_En_Encount2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02052000",
+      "name": "object_Obj_Ending",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0205B000",
+      "name": "object_gi_meotomask",
+      "type": "Object"
+    },
+    {
+      "vrom": "0205D000",
+      "name": "scene_texture_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02062000",
+      "name": "scene_texture_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02064000",
+      "name": "scene_texture_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02069000",
+      "name": "scene_texture_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0206F000",
+      "name": "scene_texture_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02076000",
+      "name": "scene_texture_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0207D000",
+      "name": "scene_texture_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02085000",
+      "name": "nintendo_rogo_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02088000",
+      "name": "title_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "020E5000",
+      "name": "parameter_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "020F8000",
+      "name": "daytelop_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02102000",
+      "name": "ger_daytelop_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02120000",
+      "name": "d2_fine_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0212C000",
+      "name": "d2_cloud_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02138000",
+      "name": "d2_fine_pal_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02139000",
+      "name": "elf_message_field",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0213B000",
+      "name": "Z2_SONCHONOIE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0214C000",
+      "name": "Z2_SONCHONOIE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02168000",
+      "name": "Z2_SONCHONOIE_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0217B000",
+      "name": "Z2_SONCHONOIE_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02189000",
+      "name": "Z2_BOWLING",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02194000",
+      "name": "Z2_BOWLING_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0219E000",
+      "name": "Z2_HAKASHITA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021A6000",
+      "name": "Z2_HAKASHITA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021AF000",
+      "name": "Z2_20SICHITAI2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021BC000",
+      "name": "Z2_20SICHITAI2_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021C5000",
+      "name": "Z2_20SICHITAI2_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021CD000",
+      "name": "Z2_20SICHITAI2_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021D4000",
+      "name": "Z2_20SICHITAI2_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021D9000",
+      "name": "Z2_20SICHITAI2_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021DF000",
+      "name": "Z2_AYASHIISHOP",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021E3000",
+      "name": "Z2_AYASHIISHOP_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021F5000",
+      "name": "Z2_AYASHIISHOP_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "021FB000",
+      "name": "TEST01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02207000",
+      "name": "TEST01_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02211000",
+      "name": "TEST01_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02222000",
+      "name": "TEST01_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0222C000",
+      "name": "KAKUSIANA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02231000",
+      "name": "KAKUSIANA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02236000",
+      "name": "SPOT00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0223E000",
+      "name": "SPOT00_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02248000",
+      "name": "SPOT00_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0224F000",
+      "name": "SPOT00_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0225A000",
+      "name": "SPOT00_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02264000",
+      "name": "Z2_IKANA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02283000",
+      "name": "Z2_IKANA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022AD000",
+      "name": "Z2_IKANA_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022AE000",
+      "name": "Z2_IKANA_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022B2000",
+      "name": "Z2_IKANA_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022B5000",
+      "name": "Z2_IKANA_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022BE000",
+      "name": "Z2_KAIZOKU",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022D0000",
+      "name": "Z2_KAIZOKU_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022E4000",
+      "name": "Z2_MILK_BAR",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022F2000",
+      "name": "Z2_MILK_BAR_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "022FD000",
+      "name": "Z2_INISIE_N",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02310000",
+      "name": "Z2_INISIE_N_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0231F000",
+      "name": "Z2_INISIE_N_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0232A000",
+      "name": "Z2_INISIE_N_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02332000",
+      "name": "Z2_INISIE_N_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0233D000",
+      "name": "Z2_INISIE_N_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02345000",
+      "name": "Z2_INISIE_N_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02346000",
+      "name": "Z2_INISIE_N_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02347000",
+      "name": "Z2_INISIE_N_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0234B000",
+      "name": "Z2_INISIE_N_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02350000",
+      "name": "Z2_INISIE_N_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02359000",
+      "name": "Z2_INISIE_N_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0235E000",
+      "name": "Z2_INISIE_N_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0235F000",
+      "name": "Z2_TAKARAYA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02369000",
+      "name": "Z2_TAKARAYA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02371000",
+      "name": "Z2_INISIE_R",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02384000",
+      "name": "Z2_INISIE_R_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02392000",
+      "name": "Z2_INISIE_R_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0239C000",
+      "name": "Z2_INISIE_R_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023A5000",
+      "name": "Z2_INISIE_R_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023B0000",
+      "name": "Z2_INISIE_R_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023B7000",
+      "name": "Z2_INISIE_R_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023B8000",
+      "name": "Z2_INISIE_R_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023B9000",
+      "name": "Z2_INISIE_R_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023BA000",
+      "name": "Z2_INISIE_R_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023BF000",
+      "name": "Z2_INISIE_R_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023C0000",
+      "name": "Z2_INISIE_R_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023C6000",
+      "name": "Z2_INISIE_R_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023CB000",
+      "name": "Z2_OKUJOU",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023E6000",
+      "name": "Z2_OKUJOU_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023E9000",
+      "name": "Z2_OPENINGDAN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "023F4000",
+      "name": "Z2_OPENINGDAN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02400000",
+      "name": "Z2_OPENINGDAN_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02407000",
+      "name": "Z2_MITURIN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0241F000",
+      "name": "Z2_MITURIN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02429000",
+      "name": "Z2_MITURIN_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02432000",
+      "name": "Z2_MITURIN_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02439000",
+      "name": "Z2_MITURIN_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02443000",
+      "name": "Z2_MITURIN_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02446000",
+      "name": "Z2_MITURIN_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0244D000",
+      "name": "Z2_MITURIN_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02451000",
+      "name": "Z2_MITURIN_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02455000",
+      "name": "Z2_MITURIN_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0245C000",
+      "name": "Z2_MITURIN_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02467000",
+      "name": "Z2_MITURIN_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0246C000",
+      "name": "Z2_MITURIN_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02473000",
+      "name": "Z2_MITURIN_room_12",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02477000",
+      "name": "Z2_13HUBUKINOMITI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0247F000",
+      "name": "Z2_13HUBUKINOMITI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02484000",
+      "name": "Z2_CASTLE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02494000",
+      "name": "Z2_CASTLE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024AD000",
+      "name": "Z2_CASTLE_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024B4000",
+      "name": "Z2_CASTLE_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024BA000",
+      "name": "Z2_CASTLE_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024C0000",
+      "name": "Z2_CASTLE_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024C9000",
+      "name": "Z2_CASTLE_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024CE000",
+      "name": "Z2_CASTLE_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024D1000",
+      "name": "Z2_CASTLE_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024D4000",
+      "name": "Z2_CASTLE_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024D5000",
+      "name": "Z2_CASTLE_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024D6000",
+      "name": "Z2_DEKUTES",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024DF000",
+      "name": "Z2_DEKUTES_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024E4000",
+      "name": "Z2_MITURIN_BS",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024E8000",
+      "name": "Z2_MITURIN_BS_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024EA000",
+      "name": "Z2_SYATEKI_MIZU",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024F4000",
+      "name": "Z2_SYATEKI_MIZU_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "024FB000",
+      "name": "Z2_HAKUGIN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02517000",
+      "name": "Z2_HAKUGIN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02520000",
+      "name": "Z2_HAKUGIN_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02527000",
+      "name": "Z2_HAKUGIN_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02534000",
+      "name": "Z2_HAKUGIN_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0253A000",
+      "name": "Z2_HAKUGIN_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0255C000",
+      "name": "Z2_HAKUGIN_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02564000",
+      "name": "Z2_HAKUGIN_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02568000",
+      "name": "Z2_HAKUGIN_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0256F000",
+      "name": "Z2_HAKUGIN_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02574000",
+      "name": "Z2_HAKUGIN_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0257D000",
+      "name": "Z2_HAKUGIN_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02581000",
+      "name": "Z2_HAKUGIN_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02584000",
+      "name": "Z2_HAKUGIN_room_12",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02589000",
+      "name": "Z2_HAKUGIN_room_13",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0258E000",
+      "name": "Z2_ROMANYMAE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02592000",
+      "name": "Z2_ROMANYMAE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02596000",
+      "name": "Z2_PIRATE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025AB000",
+      "name": "Z2_PIRATE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025AE000",
+      "name": "Z2_PIRATE_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025B3000",
+      "name": "Z2_PIRATE_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025B9000",
+      "name": "Z2_PIRATE_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025D1000",
+      "name": "Z2_PIRATE_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025D5000",
+      "name": "Z2_PIRATE_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025E5000",
+      "name": "Z2_PIRATE_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025E9000",
+      "name": "Z2_PIRATE_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025FB000",
+      "name": "Z2_PIRATE_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "025FF000",
+      "name": "Z2_PIRATE_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02609000",
+      "name": "Z2_PIRATE_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02614000",
+      "name": "Z2_PIRATE_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0261E000",
+      "name": "Z2_PIRATE_room_12",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0262C000",
+      "name": "Z2_PIRATE_room_13",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02631000",
+      "name": "Z2_PIRATE_room_14",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02633000",
+      "name": "Z2_SYATEKI_MORI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02645000",
+      "name": "Z2_SYATEKI_MORI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0264C000",
+      "name": "Z2_SINKAI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02656000",
+      "name": "Z2_SINKAI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0265E000",
+      "name": "Z2_YOUSEI_IZUMI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02682000",
+      "name": "Z2_YOUSEI_IZUMI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02688000",
+      "name": "Z2_YOUSEI_IZUMI_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0268E000",
+      "name": "Z2_YOUSEI_IZUMI_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02694000",
+      "name": "Z2_YOUSEI_IZUMI_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0269A000",
+      "name": "Z2_YOUSEI_IZUMI_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026A0000",
+      "name": "Z2_KINSTA1",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026AB000",
+      "name": "Z2_KINSTA1_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026AE000",
+      "name": "Z2_KINSTA1_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026B9000",
+      "name": "Z2_KINSTA1_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026BF000",
+      "name": "Z2_KINSTA1_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026C4000",
+      "name": "Z2_KINSTA1_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026CE000",
+      "name": "Z2_KINSTA1_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026D0000",
+      "name": "Z2_KINDAN2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026E0000",
+      "name": "Z2_KINDAN2_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026E7000",
+      "name": "Z2_KINDAN2_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026F4000",
+      "name": "Z2_KINDAN2_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "026FF000",
+      "name": "Z2_KINDAN2_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02709000",
+      "name": "Z2_KINDAN2_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0270E000",
+      "name": "Z2_KINDAN2_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02716000",
+      "name": "Z2_TENMON_DAI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0271F000",
+      "name": "Z2_TENMON_DAI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02732000",
+      "name": "Z2_TENMON_DAI_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0274B000",
+      "name": "Z2_LAST_DEKU",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0274F000",
+      "name": "Z2_LAST_DEKU_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0275D000",
+      "name": "Z2_LAST_DEKU_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02762000",
+      "name": "Z2_22DEKUCITY",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02770000",
+      "name": "Z2_22DEKUCITY_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02782000",
+      "name": "Z2_22DEKUCITY_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02791000",
+      "name": "Z2_22DEKUCITY_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "027A4000",
+      "name": "Z2_KAJIYA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "027AC000",
+      "name": "Z2_KAJIYA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "027BA000",
+      "name": "Z2_00KEIKOKU",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "027F3000",
+      "name": "Z2_00KEIKOKU_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0281C000",
+      "name": "Z2_POSTHOUSE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02826000",
+      "name": "Z2_POSTHOUSE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0282F000",
+      "name": "Z2_LABO",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0283D000",
+      "name": "Z2_LABO_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02846000",
+      "name": "Z2_DANPEI2TEST",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0284C000",
+      "name": "Z2_DANPEI2TEST_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02863000",
+      "name": "Z2_DANPEI2TEST_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02869000",
+      "name": "Z2_16GORON_HOUSE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02877000",
+      "name": "Z2_16GORON_HOUSE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02884000",
+      "name": "Z2_16GORON_HOUSE_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0288C000",
+      "name": "Z2_33ZORACITY",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0289B000",
+      "name": "Z2_33ZORACITY_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028A6000",
+      "name": "Z2_8ITEMSHOP",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028B1000",
+      "name": "Z2_8ITEMSHOP_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028BE000",
+      "name": "Z2_F01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028DB000",
+      "name": "Z2_F01_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028E9000",
+      "name": "Z2_INISIE_BS",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028EC000",
+      "name": "Z2_INISIE_BS_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "028ED000",
+      "name": "Z2_30GYOSON",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0290C000",
+      "name": "Z2_30GYOSON_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0292A000",
+      "name": "Z2_31MISAKI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02943000",
+      "name": "Z2_31MISAKI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0295B000",
+      "name": "Z2_TAKARAKUJI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0295E000",
+      "name": "Z2_TAKARAKUJI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02961000",
+      "name": "Z2_TORIDE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0296E000",
+      "name": "Z2_TORIDE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0297C000",
+      "name": "Z2_FISHERMAN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02986000",
+      "name": "Z2_FISHERMAN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0298F000",
+      "name": "Z2_GORONSHOP",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0299C000",
+      "name": "Z2_GORONSHOP_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029A6000",
+      "name": "Z2_DEKU_KING",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029B8000",
+      "name": "Z2_DEKU_KING_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029C2000",
+      "name": "Z2_LAST_GORON",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029CC000",
+      "name": "Z2_LAST_GORON_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029E2000",
+      "name": "Z2_LAST_GORON_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029E7000",
+      "name": "Z2_24KEMONOMITI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029EF000",
+      "name": "Z2_24KEMONOMITI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "029F6000",
+      "name": "Z2_F01_B",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A02000",
+      "name": "Z2_F01_B_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A0A000",
+      "name": "Z2_F01C",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A19000",
+      "name": "Z2_F01C_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A1F000",
+      "name": "Z2_BOTI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A2E000",
+      "name": "Z2_BOTI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A3B000",
+      "name": "Z2_BOTI_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A44000",
+      "name": "Z2_HAKUGIN_BS",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A4C000",
+      "name": "Z2_HAKUGIN_BS_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A53000",
+      "name": "Z2_20SICHITAI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A65000",
+      "name": "Z2_20SICHITAI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A83000",
+      "name": "Z2_20SICHITAI_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02A98000",
+      "name": "Z2_20SICHITAI_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02AA7000",
+      "name": "Z2_21MITURINMAE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02AB2000",
+      "name": "Z2_21MITURINMAE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02AC2000",
+      "name": "Z2_LAST_ZORA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02AD7000",
+      "name": "Z2_LAST_ZORA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02AE6000",
+      "name": "Z2_11GORONNOSATO2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02AED000",
+      "name": "Z2_11GORONNOSATO2_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B04000",
+      "name": "Z2_11GORONNOSATO2_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B07000",
+      "name": "Z2_SEA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B24000",
+      "name": "Z2_SEA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B33000",
+      "name": "Z2_SEA_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B3C000",
+      "name": "Z2_SEA_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B3F000",
+      "name": "Z2_SEA_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B42000",
+      "name": "Z2_SEA_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B4B000",
+      "name": "Z2_SEA_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B51000",
+      "name": "Z2_SEA_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B5D000",
+      "name": "Z2_SEA_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B63000",
+      "name": "Z2_SEA_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B6E000",
+      "name": "Z2_SEA_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B73000",
+      "name": "Z2_SEA_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B7C000",
+      "name": "Z2_SEA_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B87000",
+      "name": "Z2_SEA_room_12",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B90000",
+      "name": "Z2_SEA_room_13",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B94000",
+      "name": "Z2_SEA_room_14",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B96000",
+      "name": "Z2_SEA_room_15",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02B98000",
+      "name": "Z2_35TAKI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BB1000",
+      "name": "Z2_35TAKI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BCA000",
+      "name": "Z2_REDEAD",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BD8000",
+      "name": "Z2_REDEAD_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BDE000",
+      "name": "Z2_REDEAD_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BE7000",
+      "name": "Z2_REDEAD_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BF0000",
+      "name": "Z2_REDEAD_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02BF8000",
+      "name": "Z2_REDEAD_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C00000",
+      "name": "Z2_REDEAD_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C0A000",
+      "name": "Z2_REDEAD_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C11000",
+      "name": "Z2_REDEAD_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C18000",
+      "name": "Z2_REDEAD_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C1B000",
+      "name": "Z2_REDEAD_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C1E000",
+      "name": "Z2_REDEAD_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C21000",
+      "name": "Z2_REDEAD_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C2B000",
+      "name": "Z2_REDEAD_room_12",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C2C000",
+      "name": "Z2_REDEAD_room_13",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C2E000",
+      "name": "Z2_BANDROOM",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C3A000",
+      "name": "Z2_BANDROOM_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C4C000",
+      "name": "Z2_BANDROOM_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C58000",
+      "name": "Z2_BANDROOM_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C67000",
+      "name": "Z2_BANDROOM_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C72000",
+      "name": "Z2_BANDROOM_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C7C000",
+      "name": "Z2_11GORONNOSATO",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C82000",
+      "name": "Z2_11GORONNOSATO_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C96000",
+      "name": "Z2_11GORONNOSATO_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02C99000",
+      "name": "Z2_GORON_HAKA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CA2000",
+      "name": "Z2_GORON_HAKA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CAA000",
+      "name": "Z2_SECOM",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CB1000",
+      "name": "Z2_SECOM_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CB5000",
+      "name": "Z2_SECOM_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CC5000",
+      "name": "Z2_10YUKIYAMANOMURA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CD4000",
+      "name": "Z2_10YUKIYAMANOMURA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CE0000",
+      "name": "Z2_TOUGITES",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CE7000",
+      "name": "Z2_TOUGITES_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CEC000",
+      "name": "Z2_DANPEI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02CFD000",
+      "name": "Z2_DANPEI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D08000",
+      "name": "Z2_DANPEI_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D11000",
+      "name": "Z2_DANPEI_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D1E000",
+      "name": "Z2_DANPEI_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D28000",
+      "name": "Z2_DANPEI_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D2E000",
+      "name": "Z2_DANPEI_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D38000",
+      "name": "Z2_DANPEI_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D44000",
+      "name": "Z2_DANPEI_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D52000",
+      "name": "Z2_DANPEI_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D59000",
+      "name": "Z2_IKANAMAE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D62000",
+      "name": "Z2_IKANAMAE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D67000",
+      "name": "Z2_DOUJOU",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D6F000",
+      "name": "Z2_DOUJOU_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D76000",
+      "name": "Z2_MUSICHOUSE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D90000",
+      "name": "Z2_MUSICHOUSE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02D9D000",
+      "name": "Z2_IKNINSIDE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DA8000",
+      "name": "Z2_IKNINSIDE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DAB000",
+      "name": "Z2_IKNINSIDE_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DB3000",
+      "name": "Z2_MAP_SHOP",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DBB000",
+      "name": "Z2_MAP_SHOP_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DC1000",
+      "name": "Z2_F40",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DD6000",
+      "name": "Z2_F40_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DE2000",
+      "name": "Z2_F41",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02DF6000",
+      "name": "Z2_F41_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E02000",
+      "name": "Z2_10YUKIYAMANOMURA2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E0A000",
+      "name": "Z2_10YUKIYAMANOMURA2_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E29000",
+      "name": "Z2_10YUKIYAMANOMURA2_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E2B000",
+      "name": "Z2_14YUKIDAMANOMITI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E31000",
+      "name": "Z2_14YUKIDAMANOMITI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E36000",
+      "name": "Z2_12HAKUGINMAE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E3E000",
+      "name": "Z2_12HAKUGINMAE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E46000",
+      "name": "Z2_17SETUGEN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E50000",
+      "name": "Z2_17SETUGEN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E58000",
+      "name": "Z2_17SETUGEN2",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E61000",
+      "name": "Z2_17SETUGEN2_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E69000",
+      "name": "Z2_SEA_BS",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E6F000",
+      "name": "Z2_SEA_BS_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E75000",
+      "name": "Z2_RANDOM",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E81000",
+      "name": "Z2_RANDOM_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E84000",
+      "name": "Z2_RANDOM_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E8E000",
+      "name": "Z2_RANDOM_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E96000",
+      "name": "Z2_RANDOM_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02E9E000",
+      "name": "Z2_RANDOM_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EA2000",
+      "name": "Z2_RANDOM_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EA6000",
+      "name": "Z2_YADOYA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EB6000",
+      "name": "Z2_YADOYA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02ECF000",
+      "name": "Z2_YADOYA_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02ED8000",
+      "name": "Z2_YADOYA_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EDE000",
+      "name": "Z2_YADOYA_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EE4000",
+      "name": "Z2_YADOYA_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EEC000",
+      "name": "Z2_KONPEKI_ENT",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EF4000",
+      "name": "Z2_KONPEKI_ENT_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02EFB000",
+      "name": "Z2_INSIDETOWER",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F03000",
+      "name": "Z2_INSIDETOWER_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F13000",
+      "name": "Z2_INSIDETOWER_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F14000",
+      "name": "Z2_26SARUNOMORI",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F21000",
+      "name": "Z2_26SARUNOMORI_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F25000",
+      "name": "Z2_26SARUNOMORI_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F29000",
+      "name": "Z2_26SARUNOMORI_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F2E000",
+      "name": "Z2_26SARUNOMORI_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F31000",
+      "name": "Z2_26SARUNOMORI_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F35000",
+      "name": "Z2_26SARUNOMORI_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F38000",
+      "name": "Z2_26SARUNOMORI_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F3D000",
+      "name": "Z2_26SARUNOMORI_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F40000",
+      "name": "Z2_26SARUNOMORI_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F44000",
+      "name": "Z2_LOST_WOODS",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F54000",
+      "name": "Z2_LOST_WOODS_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F5D000",
+      "name": "Z2_LOST_WOODS_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F67000",
+      "name": "Z2_LOST_WOODS_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F69000",
+      "name": "Z2_LAST_LINK",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F71000",
+      "name": "Z2_LAST_LINK_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F75000",
+      "name": "Z2_LAST_LINK_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F78000",
+      "name": "Z2_LAST_LINK_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F7B000",
+      "name": "Z2_LAST_LINK_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F7F000",
+      "name": "Z2_LAST_LINK_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F81000",
+      "name": "Z2_LAST_LINK_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F85000",
+      "name": "Z2_LAST_LINK_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F86000",
+      "name": "Z2_LAST_LINK_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F87000",
+      "name": "Z2_SOUGEN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F92000",
+      "name": "Z2_SOUGEN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02F9A000",
+      "name": "Z2_BOMYA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FA7000",
+      "name": "Z2_BOMYA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FAF000",
+      "name": "Z2_KYOJINNOMA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FBE000",
+      "name": "Z2_KYOJINNOMA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FC0000",
+      "name": "Z2_KOEPONARACE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FCB000",
+      "name": "Z2_KOEPONARACE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FD4000",
+      "name": "Z2_GORONRACE",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FE4000",
+      "name": "Z2_GORONRACE_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "02FF2000",
+      "name": "Z2_TOWN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03011000",
+      "name": "Z2_TOWN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03029000",
+      "name": "Z2_ICHIBA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0303F000",
+      "name": "Z2_ICHIBA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0304A000",
+      "name": "Z2_BACKTOWN",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0305B000",
+      "name": "Z2_BACKTOWN_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03066000",
+      "name": "Z2_CLOCKTOWER",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03089000",
+      "name": "Z2_CLOCKTOWER_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0309D000",
+      "name": "Z2_ALLEY",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030AB000",
+      "name": "Z2_ALLEY_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030B4000",
+      "name": "Z2_OMOYA",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030C1000",
+      "name": "Z2_OMOYA_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030C2000",
+      "name": "Z2_WITCH_SHOP",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030D2000",
+      "name": "Z2_WITCH_SHOP_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030D6000",
+      "name": "Z2_WITCH_SHOP_room_01",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030DD000",
+      "name": "Z2_WITCH_SHOP_room_02",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030E0000",
+      "name": "Z2_WITCH_SHOP_room_03",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030E3000",
+      "name": "Z2_WITCH_SHOP_room_04",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030E5000",
+      "name": "Z2_WITCH_SHOP_room_05",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030E7000",
+      "name": "Z2_WITCH_SHOP_room_06",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030EA000",
+      "name": "Z2_WITCH_SHOP_room_07",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030ED000",
+      "name": "Z2_WITCH_SHOP_room_08",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030F1000",
+      "name": "Z2_WITCH_SHOP_room_09",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030F4000",
+      "name": "Z2_WITCH_SHOP_room_10",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030F6000",
+      "name": "Z2_WITCH_SHOP_room_11",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "030F9000",
+      "name": "Z2_WITCH_SHOP_room_12",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03100000",
+      "name": "Z2_WITCH_SHOP_room_13",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03104000",
+      "name": "Z2_WITCH_SHOP_room_14",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03107000",
+      "name": "Z2_LAST_BS",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0310C000",
+      "name": "Z2_LAST_BS_room_00",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "03117000",
+      "name": "bump_texture_static",
+      "type": "Unknow"
+    }
+  ]
+}

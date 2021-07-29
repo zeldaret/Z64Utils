@@ -1,0 +1,24 @@
+{
+  "version_name": "Majora\u0027s Mask USA Gamecube",
+  "version_game": "Mm",
+  "compression_method": "Yaz0",
+  "identifier": {
+    "build_team": "zelda@srd021j",
+    "build_date": "03-08-26 04:20:25"
+  },
+  "memory": {
+    "code": "800A6440",
+    "actor_table": "801AD6A0",
+    "gamestate_table": "801BBFE0",
+    "effect_table": "801ACF00",
+    "kaleido_mgr_table": "801CFDF0",
+    "fbdemo_table": "801CFE30"
+  },
+  "files": [
+    {
+      "vrom": "00B4B000",
+      "name": "code",
+      "type": "Unknow"
+    }
+  ]
+}

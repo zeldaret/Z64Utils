@@ -1,0 +1,24 @@
+{
+  "version_name": "Majora\u0027s Mask PAL 1.0",
+  "version_game": "Mm",
+  "compression_method": "Yaz0",
+  "identifier": {
+    "build_team": "zelda@srd44",
+    "build_date": "00-09-25 11:16:53"
+  },
+  "memory": {
+    "code": "800A5D60",
+    "actor_table": "801AF760",
+    "gamestate_table": "801BE0A0",
+    "effect_table": "801AEFC0",
+    "kaleido_mgr_table": "801C90B0",
+    "fbdemo_table": "801C90F0"
+  },
+  "files": [
+    {
+      "vrom": "00C8A000",
+      "name": "code",
+      "type": "Unknow"
+    }
+  ]
+}

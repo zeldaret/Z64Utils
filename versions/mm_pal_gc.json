@@ -1,0 +1,24 @@
+{
+  "version_name": "Majora\u0027s Mask PAL Gamecube",
+  "version_game": "Mm",
+  "compression_method": "Yaz0",
+  "identifier": {
+    "build_team": "zelda@srd021j",
+    "build_date": "03-10-04 00:40:20"
+  },
+  "memory": {
+    "code": "800A65A0",
+    "actor_table": "801AE0C0",
+    "gamestate_table": "801BCA00",
+    "effect_table": "801AD920",
+    "kaleido_mgr_table": "801C7A10",
+    "fbdemo_table": "801C7A50"
+  },
+  "files": [
+    {
+      "vrom": "00C99000",
+      "name": "code",
+      "type": "Unknow"
+    }
+  ]
+}

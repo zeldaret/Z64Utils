@@ -1,0 +1,24 @@
+{
+  "version_name": "Majora\u0027s Mask Japan 1.1",
+  "version_game": "Mm",
+  "compression_method": "Yaz0",
+  "identifier": {
+    "build_team": "zelda@srd44",
+    "build_date": "00-04-04 09:34:16"
+  },
+  "memory": {
+    "code": "800A75E0",
+    "actor_table": "801AA0A0",
+    "gamestate_table": "801B89E0",
+    "effect_table": "801A9570",
+    "kaleido_mgr_table": "801CB540",
+    "fbdemo_table": "801CB580"
+  },
+  "files": [
+    {
+      "vrom": "00B5F000",
+      "name": "code",
+      "type": "Unknow"
+    }
+  ]
+}
