@@ -27,10 +27,7 @@ namespace Z64.Forms
         {
             InitializeComponent();
 
-            if (segmentId > 15)
-                segmentId = 15;
-            if (segmentId < 0)
-                segmentId = 0;
+            segmentId = Math.Clamp(segmentId, 0, 15);
 
             _game = game;
             _data = data;
@@ -134,7 +131,7 @@ namespace Z64.Forms
             listView_map.Items.Clear();
             listView_map.BeginUpdate();
 
-            string compare = textBox1.Text.ToLower();
+            string compare = textBox_filter.Text.ToLower();
 
             for (int i = 0; i < _obj.Entries.Count; i++)
             {
@@ -935,7 +932,7 @@ namespace Z64.Forms
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void textBox_filter_TextChanged(object sender, EventArgs e)
         {
             UpdateMap();
         }

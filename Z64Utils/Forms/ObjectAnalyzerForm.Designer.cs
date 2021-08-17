@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "06000000",
             "-32767, -32767, -32767",
             "0xFFFF",
             "-32767, -32767",
             "255, 255, 255, 255"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "00000000",
             "cube_vtx",
             "Vertex"}, -1);
@@ -80,7 +80,7 @@
             this.disassemblySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_filter = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_text.SuspendLayout();
@@ -208,7 +208,7 @@
             this.listView_vtx.FullRowSelect = true;
             this.listView_vtx.HideSelection = false;
             this.listView_vtx.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.listView_vtx.Location = new System.Drawing.Point(6, 6);
             this.listView_vtx.Name = "listView_vtx";
             this.listView_vtx.Size = new System.Drawing.Size(619, 461);
@@ -283,7 +283,7 @@
             this.listView_map.FullRowSelect = true;
             this.listView_map.HideSelection = false;
             this.listView_map.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4});
+            listViewItem2});
             this.listView_map.Location = new System.Drawing.Point(12, 49);
             this.listView_map.MultiSelect = false;
             this.listView_map.Name = "listView_map";
@@ -459,18 +459,18 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // textBox1
+            // textBox_filter
             // 
-            this.textBox1.Location = new System.Drawing.Point(50, 27);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(321, 20);
-            this.textBox1.TabIndex = 10;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox_filter.Location = new System.Drawing.Point(56, 27);
+            this.textBox_filter.Name = "textBox_filter";
+            this.textBox_filter.Size = new System.Drawing.Size(315, 20);
+            this.textBox_filter.TabIndex = 10;
+            this.textBox_filter.TextChanged += new System.EventHandler(this.textBox_filter_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 30);
+            this.label1.Location = new System.Drawing.Point(18, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(32, 13);
             this.label1.TabIndex = 11;
@@ -482,7 +482,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1009, 528);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_filter);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.listView_map);
             this.Controls.Add(this.menuStrip1);
@@ -548,8 +548,7 @@
         private System.Windows.Forms.ToolStripMenuItem addToDlistViewerMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openSkeletonViewerMenuItem;
         private System.Windows.Forms.Label label_textureInfo;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_filter;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripMenuItem openInCollisionViewerMenuItem;
     }
 }
