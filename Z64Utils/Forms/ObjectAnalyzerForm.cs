@@ -34,9 +34,14 @@ namespace Z64.Forms
             _obj = new Z64Object(game, _data, fileName);
             _segment = segmentId;
 
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
-            tabControl1.Appearance = TabAppearance.FlatButtons;
+
+            // setup page stuff
+            tabPage_text.Text = tabPage_texture.Text = tabPage_vtx.Text = "Data";
+            tabPage_unknow.Text = "Hex";
+            _defaultTabItemSize = tabControl1.ItemSize;
+            _defaultTabSizeMode = tabControl1.SizeMode;
+            _defaultTabAppearance = tabControl1.Appearance;
+            SetTabControlVisible(false);
 
             MinimumSize = new Size(Width, Height);
 
@@ -189,6 +194,12 @@ namespace Z64.Forms
             openInCollisionViewerMenuItem.Visible = false;
             _doubleClickAction = null;
 
+
+            var provider = new DynamicByteProvider(holder.GetData()); ;
+            hexBox1.ByteProvider = provider;
+            hexBox1.LineInfoOffset = new SegmentedAddress(_segment, _obj.OffsetOf(holder)).VAddr;
+
+
             switch (holder.GetEntryType())
             {
                 case Z64Object.EntryType.DList:
@@ -197,13 +208,13 @@ namespace Z64.Forms
                         addToDlistViewerMenuItem.Visible = true;
                         _doubleClickAction = this.openDisplayList;
 
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         UpdateDisassembly();
                         break;
                     }
                 case Z64Object.EntryType.Vertex:
                     {
-                        tabControl1.SelectedTab = tabPage_vtx;
+                        SelectTabPage(tabPage_vtx);
                         var vtx = (Z64Object.VertexHolder)holder;
 
                         listView_vtx.BeginUpdate();
@@ -224,7 +235,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.Texture:
                     {
-                        tabControl1.SelectedTab = tabPage_texture;
+                        SelectTabPage(tabPage_texture);
                         var tex = (Z64Object.TextureHolder)holder;
 
                         label_textureInfo.Text = $"{tex.Width}x{tex.Height} {tex.Format}";
@@ -244,7 +255,7 @@ namespace Z64.Forms
                         openInCollisionViewerMenuItem.Visible = true;
                         _doubleClickAction = this.openCollisionHeader;
 
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var colHdr = (Z64Object.ColHeaderHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -264,7 +275,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.CollisionVertices:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var vertices = (Z64Object.CollisionVerticesHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -277,7 +288,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.CollisionPolygons:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var polygons = (Z64Object.CollisionPolygonsHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -293,7 +304,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.CollisionSurfaceTypes:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var surfaceTypes = (Z64Object.CollisionSurfaceTypesHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -306,7 +317,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.CollisionCamData:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var camData = (Z64Object.CollisionCamDataHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -324,7 +335,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.WaterBox:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var waterBoxes = (Z64Object.WaterBoxHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -347,7 +358,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimTextureIndexList:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var textureIndexList = (Z64Object.MatAnimTextureIndexListHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -361,7 +372,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimTextureList:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var textureList = (Z64Object.MatAnimTextureListHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -375,7 +386,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimHeader:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var header = (Z64Object.MatAnimHeaderHolder)holder;
                         StringWriter sw = new StringWriter();
 
@@ -401,7 +412,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimTexScrollParams:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var scrollParams = (Z64Object.MatAnimTexScrollParamsHolder)holder;
                         StringWriter sw = new StringWriter();
 
@@ -415,7 +426,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimColorParams:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var colorParams = (Z64Object.MatAnimColorParamsHolder)holder;
                         StringWriter sw = new StringWriter();
 
@@ -430,7 +441,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimPrimColors:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var primColors = (Z64Object.MatAnimPrimColorsHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -443,7 +454,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimEnvColors:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var envColors = (Z64Object.MatAnimEnvColorsHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -456,7 +467,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimKeyFrames:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var envColors = (Z64Object.MatAnimKeyFramesHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -469,7 +480,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.MatAnimTexCycleParams:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var cycleParams = (Z64Object.MatAnimTexCycleParamsHolder)holder;
                         StringWriter sw = new StringWriter();
 
@@ -482,7 +493,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.Mtx:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var matrices = (Z64Object.MtxHolder)holder;
                         StringWriter sw = new StringWriter();
                         for (int n = 0; n < matrices.Matrices.Count; n++)
@@ -508,7 +519,7 @@ namespace Z64.Forms
                     {
                         openSkeletonViewerMenuItem.Visible = true;
                         _doubleClickAction = this.openSkeletonViewer;
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var skel = (Z64Object.SkeletonHolder)holder;
                         StringWriter sw = new StringWriter();
                         sw.WriteLine($"Limbs: 0x{skel.LimbsSeg.VAddr:X8}");
@@ -520,7 +531,7 @@ namespace Z64.Forms
                     {
                         openSkeletonViewerMenuItem.Visible = true;
                         _doubleClickAction = this.openSkeletonViewer;
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var skel = (Z64Object.FlexSkeletonHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -533,7 +544,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.SkeletonLimbs:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var limbs = (Z64Object.SkeletonLimbsHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -548,7 +559,7 @@ namespace Z64.Forms
                 case Z64Object.EntryType.LODLimb:
                 case Z64Object.EntryType.SkinLimb:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var limb = (Z64Object.SkeletonLimbHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -570,7 +581,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.PlayerAnimationHeader:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var anim = (Z64Object.PlayerAnimationHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -582,7 +593,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.AnimationHeader:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var anim = (Z64Object.AnimationHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -596,7 +607,7 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.JointIndices:
                     {
-                        tabControl1.SelectedTab = tabPage_text;
+                        SelectTabPage(tabPage_text);
                         var joints = (Z64Object.AnimationJointIndicesHolder)holder;
 
                         StringWriter sw = new StringWriter();
@@ -610,15 +621,12 @@ namespace Z64.Forms
                 case Z64Object.EntryType.FrameData:
                 case Z64Object.EntryType.Unknown:
                     {
-                        tabControl1.SelectedTab = tabPage_unknow;
-
-                        var provider = new DynamicByteProvider(holder.GetData());;
-                        hexBox1.ByteProvider = provider;
-                        hexBox1.LineInfoOffset = new SegmentedAddress(_segment, _obj.OffsetOf(holder)).VAddr;
+                        SelectTabPage(tabPage_unknow);
                         break;
                     }
-                default: tabControl1.SelectedTab = tabPage_empty; break;
+                default: SelectTabPage(tabPage_empty); break;
             }
+
             listView_map.Focus();
         }
 

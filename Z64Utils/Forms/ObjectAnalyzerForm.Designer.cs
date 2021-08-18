@@ -547,6 +547,7 @@
         private System.Windows.Forms.ToolStripMenuItem openInDlistViewerMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addToDlistViewerMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openSkeletonViewerMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openInCollisionViewerMenuItem;
         private System.Windows.Forms.Label label_textureInfo;
         private System.Windows.Forms.TextBox textBox_filter;
         private System.Windows.Forms.Label label1;
