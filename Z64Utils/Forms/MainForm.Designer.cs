@@ -66,6 +66,7 @@ namespace Z64.Forms
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.objectAnalyzerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.contextMenuStrip_fs.SuspendLayout();
@@ -286,7 +287,8 @@ namespace Z64.Forms
             this.openObjectToolStripMenuItem,
             this.f3DEXDisassemblerToolStripMenuItem,
             this.ROMRAMConversionsToolStripMenuItem,
-            this.textureViewerToolStripMenuItem});
+            this.textureViewerToolStripMenuItem,
+            this.objectAnalyzerToolStripMenuItem});
             this.toolsToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolsToolStripButton.Name = "toolsToolStripButton";
             this.toolsToolStripButton.Size = new System.Drawing.Size(47, 22);
@@ -350,6 +352,13 @@ namespace Z64.Forms
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // objectAnalyzerToolStripMenuItem
+            // 
+            this.objectAnalyzerToolStripMenuItem.Name = "objectAnalyzerToolStripMenuItem";
+            this.objectAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.objectAnalyzerToolStripMenuItem.Text = "Object Analyzer";
+            this.objectAnalyzerToolStripMenuItem.Click += new System.EventHandler(this.objectAnalyzerToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -410,6 +419,7 @@ namespace Z64.Forms
         private System.Windows.Forms.ToolStripDropDownButton toolsToolStripButton;
         private System.Windows.Forms.ToolStripDropDownButton helpToolStripButton;
         private System.Windows.Forms.ToolStripMenuItem romExportNamesItem;
+        private System.Windows.Forms.ToolStripMenuItem objectAnalyzerToolStripMenuItem;
     }
 }
 

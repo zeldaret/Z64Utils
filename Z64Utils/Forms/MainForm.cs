@@ -264,6 +264,25 @@ namespace Z64.Forms
                 SystemSounds.Asterisk.Play();
             }
         }
+
+        private void OpenObjectViewerForExternalFile(byte[] data)
+        {
+            var valueForm = new EditValueForm("Choose Segment", "Plase enter a segment id.", (v) =>
+            {
+                return (int.TryParse(v, out int ret) && ret >= 0 && ret < 16)
+                ? null
+                : "Segment ID must be a value between 0 and 15";
+            }, "6");
+
+            if (valueForm.ShowDialog() == DialogResult.OK)
+            {
+                var form = new ObjectAnalyzerForm(_game, data, int.Parse(valueForm.Result));
+                form.Text += "External file";
+                form.Show();
+            }
+        }
+
+
         private void OpenObjectViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView_files.SelectedIndices.Count != 1)
@@ -281,7 +300,6 @@ namespace Z64.Forms
                 MessageBox.Show("Deleted File");
                 return;
             }
-
 
             string defaultValue = null;
             string fileName = _game.GetFileName(file.VRomStart).ToLower();
@@ -372,5 +390,16 @@ namespace Z64.Forms
                 MessageBox.Show("No new release available.");
         }
 
+        private void objectAnalyzerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var OF = new OpenFileDialog();
+            DialogResult DR = OF.ShowDialog();
+
+            if (DR == DialogResult.OK)
+            {
+                byte[] b = File.ReadAllBytes(OF.FileName);
+                OpenObjectViewerForExternalFile(b);
+            }
+        }
     }
 }
