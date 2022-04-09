@@ -46,9 +46,12 @@ namespace Z64.Forms
             this.label_anim = new System.Windows.Forms.Label();
             this.button_playAnim = new System.Windows.Forms.Button();
             this.button_playbackAnim = new System.Windows.Forms.Button();
+            this.numUpDown_playbackSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label_playbackSpeed = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_anim)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDown_playbackSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // modelViewer
@@ -173,7 +176,7 @@ namespace Z64.Forms
             this.trackBar_anim.Enabled = false;
             this.trackBar_anim.Location = new System.Drawing.Point(86, 557);
             this.trackBar_anim.Name = "trackBar_anim";
-            this.trackBar_anim.Size = new System.Drawing.Size(608, 45);
+            this.trackBar_anim.Size = new System.Drawing.Size(493, 45);
             this.trackBar_anim.TabIndex = 12;
             this.trackBar_anim.ValueChanged += new System.EventHandler(this.trackBar_anim_ValueChanged);
             // 
@@ -215,11 +218,45 @@ namespace Z64.Forms
             this.button_playbackAnim.UseVisualStyleBackColor = true;
             this.button_playbackAnim.Click += new System.EventHandler(this.button_playbackAnim_Click);
             // 
+            // numUpDown_playbackSpeed
+            // 
+            this.numUpDown_playbackSpeed.Location = new System.Drawing.Point(585, 566);
+            this.numUpDown_playbackSpeed.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numUpDown_playbackSpeed.Minimum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numUpDown_playbackSpeed.Name = "numUpDown_playbackSpeed";
+            this.numUpDown_playbackSpeed.Size = new System.Drawing.Size(111, 20);
+            this.numUpDown_playbackSpeed.TabIndex = 16;
+            this.numUpDown_playbackSpeed.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numUpDown_playbackSpeed.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // label_playbackSpeed
+            // 
+            this.label_playbackSpeed.AutoSize = true;
+            this.label_playbackSpeed.Location = new System.Drawing.Point(585, 550);
+            this.label_playbackSpeed.Name = "label_playbackSpeed";
+            this.label_playbackSpeed.Size = new System.Drawing.Size(86, 13);
+            this.label_playbackSpeed.TabIndex = 17;
+            this.label_playbackSpeed.Text = "Playback speed:";
+            // 
             // SkeletonViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(706, 617);
+            this.Controls.Add(this.label_playbackSpeed);
+            this.Controls.Add(this.numUpDown_playbackSpeed);
             this.Controls.Add(this.button_playbackAnim);
             this.Controls.Add(this.button_playAnim);
             this.Controls.Add(this.label_anim);
@@ -240,6 +277,7 @@ namespace Z64.Forms
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_anim)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDown_playbackSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -263,5 +301,7 @@ namespace Z64.Forms
         private System.Windows.Forms.Label label_anim;
         private System.Windows.Forms.Button button_playAnim;
         private System.Windows.Forms.Button button_playbackAnim;
+        private System.Windows.Forms.NumericUpDown numUpDown_playbackSpeed;
+        private System.Windows.Forms.Label label_playbackSpeed;
     }
 }

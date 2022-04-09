@@ -38,7 +38,7 @@ namespace Z64.Forms
         DisasmForm _disasForm;
         SettingsForm _settingsForm;
         F3DZEX.Render.Renderer.Config _rendererCfg;
-        
+
         SkeletonHolder _skel;
         List<AnimationHolder> _anims;
         List<SkeletonLimbHolder> _limbs;
@@ -61,6 +61,7 @@ namespace Z64.Forms
 
             _timer = new System.Timers.Timer();
             _timer.Elapsed += Timer_Elapsed;
+            _timer.Interval = (int)numUpDown_playbackSpeed.Value;
 
 
             if ((Control.ModifierKeys & Keys.Control) == 0)
@@ -71,7 +72,8 @@ namespace Z64.Forms
 
             NewRender();
 
-            FormClosing += (s, e) => {
+            FormClosing += (s, e) =>
+            {
                 if (_timer.Enabled && !_formClosing)
                 {
                     _formClosing = true;
@@ -87,36 +89,41 @@ namespace Z64.Forms
             _renderer.RdpMtxStack.Push();
 
 
-            if (_curAnim != null)
+
+            _renderer.RdpMtxStack.Load(CalcMatrix(_renderer.RdpMtxStack.Top(), limbIdx));
+
+            if (overlay)
             {
-                _renderer.RdpMtxStack.Load(CalcMatrix(_renderer.RdpMtxStack.Top(), limbIdx));
+                GL.Begin(PrimitiveType.Points);
+                GL.Vertex3(0, 0, 0);
+                GL.End();
 
-                if (overlay)
+                if (_limbs[limbIdx].Child != 0xFF)
                 {
-                    GL.Begin(PrimitiveType.Points);
+                    Vector3 childPos;
+
+                    if (_curAnim != null)
+                        childPos = GetLimbPos(_limbs[limbIdx].Child);
+                    else
+                        childPos = new Vector3(0, 0, 0);
+
+                    GL.Begin(PrimitiveType.Lines);
                     GL.Vertex3(0, 0, 0);
+                    GL.Vertex3(childPos);
                     GL.End();
-
-                    if (_limbs[limbIdx].Child != 0xFF)
-                    {
-                        Vector3 childPos = GetLimbPos(_limbs[limbIdx].Child);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(0, 0, 0);
-                        GL.Vertex3(childPos);
-                        GL.End();
-                    }
                 }
-                else
-                {
-                    var node = treeView_hierarchy.SelectedNode;
-                    _renderer.SetHightlightEnabled(node?.Tag?.Equals(_limbs[limbIdx]) ?? false);
-
-                    if (_limbDlists[limbIdx] != null)
-                        _renderer.RenderDList(_limbDlists[limbIdx]);
-                }
-
-
             }
+            else
+            {
+                var node = treeView_hierarchy.SelectedNode;
+                _renderer.SetHightlightEnabled(node?.Tag?.Equals(_limbs[limbIdx]) ?? false);
+
+                if (_limbDlists[limbIdx] != null)
+                    _renderer.RenderDList(_limbDlists[limbIdx]);
+            }
+
+
+
 
             if (_limbs[limbIdx].Child != 0xFF)
                 RenderLimb(_limbs[limbIdx].Child, overlay);
@@ -168,17 +175,9 @@ namespace Z64.Forms
         private void NewRender(object sender = null, EventArgs e = null)
         {
             _renderer.ClearErrors();
-
             toolStripErrorLabel.Text = "";
-
             modelViewer.Render();
-
         }
-
-
-
-
-
 
         public void SetSkeleton(SkeletonHolder skel, List<AnimationHolder> anims)
         {
@@ -217,7 +216,7 @@ namespace Z64.Forms
         // Updates skeleton -> limbs / limbs dlists -> matrices
         void UpdateSkeleton()
         {
-            treeView_hierarchy.Nodes.Clear(); 
+            treeView_hierarchy.Nodes.Clear();
             var root = treeView_hierarchy.Nodes.Add("skeleton");
             root.Tag = _skel;
 
@@ -274,10 +273,10 @@ namespace Z64.Forms
         void UpdateAnim()
         {
             trackBar_anim.Minimum = 0;
-            trackBar_anim.Maximum = _curAnim.FrameCount-1;
+            trackBar_anim.Maximum = _curAnim.FrameCount - 1;
             trackBar_anim.Value = 0;
 
-            byte[] buff = _renderer.Memory.ReadBytes(_curAnim.JointIndices, (_limbs.Count+1) * AnimationJointIndicesHolder.ENTRY_SIZE);
+            byte[] buff = _renderer.Memory.ReadBytes(_curAnim.JointIndices, (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE);
             _curJoints = new AnimationJointIndicesHolder("joints", buff).JointIndices;
 
             int max = 0;
@@ -288,7 +287,7 @@ namespace Z64.Forms
                 max = Math.Max(max, joint.Z);
             }
 
-            buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, (max < _curAnim.StaticIndexMax ? max+1 : _curAnim.FrameCount+max) * 2);
+            buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2);
             _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
 
             UpdateMatrixBuf();
@@ -513,6 +512,15 @@ namespace Z64.Forms
                 button_playAnim.BackgroundImage = Properties.Resources.pause_icon;
                 button_playbackAnim.BackgroundImage = Properties.Resources.playback_icon;
             }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            _timer.Interval = (int)numUpDown_playbackSpeed.Value;
+            _playState = PlayState.Pause;
+            button_playAnim.BackgroundImage = Properties.Resources.play_icon;
+            button_playbackAnim.BackgroundImage = Properties.Resources.playback_icon;
         }
     }
 }
