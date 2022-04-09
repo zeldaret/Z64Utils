@@ -62,6 +62,13 @@ namespace Z64.Forms
             _timer = new System.Timers.Timer();
             _timer.Elapsed += Timer_Elapsed;
 
+
+            if ((Control.ModifierKeys & Keys.Control) == 0)
+            {
+                for (int i = 8; i < 15; i++)
+                    _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+            }
+
             NewRender();
 
             FormClosing += (s, e) => {

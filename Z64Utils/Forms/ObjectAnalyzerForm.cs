@@ -43,6 +43,9 @@ namespace Z64.Forms
             MinimumSize = new Size(Width, Height);
 
             UpdateMap();
+
+            findDlistsToolStripMenuItem_Click(null, null);
+            analyzeDlistsToolStripMenuItem_Click(null, null);
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -304,7 +307,7 @@ namespace Z64.Forms
         private void findDlistsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = new AnalyzerSettingsForm();
-            if (form.ShowDialog() == DialogResult.OK)
+            if ((Control.ModifierKeys & Keys.Control) == 0 || form.ShowDialog() == DialogResult.OK)
             {
                 Z64ObjectAnalyzer.FindDlists(_obj, _data, _segment, form.Result);
                 UpdateMap();
@@ -313,7 +316,7 @@ namespace Z64.Forms
         private void analyzeDlistsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var errors = Z64ObjectAnalyzer.AnalyzeDlists(_obj, _data, _segment);
-            if (errors.Count > 0)
+            if ((Control.ModifierKeys & Keys.Control) != 0 && errors.Count > 0)
             {
                 StringWriter sw = new StringWriter();
                 errors.ForEach(error => sw.WriteLine(error));
