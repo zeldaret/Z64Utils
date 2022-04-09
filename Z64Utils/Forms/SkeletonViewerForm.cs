@@ -66,7 +66,7 @@ namespace Z64.Forms
 
             if ((Control.ModifierKeys & Keys.Control) == 0)
             {
-                for (int i = 8; i < 15; i++)
+                for (int i = 8; i < 16; i++)
                     _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
             }
 
