@@ -101,13 +101,21 @@ namespace Z64.Forms
         {
             listView_map.Items.Clear();
             listView_map.BeginUpdate();
-            foreach (var entry in _obj.Entries)
+
+            string compare = textBox1.Text.ToLower();
+
+            for (int i = 0; i < _obj.Entries.Count; i++)
             {
-                if (entry.Name.ToUpper().Contains(textBox1.Text.ToUpper()))
+                var entry = _obj.Entries[i];
+                string addrStr = $"{new SegmentedAddress(_segment, _obj.OffsetOf(entry)).VAddr:X8}";
+                string entryStr = $"{addrStr}{entry.Name}{entry.GetEntryType()}".ToLower();
+
+                if (entryStr.Contains(compare))
                 {
-                    var item = listView_map.Items.Add($"{new SegmentedAddress(_segment, _obj.OffsetOf(entry)).VAddr:X8}");
+                    var item = listView_map.Items.Add(addrStr);
                     item.SubItems.Add(entry.Name);
                     item.SubItems.Add(entry.GetEntryType().ToString());
+                    item.Tag = i;
                 }
             }
             listView_map.EndUpdate();
@@ -121,6 +129,8 @@ namespace Z64.Forms
             int idx = listView_map.SelectedIndices[0];
             if (idx >= _obj.Entries.Count || idx < 0)
                 return null;
+
+            idx = (int)listView_map.Items[idx].Tag;
 
             return (typeof(T) == typeof(Z64Object.ObjectHolder) || typeof(T) == _obj.Entries[idx].GetType())
                 ? (T)_obj.Entries[idx]

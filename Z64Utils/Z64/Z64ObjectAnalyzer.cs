@@ -393,8 +393,9 @@ namespace Z64
         {
             // Search for Animation Headers
             // Structure: FF FF 00 00 SS OO OO OO SS OO OO OO II II 00 00
-            for (int i = 0; i < data.Length - Z64Object.AnimationHolder.HEADER_SIZE; i += 4)
+            for (int i = 0; i < data.Length - (Z64Object.AnimationHolder.HEADER_SIZE - 2); i += 4)
             {
+   
                 var frameCount = ArrayUtil.ReadInt16BE(data, i);
                 // check positive nonzero frame count, check struct padding zeroes
                 if (frameCount > 0 &&
