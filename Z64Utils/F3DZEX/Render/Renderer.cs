@@ -183,19 +183,31 @@ namespace F3DZEX.Render
                 d.a2 = combine.Ad1;
             }
 
-            public bool UsesTex1()
+            public bool UsesTex0()
             {
-                int i = 0;
-                while (i < 4 && 
-                    this[i].a1 != G_ACMUX.G_ACMUX_TEXEL1 &&
-                    this[i].a2 != G_ACMUX.G_ACMUX_TEXEL1 &&
-                    this[i].c1 != G_CCMUX.G_CCMUX_TEXEL1 && 
-                    this[i].c1 != G_CCMUX.G_CCMUX_TEXEL1)
+                for (int i = 0; i < 4; i++)
                 {
-                    i++;
+                    if (this[i].a1 == G_ACMUX.G_ACMUX_TEXEL0 ||
+                        this[i].a2 == G_ACMUX.G_ACMUX_TEXEL0 ||
+                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL0 ||
+                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL0)
+                        return true;
                 }
 
-                return i < 4;
+                return false;
+            }
+
+            public bool UsesTex1()
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (this[i].a1 == G_ACMUX.G_ACMUX_TEXEL1 ||
+                        this[i].a2 == G_ACMUX.G_ACMUX_TEXEL1 ||
+                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL1 ||
+                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL1)
+                        return true;
+                }
+                return false;
             }
         }
 
@@ -242,17 +254,7 @@ namespace F3DZEX.Render
         public MatrixStack ModelMtxStack { get; }
 
 
-        //G_IM_SIZ _loadTexSiz;
-        //G_IM_FMT _renderTexFmt;
-        //G_IM_SIZ _renderTexSiz;
         uint _curImgAddr;
-        //byte[] _loadTexData;
-        //byte[] _renderTexData;
-        //byte[] _curTLUT;
-        //int _curTexW;
-        //int _curTexH;
-        //bool _mirrorV;
-        //bool _mirrorH;
         bool _reqDecodeTex = false;
         Tile[] _tiles = new Tile[8];
         byte[] _tmem = new byte[0x1000];
@@ -488,19 +490,23 @@ namespace F3DZEX.Render
             {
                 //Debug.WriteLine($"Decoding texture... {TexDecodeCount++}");
 
-                var tile0 = _tiles[_selectedTile];
-                var tile1 =  _combiner.UsesTex1() ? _tiles[_selectedTile + 1] : null;
+                var tile0 = _combiner.UsesTex0() ? _tiles[_selectedTile + 0] : null;
+                var tile1 = _combiner.UsesTex1() ? _tiles[_selectedTile + 1] : null;
 
 
                 byte[] tlut = null;
-                if (tile0.fmt == G_IM_FMT.G_IM_FMT_CI || (tile1 != null && tile1.fmt == G_IM_FMT.G_IM_FMT_CI))
+                if ((tile0 != null && tile0.fmt == G_IM_FMT.G_IM_FMT_CI) || (tile1 != null && tile1.fmt == G_IM_FMT.G_IM_FMT_CI))
                 {
                     tlut = new byte[_tlutSize];
                     System.Buffer.BlockCopy(_tmem, _tlutTmem, tlut, 0, tlut.Length);
                 }
 
-                DecodeTex(_tex0, tile0, tlut);
-                if (tile1 != null)
+
+                if (tile0 != null && tile0.on)
+                    DecodeTex(_tex0, tile0, tlut);
+                
+                // todo: handle hilite correctly
+                if (tile1 != null && tile1.on)
                     DecodeTex(_tex1, tile1, tlut);
 
                 _reqDecodeTex = false;
@@ -508,9 +514,6 @@ namespace F3DZEX.Render
                 _rdpVtxDrawer.SendTile(0, _tiles[0]);
                 _rdpVtxDrawer.SendTile(1, _tiles[1]);
             }
-
-            // _rdpVtxDrawer.SendTex0(0);
-            // _rdpVtxDrawer.SendTex1(1);
         }
 
         private unsafe void ProcessInstruction(CmdInfo info)

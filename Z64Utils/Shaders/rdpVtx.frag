@@ -292,13 +292,13 @@ vec4 blendCycle(vec4 x, bool first, float shadeAlpha)
             b = 1.0 - a;
             break;
         case G_BL_A_MEM :
-            b = 0; // todo
+            b = 0.; // todo
             break;
         case G_BL_1:
-            a = 1;
+            a = 1.;
             break;
         case G_BL_0:
-            a = 0;
+            a = 0.;
             break;
     }
     
@@ -422,9 +422,9 @@ float combineAlphaAny(vec4 x, int flag, float shadeAlpha)
         case G_ACMUX_ENVIRONMENT:
             return u_RdpState.color.env.a;
         case G_ACMUX_0:
-            return 0;
+            return 0.;
     }
-    return 0;
+    return 0.;
 }
 
 float combineAlphaABD(vec4 x, int flag, float shadeAlpha)
@@ -435,7 +435,7 @@ float combineAlphaABD(vec4 x, int flag, float shadeAlpha)
         case G_ACMUX_COMBINED:
             return x.a;
         case G_ACMUX_1:
-            return 1;
+            return 1.;
     }
     return ret;
 }
@@ -446,7 +446,7 @@ float combineAlphaC(vec4 x, int flag, float shadeAlpha)
     switch (flag)
     {
         case G_ACMUX_LOD_FRACTION:
-            //return 0;
+            //return 0.;
             return u_RdpState.color.primLod;
         // G_ACMUX_PRIM_LOD_FRAC 
     }
@@ -519,7 +519,7 @@ vec4 debugDepth(vec4 color)
 {
     float z = gl_FragCoord.z;
     z -= 0.999;
-    z *= 1000;
+    z *= 1000.;
     z -= 0.4;
     return color * vec4(vec3(z), 1.0);
 }

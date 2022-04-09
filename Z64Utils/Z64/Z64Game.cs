@@ -306,23 +306,41 @@ namespace Z64
             _files = new List<Z64File>();
             int filecount = 3; //dmadata file
 
+            DateTime lastProgressUpdate = DateTime.Now - new TimeSpan(1, 0, 0); // one hour ago
+            int lastprogressI = 0;
+
             for (int i = 0; i < filecount; i++)
             {
                 DmadataEntry entry = new DmadataEntry(br);
 
-                if (i <= 2)
-                    progressCalback?.Invoke(0, $"Processing files... [{i}/?] \"{GetFileName(entry.VRomStart)}\"");
-                else
-                    progressCalback?.Invoke((float)i / filecount, $"Processing files... [{i}/{filecount}] \"{GetFileName(entry.VRomStart)}\"");
+                DateTime now = DateTime.Now;
+                // only update progress if 10% of the files were processed,
+                // or 100 milliseconds elapsed, since the last progress update
+                if (((float)(i - lastprogressI) / filecount) > 0.1
+                    || (now - lastProgressUpdate).TotalMilliseconds > 100)
+                {
+                    if (i <= 2)
+                        progressCalback?.Invoke(0, $"Processing files... [{i}/?] \"{GetFileName(entry.VRomStart)}\"");
+                    else
+                        progressCalback?.Invoke((float)i / filecount, $"Processing files... [{i}/{filecount}] \"{GetFileName(entry.VRomStart)}\"");
+                    lastProgressUpdate = now;
+                    lastprogressI = i;
+                }
+
                 var file = entry.ToFile(this);
                 _files.Add(file);
                 if (entry.Valid() && entry.Exist())
                 {
                     if (i == 2) //dmadata
+                    {
                         filecount = file.Data.Length / 0x10;
 
+                        lastprogressI = -filecount; // force a progress update
+                    }
                 }
             }
+
+            progressCalback?.Invoke(1, $"Done processing {filecount} files.");
         }
 
     }

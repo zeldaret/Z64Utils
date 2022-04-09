@@ -50,7 +50,7 @@ namespace N64
                 case N64TexFormat.I4: return new Tuple<G_IM_FMT, G_IM_SIZ>(G_IM_FMT.G_IM_FMT_I, G_IM_SIZ.G_IM_SIZ_4b);
                 case N64TexFormat.CI8: return new Tuple<G_IM_FMT, G_IM_SIZ>(G_IM_FMT.G_IM_FMT_CI, G_IM_SIZ.G_IM_SIZ_8b);
                 case N64TexFormat.CI4: return new Tuple<G_IM_FMT, G_IM_SIZ>(G_IM_FMT.G_IM_FMT_CI, G_IM_SIZ.G_IM_SIZ_4b);
-                default: throw new N64TextureException("Invalid Format");
+                default: throw new N64TextureException($"Invalid Texture Format : {format}");
             }
         }
         public static N64TexFormat ConvertFormat(G_IM_FMT fmt, G_IM_SIZ siz)
@@ -62,7 +62,7 @@ namespace N64
                     {
                         case G_IM_SIZ.G_IM_SIZ_16b: return N64TexFormat.RGBA16;
                         case G_IM_SIZ.G_IM_SIZ_32b: return N64TexFormat.RGBA32;
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_YUV:
                 case G_IM_FMT.G_IM_FMT_CI:
@@ -70,7 +70,7 @@ namespace N64
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b: return N64TexFormat.CI4;
                         case G_IM_SIZ.G_IM_SIZ_8b: return N64TexFormat.CI8;
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_IA:
                     switch (siz)
@@ -78,17 +78,17 @@ namespace N64
                         case G_IM_SIZ.G_IM_SIZ_4b: return N64TexFormat.IA4;
                         case G_IM_SIZ.G_IM_SIZ_8b: return N64TexFormat.IA8;
                         case G_IM_SIZ.G_IM_SIZ_16b: return N64TexFormat.IA16;
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_I:
                     switch (siz)
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b: return N64TexFormat.I4;
                         case G_IM_SIZ.G_IM_SIZ_8b: return N64TexFormat.I8;
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 default:
-                    throw new N64TextureException("Invalid Format");
+                    throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
             }
         }
 
@@ -100,7 +100,7 @@ namespace N64
                 case G_IM_SIZ.G_IM_SIZ_8b: return texels;
                 case G_IM_SIZ.G_IM_SIZ_16b: return texels * 2;
                 case G_IM_SIZ.G_IM_SIZ_32b: return texels * 4;
-                default: throw new N64TextureException("Invalid Size");
+                default: throw new N64TextureException($"Invalid Texture Size : size={siz}");
             }
         }
         public static int GetTexSize(int texels, N64TexFormat format)
@@ -141,7 +141,7 @@ namespace N64
                     {
                         case G_IM_SIZ.G_IM_SIZ_16b: return DecodeRgba16(texels, buff);
                         case G_IM_SIZ.G_IM_SIZ_32b: return DecodeRgba32(texels, buff);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_YUV:
                 case G_IM_FMT.G_IM_FMT_CI:
@@ -149,7 +149,7 @@ namespace N64
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b: return DecodeCI4(texels, buff, tlut);
                         case G_IM_SIZ.G_IM_SIZ_8b: return DecodeCI8(texels, buff, tlut);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_IA:
                     switch (siz)
@@ -157,17 +157,17 @@ namespace N64
                         case G_IM_SIZ.G_IM_SIZ_4b: return DecodeIA4(texels, buff);
                         case G_IM_SIZ.G_IM_SIZ_8b: return DecodeIA8(texels, buff);
                         case G_IM_SIZ.G_IM_SIZ_16b: return DecodeIA16(texels, buff);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_I:
                     switch (siz)
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b: return DecodeI4(texels, buff);
                         case G_IM_SIZ.G_IM_SIZ_8b: return DecodeI8(texels, buff);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 default:
-                    throw new N64TextureException("Invalid Format");
+                    throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
             }
         }
 
@@ -203,7 +203,7 @@ namespace N64
                     {
                         case G_IM_SIZ.G_IM_SIZ_16b: return EncodeRgba16(rgba);
                         case G_IM_SIZ.G_IM_SIZ_32b: return EncodeRgba32(rgba);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_YUV:
                 case G_IM_FMT.G_IM_FMT_CI:
@@ -222,14 +222,14 @@ namespace N64
                         case G_IM_SIZ.G_IM_SIZ_4b: return EncodeIA4(rgba);
                         case G_IM_SIZ.G_IM_SIZ_8b: return EncodeIA8(rgba);
                         case G_IM_SIZ.G_IM_SIZ_16b: return EncodeIA16(rgba);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 case G_IM_FMT.G_IM_FMT_I:
                     switch (siz)
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b: return EncodeI4(rgba);
                         case G_IM_SIZ.G_IM_SIZ_8b: return EncodeI8(rgba);
-                        default: throw new N64TextureException("Invalid Size");
+                        default: throw new N64TextureException($"Invalid Texture Format: fmt={fmt}; size={siz}");
                     }
                 default:
                     throw new N64TextureException("Invalid Format");
@@ -239,7 +239,7 @@ namespace N64
         private static byte[] DecodeRgba16(int texels, byte[] inBuff)
         {
             if (inBuff.Length != texels * 2)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
             //5551
@@ -258,7 +258,7 @@ namespace N64
         private static byte[] DecodeRgba32(int texels, byte[] inBuff)
         {
             if (inBuff.Length != texels * 4)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             return inBuff;
         }
@@ -266,7 +266,7 @@ namespace N64
         private static byte[] DecodeI4(int texels, byte[] inBuff)
         {
             if (inBuff.Length * 2 != texels)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
 
@@ -292,7 +292,7 @@ namespace N64
         private static byte[] DecodeI8(int texels, byte[] inBuff)
         {
             if (inBuff.Length != texels)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
             for (int t = 0; t < texels; t++)
@@ -311,7 +311,7 @@ namespace N64
         private static byte[] DecodeIA4(int texels, byte[] inBuff)
         {
             if (inBuff.Length * 2 != texels)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
 
@@ -339,7 +339,7 @@ namespace N64
         private static byte[] DecodeIA8(int texels, byte[] inBuff)
         {
             if (texels != inBuff.Length)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
 
@@ -359,7 +359,7 @@ namespace N64
         private static byte[] DecodeIA16(int texels, byte[] inBuff)
         {
             if (inBuff.Length != texels * 2)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
 
@@ -379,7 +379,7 @@ namespace N64
         private static byte[] DecodeCI4(int texels, byte[] inBuff, byte[] tlut)
         {
             if (texels != inBuff.Length * 2)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
             for (int t = 0; t < inBuff.Length; t++)
@@ -406,7 +406,7 @@ namespace N64
         private static byte[] DecodeCI8(int texels, byte[] inBuff, byte[] tlut)
         {
             if (texels != inBuff.Length)
-                throw new N64TextureException("Invalid Buffer Size");
+                throw new N64TextureException($"Invalid Buffer Size for {texels} texels");
 
             byte[] ret = new byte[texels * 4];
             for (int t = 0; t < texels; t++)
