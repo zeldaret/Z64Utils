@@ -74,8 +74,7 @@ namespace Z64.Forms
             {
                 for (int i = 8; i < 16; i++)
                 {
-                    if (i != 13 || _skel is SkeletonHolder)
-                        _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
                 }
             }
 
@@ -434,7 +433,8 @@ namespace Z64.Forms
                 _segForm.SegmentsChanged += (sender, seg) =>
                 {
                     int idx = (int)sender;
-                    if (idx == 0xD)
+
+                    if (idx == 0xD && _skel is FlexSkeletonHolder)
                         MessageBox.Show("Error", "Cannot set segment 13 (reserved for animation matrices)");
                     else
                     {

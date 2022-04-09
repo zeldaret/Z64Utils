@@ -103,9 +103,12 @@ namespace Z64.Forms
             listView_map.BeginUpdate();
             foreach (var entry in _obj.Entries)
             {
-                var item = listView_map.Items.Add($"{new SegmentedAddress(_segment, _obj.OffsetOf(entry)).VAddr:X8}");
-                item.SubItems.Add(entry.Name);
-                item.SubItems.Add(entry.GetEntryType().ToString());
+                if (entry.Name.ToUpper().Contains(textBox1.Text.ToUpper()))
+                {
+                    var item = listView_map.Items.Add($"{new SegmentedAddress(_segment, _obj.OffsetOf(entry)).VAddr:X8}");
+                    item.SubItems.Add(entry.Name);
+                    item.SubItems.Add(entry.GetEntryType().ToString());
+                }
             }
             listView_map.EndUpdate();
         }
@@ -570,6 +573,11 @@ namespace Z64.Forms
 
                 File.WriteAllText(saveFileDialog1.FileName, sw.ToString());
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            UpdateMap();
         }
     }
 }
