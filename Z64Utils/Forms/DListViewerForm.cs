@@ -72,6 +72,18 @@ namespace Z64.Forms
 
             _routines = new List<RenderRoutine>();
             DecodeDlists();
+
+
+            if ((Control.ModifierKeys & Keys.Control) == 0)
+            {
+                for (int i = 8; i < 16; i++)
+                {
+                    if (i != 13)
+                        _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                }
+            }
+
+
             NewRender();
         }
 
@@ -140,7 +152,7 @@ namespace Z64.Forms
                 Instance.Activate();
             }
         }
-        
+
         public void SetSegment(int index, F3DZEX.Memory.Segment segment)
         {
             if (index >= 0 && index < F3DZEX.Memory.Segment.COUNT)
@@ -310,7 +322,7 @@ namespace Z64.Forms
 
         private string IsInputValid(string input)
         {
-            string err ="Invalid format, must be \"<address in hex>(; <x>; <y>; <z>)\"";
+            string err = "Invalid format, must be \"<address in hex>(; <x>; <y>; <z>)\"";
 
             var parts = input.Replace(" ", "").Split(";");
             if (parts.Length != 1 && parts.Length != 4)
@@ -380,7 +392,7 @@ namespace Z64.Forms
                     NewRender();
                 }
             }
-            
+
         }
 
 
