@@ -380,6 +380,8 @@ namespace Z64
             public SegmentedAddress JointIndices { get; set; }
             public ushort StaticIndexMax { get; set; }
 
+            public bool extAnim { get; set; }
+
             public AnimationHolder(string name, byte[] data) : base(name)
             {
                 SetData(data);

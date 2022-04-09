@@ -18,7 +18,7 @@ namespace Z64.Forms
     public partial class ObjectAnalyzerForm : MicrosoftFontForm
     {
         byte[] _data;
-        Z64Object _obj;
+        public Z64Object _obj;
         int _segment;
         Z64Game _game;
 
@@ -350,7 +350,7 @@ namespace Z64.Forms
                                 anims.Add((Z64Object.AnimationHolder)e);
                         });
 
-                        SkeletonViewerForm form = new SkeletonViewerForm(_game);
+                        SkeletonViewerForm form = new SkeletonViewerForm(_game, _segment);
                         form.SetSegment(_segment, F3DZEX.Memory.Segment.FromBytes("[Current Object]", _data));
                         form.SetSkeleton(skel, anims);
                         form.Show();
@@ -366,7 +366,7 @@ namespace Z64.Forms
                                 anims.Add((Z64Object.AnimationHolder)e);
                         });
 
-                        SkeletonViewerForm form = new SkeletonViewerForm(_game);
+                        SkeletonViewerForm form = new SkeletonViewerForm(_game, _segment);
                         form.SetSegment(_segment, F3DZEX.Memory.Segment.FromBytes("[Current Object]", _data));
                         form.SetSkeleton(skel, anims);
                         form.Show();

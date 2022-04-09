@@ -168,6 +168,7 @@ namespace Z64.Forms
             this.listBox_anims.Size = new System.Drawing.Size(172, 212);
             this.listBox_anims.TabIndex = 11;
             this.listBox_anims.SelectedIndexChanged += new System.EventHandler(this.listBox_anims_SelectedIndexChanged);
+            this.listBox_anims.DoubleClick += new System.EventHandler(this.listBox_anims_DoubleClick);
             // 
             // trackBar_anim
             // 

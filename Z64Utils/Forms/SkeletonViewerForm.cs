@@ -48,10 +48,16 @@ namespace Z64.Forms
         short[] _frameData;
         AnimationJointIndicesHolder.JointIndex[] _curJoints;
 
-        public SkeletonViewerForm(Z64Game game)
+        byte[] _animFile;
+        int _curSegment = 6;
+
+        public SkeletonViewerForm(Z64Game game, int curSegment)
         {
             _game = game;
+            _curSegment = curSegment;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
+
+            
 
             InitializeComponent();
             Toolkit.Init();
@@ -68,7 +74,7 @@ namespace Z64.Forms
             {
                 for (int i = 8; i < 16; i++)
                 {
-                    if (i != 13)
+                    if (i != 13 || _skel is SkeletonHolder)
                         _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
                 }
             }
@@ -279,6 +285,11 @@ namespace Z64.Forms
             trackBar_anim.Maximum = _curAnim.FrameCount - 1;
             trackBar_anim.Value = 0;
 
+            var Saved = _renderer.Memory.Segments[_curSegment];
+
+            if (_curAnim.extAnim)
+                _renderer.Memory.Segments[_curSegment] = F3DZEX.Memory.Segment.FromBytes("", _animFile);
+
             byte[] buff = _renderer.Memory.ReadBytes(_curAnim.JointIndices, (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE);
             _curJoints = new AnimationJointIndicesHolder("joints", buff).JointIndices;
 
@@ -292,6 +303,8 @@ namespace Z64.Forms
 
             buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2);
             _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
+
+            _renderer.Memory.Segments[_curSegment] = Saved;
 
             UpdateMatrixBuf();
         }
@@ -524,6 +537,41 @@ namespace Z64.Forms
             _playState = PlayState.Pause;
             button_playAnim.BackgroundImage = Properties.Resources.play_icon;
             button_playbackAnim.BackgroundImage = Properties.Resources.playback_icon;
+        }
+
+        private void listBox_anims_DoubleClick(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            _playState = PlayState.Pause;
+            button_playAnim.BackgroundImage = Properties.Resources.play_icon;
+            button_playbackAnim.BackgroundImage = Properties.Resources.playback_icon;
+
+            OpenFileDialog of = new OpenFileDialog();
+            DialogResult DR = of.ShowDialog();
+
+            if (DR == DialogResult.OK)
+            {
+                _animFile = File.ReadAllBytes(of.FileName);
+
+                using (var form = new ObjectAnalyzerForm(_game, _animFile, _curSegment))
+                {
+                    _anims.Clear();
+
+                    form._obj.Entries.ForEach(e =>
+                    {
+                        if (e is Z64Object.AnimationHolder)
+                        {
+                            (e as Z64Object.AnimationHolder).extAnim = true;
+                            (e as Z64Object.AnimationHolder).Name = "ext_" + (e as Z64Object.AnimationHolder).Name;
+                            _anims.Add((Z64Object.AnimationHolder)e);
+                        }
+                    });
+                }
+
+                listBox_anims.Items.Clear();
+                _anims.ForEach(a => listBox_anims.Items.Add(a.Name));
+            }
+
         }
     }
 }
