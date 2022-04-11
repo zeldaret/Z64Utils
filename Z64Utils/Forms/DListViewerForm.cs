@@ -78,8 +78,7 @@ namespace Z64.Forms
             {
                 for (int i = 8; i < 16; i++)
                 {
-                    if (i != 13)
-                        _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
                 }
             }
 
