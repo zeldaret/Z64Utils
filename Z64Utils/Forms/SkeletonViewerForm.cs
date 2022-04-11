@@ -110,7 +110,7 @@ namespace Z64.Forms
                 {
                     Vector3 childPos;
 
-                    if (_curAnim != null)
+                    if (_curAnim != null && _curJoints != null)
                         childPos = GetLimbPos(_limbs[limbIdx].Child);
                     else
                         childPos = new Vector3(0, 0, 0);
@@ -273,9 +273,11 @@ namespace Z64.Forms
         float DegToRad(float x) => x * (float)Math.PI / 180.0f;
 
         short GetFrameData(int frameDataIdx) => _frameData[frameDataIdx < _curAnim.StaticIndexMax ? frameDataIdx : frameDataIdx + trackBar_anim.Value];
-        Vector3 GetLimbPos(int limbIdx) => (limbIdx == 0)
-                ? new Vector3(_curJoints[limbIdx].X, _curJoints[limbIdx].Y, _curJoints[limbIdx].Z)
-                : new Vector3(_limbs[limbIdx].JointX, _limbs[limbIdx].JointY, _limbs[limbIdx].JointZ);
+        Vector3 GetLimbPos(int limbIdx) => (_curJoints == null) 
+                ? new Vector3(0, 0, 0)
+                :    (limbIdx == 0)
+                    ? new Vector3(_curJoints[limbIdx].X, _curJoints[limbIdx].Y, _curJoints[limbIdx].Z)
+                    : new Vector3(_limbs[limbIdx].JointX, _limbs[limbIdx].JointY, _limbs[limbIdx].JointZ);
 
         // Update anims -> matrices
         void UpdateAnim()
@@ -300,17 +302,27 @@ namespace Z64.Forms
                 max = Math.Max(max, joint.Z);
             }
 
-            buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2);
-            _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
+            int bytesToRead = (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2;
+
+            if (bytesToRead + _curAnim.FrameData.SegmentOff > _renderer.Memory.Segments[_curSegment].Data.Length)
+            {
+                _curAnim = null;
+                _curJoints = null;
+                _frameData = null;
+            }
+            else
+            {
+                buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, bytesToRead);
+                _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
+            }
 
             _renderer.Memory.Segments[_curSegment] = Saved;
-
             UpdateMatrixBuf();
         }
 
         Matrix4 CalcMatrix(Matrix4 src, int limbIdx)
         {
-            if (_curAnim == null)
+            if (_curAnim == null || _curJoints == null)
                 return src;
 
             Vector3 pos = GetLimbPos(limbIdx);
@@ -462,6 +474,9 @@ namespace Z64.Forms
                 UpdateAnim();
                 NewRender();
             }
+
+            //if (_playState != PlayState.Pause)
+            //    _timer.Start()
         }
 
         private void trackBar_anim_ValueChanged(object sender, EventArgs e)
@@ -485,8 +500,7 @@ namespace Z64.Forms
                 if (_playState == PlayState.Forward)
                 {
                     trackBar_anim.Value = trackBar_anim.Value < trackBar_anim.Maximum
-                        ? trackBar_anim.Value + 1
-                        : 0;
+                        ? trackBar_anim.Value + 1 : 0;
                 }
                 else
                 {
