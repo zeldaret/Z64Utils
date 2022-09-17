@@ -22,9 +22,10 @@ namespace Z64.Forms
         const string SRC_ROM_FS = "ROM FS";
         const string SRC_FILE = "File";
         const string SRC_IDENT_MTX = "Ident Matrices";
+        const string SRC_PRIM_COLOR = "Prim Color";
+        const string SRC_ENV_COLOR = "Env Color";
         const string SRC_NULL = "Null Bytes";
         const string SRC_EMPTY_DLIST = "Empty Dlist";
-        const string SRC_PRIM_COLOR = "Prim Color";
 
         public Memory.Segment ResultSegment { get; set; }
 
@@ -44,9 +45,10 @@ namespace Z64.Forms
                 comboBox1.Items.Add(SRC_ROM_FS);
             comboBox1.Items.Add(SRC_FILE);
             comboBox1.Items.Add(SRC_IDENT_MTX);
+            comboBox1.Items.Add(SRC_PRIM_COLOR);
+            comboBox1.Items.Add(SRC_ENV_COLOR);
             comboBox1.Items.Add(SRC_NULL);
             comboBox1.Items.Add(SRC_EMPTY_DLIST);
-            comboBox1.Items.Add(SRC_PRIM_COLOR);
 
             comboBox1.SelectedItem = SRC_EMPTY;
             DialogResult = DialogResult.Cancel;
@@ -79,6 +81,10 @@ namespace Z64.Forms
                 case SRC_PRIM_COLOR: // Prim Color
                     tabControl1.SelectedTab = tabPage_primColor;
                     okBtn.Enabled = IsPrimColorOK();
+                    break;
+                case SRC_ENV_COLOR: // Env Color
+                    tabControl1.SelectedTab = tabPage_envColor;
+                    okBtn.Enabled = IsEnvColorOK();
                     break;
                 case SRC_EMPTY: // Empty
                 case SRC_IDENT_MTX: // Ident Matrices
@@ -153,16 +159,28 @@ namespace Z64.Forms
                     break;
 
                 case SRC_PRIM_COLOR:
-                    string lodFracText = primColorLodFrac.Text;
-                    if (lodFracText.StartsWith("0x"))
-                        lodFracText = lodFracText.Substring(2);
+                    {
+                        string lodFracText = primColorLodFrac.Text;
+                        if (lodFracText.StartsWith("0x"))
+                            lodFracText = lodFracText.Substring(2);
 
-                    byte locFrac = byte.Parse(lodFracText, NumberStyles.HexNumber);
-                    byte r = byte.Parse(primColorR.Text, NumberStyles.Number);
-                    byte g = byte.Parse(primColorG.Text, NumberStyles.Number);
-                    byte b = byte.Parse(primColorB.Text, NumberStyles.Number);
-                    byte a = byte.Parse(primColorA.Text, NumberStyles.Number);
-                    ResultSegment = Memory.Segment.FromFill("Prim Color", new byte[] { 0xFA, 0x00, 0x00, locFrac, r, g, b, a, 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                        byte locFrac = byte.Parse(lodFracText, NumberStyles.HexNumber);
+                        byte r = byte.Parse(primColorR.Text, NumberStyles.Number);
+                        byte g = byte.Parse(primColorG.Text, NumberStyles.Number);
+                        byte b = byte.Parse(primColorB.Text, NumberStyles.Number);
+                        byte a = byte.Parse(primColorA.Text, NumberStyles.Number);
+                        ResultSegment = Memory.Segment.FromFill("Prim Color", new byte[] { 0xFA, 0x00, 0x00, locFrac, r, g, b, a, 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    }
+                    break;
+
+                case SRC_ENV_COLOR:
+                    {
+                        byte r = byte.Parse(envColorR.Text, NumberStyles.Number);
+                        byte g = byte.Parse(envColorG.Text, NumberStyles.Number);
+                        byte b = byte.Parse(envColorB.Text, NumberStyles.Number);
+                        byte a = byte.Parse(envColorA.Text, NumberStyles.Number);
+                        ResultSegment = Memory.Segment.FromFill("Env Color", new byte[] { 0xFB, 0x00, 0x00, 0x00, r, g, b, a, 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    }
                     break;
 
                 default:
@@ -179,12 +197,21 @@ namespace Z64.Forms
             if (lodFracText.StartsWith("0x"))
                 lodFracText = lodFracText.Substring(2);
 
-            bool lodFracOK = byte.TryParse(lodFracText, NumberStyles.HexNumber, new CultureInfo("en-US"), out byte primColorLodFracResult);
-            bool rOK = byte.TryParse(primColorR.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorRResult);
-            bool gOK = byte.TryParse(primColorG.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorGResult);
-            bool bOK = byte.TryParse(primColorB.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorBResult);
-            bool aOK = byte.TryParse(primColorA.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorAResult);
+            bool lodFracOK = byte.TryParse(lodFracText, NumberStyles.HexNumber, new CultureInfo("en-US"), out byte lodFrac);
+            bool rOK = byte.TryParse(primColorR.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte r);
+            bool gOK = byte.TryParse(primColorG.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte g);
+            bool bOK = byte.TryParse(primColorB.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte b);
+            bool aOK = byte.TryParse(primColorA.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte a);
             return lodFracOK && rOK && gOK && bOK && aOK;
+        }
+
+        private bool IsEnvColorOK()
+        {
+            bool rOK = byte.TryParse(envColorR.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte r);
+            bool gOK = byte.TryParse(envColorG.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte g);
+            bool bOK = byte.TryParse(envColorB.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte b);
+            bool aOK = byte.TryParse(envColorA.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte a);
+            return rOK && gOK && bOK && aOK;
         }
 
         private void addressValue_TextChanged(object sender, EventArgs e)
@@ -215,6 +242,26 @@ namespace Z64.Forms
         private void primColorA_TextChanged(object sender, EventArgs e)
         {
             okBtn.Enabled = IsPrimColorOK();
+        }
+
+        private void envColorR_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsEnvColorOK();
+        }
+
+        private void envColorG_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsEnvColorOK();
+        }
+
+        private void envColorB_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsEnvColorOK();
+        }
+
+        private void envColorA_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsEnvColorOK();
         }
     }
 }

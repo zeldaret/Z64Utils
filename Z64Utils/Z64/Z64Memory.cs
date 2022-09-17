@@ -50,7 +50,7 @@ namespace Z64
 
                 LoadOvls();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Z64MemoryException("Error while creating the memory map. Please check your config files (versions/*.json)");
             }

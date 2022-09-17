@@ -50,10 +50,20 @@
             this.label1 = new System.Windows.Forms.Label();
             this.okBtn = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.tabPage_envColor = new System.Windows.Forms.TabPage();
+            this.envColorALabel = new System.Windows.Forms.Label();
+            this.envColorA = new System.Windows.Forms.TextBox();
+            this.envColorBLabel = new System.Windows.Forms.Label();
+            this.envColorB = new System.Windows.Forms.TextBox();
+            this.envColorGLabel = new System.Windows.Forms.Label();
+            this.envColorG = new System.Windows.Forms.TextBox();
+            this.envColorRLabel = new System.Windows.Forms.Label();
+            this.envColorR = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_address.SuspendLayout();
             this.tabPage_file.SuspendLayout();
             this.tabPage_primColor.SuspendLayout();
+            this.tabPage_envColor.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -79,6 +89,7 @@
             this.tabControl1.Controls.Add(this.tabPage_address);
             this.tabControl1.Controls.Add(this.tabPage_file);
             this.tabControl1.Controls.Add(this.tabPage_primColor);
+            this.tabControl1.Controls.Add(this.tabPage_envColor);
             this.tabControl1.Controls.Add(this.tabPage_empty);
             this.tabControl1.Location = new System.Drawing.Point(26, 45);
             this.tabControl1.Name = "tabControl1";
@@ -268,6 +279,91 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // tabPage_envColor
+            // 
+            this.tabPage_envColor.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_envColor.Controls.Add(this.envColorALabel);
+            this.tabPage_envColor.Controls.Add(this.envColorA);
+            this.tabPage_envColor.Controls.Add(this.envColorBLabel);
+            this.tabPage_envColor.Controls.Add(this.envColorB);
+            this.tabPage_envColor.Controls.Add(this.envColorGLabel);
+            this.tabPage_envColor.Controls.Add(this.envColorG);
+            this.tabPage_envColor.Controls.Add(this.envColorRLabel);
+            this.tabPage_envColor.Controls.Add(this.envColorR);
+            this.tabPage_envColor.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_envColor.Name = "tabPage_envColor";
+            this.tabPage_envColor.Size = new System.Drawing.Size(91, 193);
+            this.tabPage_envColor.TabIndex = 4;
+            this.tabPage_envColor.Text = "envColor";
+            // 
+            // envColorALabel
+            // 
+            this.envColorALabel.AutoSize = true;
+            this.envColorALabel.Location = new System.Drawing.Point(4, 114);
+            this.envColorALabel.Name = "envColorALabel";
+            this.envColorALabel.Size = new System.Drawing.Size(13, 13);
+            this.envColorALabel.TabIndex = 17;
+            this.envColorALabel.Text = "a";
+            // 
+            // envColorA
+            // 
+            this.envColorA.Location = new System.Drawing.Point(5, 128);
+            this.envColorA.Name = "envColorA";
+            this.envColorA.Size = new System.Drawing.Size(80, 20);
+            this.envColorA.TabIndex = 16;
+            this.envColorA.TextChanged += new System.EventHandler(this.envColorA_TextChanged);
+            // 
+            // envColorBLabel
+            // 
+            this.envColorBLabel.AutoSize = true;
+            this.envColorBLabel.Location = new System.Drawing.Point(4, 77);
+            this.envColorBLabel.Name = "envColorBLabel";
+            this.envColorBLabel.Size = new System.Drawing.Size(13, 13);
+            this.envColorBLabel.TabIndex = 15;
+            this.envColorBLabel.Text = "b";
+            // 
+            // envColorB
+            // 
+            this.envColorB.Location = new System.Drawing.Point(5, 91);
+            this.envColorB.Name = "envColorB";
+            this.envColorB.Size = new System.Drawing.Size(80, 20);
+            this.envColorB.TabIndex = 14;
+            this.envColorB.TextChanged += new System.EventHandler(this.envColorB_TextChanged);
+            // 
+            // envColorGLabel
+            // 
+            this.envColorGLabel.AutoSize = true;
+            this.envColorGLabel.Location = new System.Drawing.Point(4, 40);
+            this.envColorGLabel.Name = "envColorGLabel";
+            this.envColorGLabel.Size = new System.Drawing.Size(13, 13);
+            this.envColorGLabel.TabIndex = 13;
+            this.envColorGLabel.Text = "g";
+            // 
+            // envColorG
+            // 
+            this.envColorG.Location = new System.Drawing.Point(5, 54);
+            this.envColorG.Name = "envColorG";
+            this.envColorG.Size = new System.Drawing.Size(80, 20);
+            this.envColorG.TabIndex = 12;
+            this.envColorG.TextChanged += new System.EventHandler(this.envColorG_TextChanged);
+            // 
+            // envColorRLabel
+            // 
+            this.envColorRLabel.AutoSize = true;
+            this.envColorRLabel.Location = new System.Drawing.Point(4, 3);
+            this.envColorRLabel.Name = "envColorRLabel";
+            this.envColorRLabel.Size = new System.Drawing.Size(10, 13);
+            this.envColorRLabel.TabIndex = 11;
+            this.envColorRLabel.Text = "r";
+            // 
+            // envColorR
+            // 
+            this.envColorR.Location = new System.Drawing.Point(5, 17);
+            this.envColorR.Name = "envColorR";
+            this.envColorR.Size = new System.Drawing.Size(80, 20);
+            this.envColorR.TabIndex = 10;
+            this.envColorR.TextChanged += new System.EventHandler(this.envColorR_TextChanged);
+            // 
             // SegmentEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,6 +386,8 @@
             this.tabPage_file.ResumeLayout(false);
             this.tabPage_primColor.ResumeLayout(false);
             this.tabPage_primColor.PerformLayout();
+            this.tabPage_envColor.ResumeLayout(false);
+            this.tabPage_envColor.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -318,5 +416,14 @@
         private System.Windows.Forms.TextBox primColorB;
         private System.Windows.Forms.Label primColorGLabel;
         private System.Windows.Forms.TextBox primColorG;
+        private System.Windows.Forms.TabPage tabPage_envColor;
+        private System.Windows.Forms.Label envColorALabel;
+        private System.Windows.Forms.TextBox envColorA;
+        private System.Windows.Forms.Label envColorBLabel;
+        private System.Windows.Forms.TextBox envColorB;
+        private System.Windows.Forms.Label envColorGLabel;
+        private System.Windows.Forms.TextBox envColorG;
+        private System.Windows.Forms.Label envColorRLabel;
+        private System.Windows.Forms.TextBox envColorR;
     }
 }

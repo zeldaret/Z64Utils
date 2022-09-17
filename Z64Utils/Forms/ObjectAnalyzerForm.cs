@@ -89,7 +89,7 @@ namespace Z64.Forms
                     lines.ForEach(s => sw.WriteLine(s));
                     textBox_holderInfo.Text = sw.ToString();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     textBox_holderInfo.Text = "ERROR";
                 }
