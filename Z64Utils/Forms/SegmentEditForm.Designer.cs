@@ -35,6 +35,17 @@
             this.addressValue = new System.Windows.Forms.TextBox();
             this.tabPage_file = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
+            this.tabPage_primColor = new System.Windows.Forms.TabPage();
+            this.primColorALabel = new System.Windows.Forms.Label();
+            this.primColorA = new System.Windows.Forms.TextBox();
+            this.primColorBLabel = new System.Windows.Forms.Label();
+            this.primColorB = new System.Windows.Forms.TextBox();
+            this.primColorGLabel = new System.Windows.Forms.Label();
+            this.primColorG = new System.Windows.Forms.TextBox();
+            this.primColorRLabel = new System.Windows.Forms.Label();
+            this.primColorR = new System.Windows.Forms.TextBox();
+            this.primColorLodFracLabel = new System.Windows.Forms.Label();
+            this.primColorLodFrac = new System.Windows.Forms.TextBox();
             this.tabPage_empty = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.okBtn = new System.Windows.Forms.Button();
@@ -42,6 +53,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage_address.SuspendLayout();
             this.tabPage_file.SuspendLayout();
+            this.tabPage_primColor.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -66,11 +78,12 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage_address);
             this.tabControl1.Controls.Add(this.tabPage_file);
+            this.tabControl1.Controls.Add(this.tabPage_primColor);
             this.tabControl1.Controls.Add(this.tabPage_empty);
             this.tabControl1.Location = new System.Drawing.Point(26, 45);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(99, 53);
+            this.tabControl1.Size = new System.Drawing.Size(99, 219);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage_address
@@ -80,7 +93,7 @@
             this.tabPage_address.Location = new System.Drawing.Point(4, 22);
             this.tabPage_address.Name = "tabPage_address";
             this.tabPage_address.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_address.Size = new System.Drawing.Size(91, 27);
+            this.tabPage_address.Size = new System.Drawing.Size(91, 193);
             this.tabPage_address.TabIndex = 0;
             this.tabPage_address.Text = "address";
             // 
@@ -102,7 +115,7 @@
             this.tabPage_file.Location = new System.Drawing.Point(4, 22);
             this.tabPage_file.Name = "tabPage_file";
             this.tabPage_file.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_file.Size = new System.Drawing.Size(91, 27);
+            this.tabPage_file.Size = new System.Drawing.Size(91, 193);
             this.tabPage_file.TabIndex = 1;
             this.tabPage_file.Text = "file";
             // 
@@ -117,11 +130,116 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // tabPage_primColor
+            // 
+            this.tabPage_primColor.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_primColor.Controls.Add(this.primColorALabel);
+            this.tabPage_primColor.Controls.Add(this.primColorA);
+            this.tabPage_primColor.Controls.Add(this.primColorBLabel);
+            this.tabPage_primColor.Controls.Add(this.primColorB);
+            this.tabPage_primColor.Controls.Add(this.primColorGLabel);
+            this.tabPage_primColor.Controls.Add(this.primColorG);
+            this.tabPage_primColor.Controls.Add(this.primColorRLabel);
+            this.tabPage_primColor.Controls.Add(this.primColorR);
+            this.tabPage_primColor.Controls.Add(this.primColorLodFracLabel);
+            this.tabPage_primColor.Controls.Add(this.primColorLodFrac);
+            this.tabPage_primColor.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_primColor.Name = "tabPage_primColor";
+            this.tabPage_primColor.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_primColor.Size = new System.Drawing.Size(91, 193);
+            this.tabPage_primColor.TabIndex = 3;
+            this.tabPage_primColor.Text = "primColor";
+            // 
+            // primColorALabel
+            // 
+            this.primColorALabel.AutoSize = true;
+            this.primColorALabel.Location = new System.Drawing.Point(4, 151);
+            this.primColorALabel.Name = "primColorALabel";
+            this.primColorALabel.Size = new System.Drawing.Size(13, 13);
+            this.primColorALabel.TabIndex = 9;
+            this.primColorALabel.Text = "a";
+            // 
+            // primColorA
+            // 
+            this.primColorA.Location = new System.Drawing.Point(5, 165);
+            this.primColorA.Name = "primColorA";
+            this.primColorA.Size = new System.Drawing.Size(80, 20);
+            this.primColorA.TabIndex = 8;
+            this.primColorA.TextChanged += new System.EventHandler(this.primColorA_TextChanged);
+            // 
+            // primColorBLabel
+            // 
+            this.primColorBLabel.AutoSize = true;
+            this.primColorBLabel.Location = new System.Drawing.Point(4, 114);
+            this.primColorBLabel.Name = "primColorBLabel";
+            this.primColorBLabel.Size = new System.Drawing.Size(13, 13);
+            this.primColorBLabel.TabIndex = 7;
+            this.primColorBLabel.Text = "b";
+            // 
+            // primColorB
+            // 
+            this.primColorB.Location = new System.Drawing.Point(5, 128);
+            this.primColorB.Name = "primColorB";
+            this.primColorB.Size = new System.Drawing.Size(80, 20);
+            this.primColorB.TabIndex = 6;
+            this.primColorB.TextChanged += new System.EventHandler(this.primColorB_TextChanged);
+            // 
+            // primColorGLabel
+            // 
+            this.primColorGLabel.AutoSize = true;
+            this.primColorGLabel.Location = new System.Drawing.Point(4, 77);
+            this.primColorGLabel.Name = "primColorGLabel";
+            this.primColorGLabel.Size = new System.Drawing.Size(13, 13);
+            this.primColorGLabel.TabIndex = 5;
+            this.primColorGLabel.Text = "g";
+            // 
+            // primColorG
+            // 
+            this.primColorG.Location = new System.Drawing.Point(5, 91);
+            this.primColorG.Name = "primColorG";
+            this.primColorG.Size = new System.Drawing.Size(80, 20);
+            this.primColorG.TabIndex = 4;
+            this.primColorG.TextChanged += new System.EventHandler(this.primColorG_TextChanged);
+            // 
+            // primColorRLabel
+            // 
+            this.primColorRLabel.AutoSize = true;
+            this.primColorRLabel.Location = new System.Drawing.Point(4, 40);
+            this.primColorRLabel.Name = "primColorRLabel";
+            this.primColorRLabel.Size = new System.Drawing.Size(10, 13);
+            this.primColorRLabel.TabIndex = 3;
+            this.primColorRLabel.Text = "r";
+            // 
+            // primColorR
+            // 
+            this.primColorR.Location = new System.Drawing.Point(5, 54);
+            this.primColorR.Name = "primColorR";
+            this.primColorR.Size = new System.Drawing.Size(80, 20);
+            this.primColorR.TabIndex = 2;
+            this.primColorR.TextChanged += new System.EventHandler(this.primColorR_TextChanged);
+            // 
+            // primColorLodFracLabel
+            // 
+            this.primColorLodFracLabel.AutoSize = true;
+            this.primColorLodFracLabel.Location = new System.Drawing.Point(4, 3);
+            this.primColorLodFracLabel.Name = "primColorLodFracLabel";
+            this.primColorLodFracLabel.Size = new System.Drawing.Size(39, 13);
+            this.primColorLodFracLabel.TabIndex = 1;
+            this.primColorLodFracLabel.Text = "lodfrac";
+            // 
+            // primColorLodFrac
+            // 
+            this.primColorLodFrac.Location = new System.Drawing.Point(5, 17);
+            this.primColorLodFrac.Name = "primColorLodFrac";
+            this.primColorLodFrac.Size = new System.Drawing.Size(80, 20);
+            this.primColorLodFrac.TabIndex = 0;
+            this.primColorLodFrac.TextChanged += new System.EventHandler(this.primColorLodFrac_TextChanged);
+            // 
             // tabPage_empty
             // 
             this.tabPage_empty.Location = new System.Drawing.Point(4, 22);
             this.tabPage_empty.Name = "tabPage_empty";
-            this.tabPage_empty.Size = new System.Drawing.Size(91, 27);
+            this.tabPage_empty.Size = new System.Drawing.Size(91, 193);
             this.tabPage_empty.TabIndex = 2;
             this.tabPage_empty.Text = "Empty";
             this.tabPage_empty.UseVisualStyleBackColor = true;
@@ -138,7 +256,7 @@
             // okBtn
             // 
             this.okBtn.Enabled = false;
-            this.okBtn.Location = new System.Drawing.Point(38, 98);
+            this.okBtn.Location = new System.Drawing.Point(38, 268);
             this.okBtn.Name = "okBtn";
             this.okBtn.Size = new System.Drawing.Size(75, 23);
             this.okBtn.TabIndex = 3;
@@ -154,7 +272,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(150, 123);
+            this.ClientSize = new System.Drawing.Size(150, 302);
             this.Controls.Add(this.okBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tabControl1);
@@ -170,6 +288,8 @@
             this.tabPage_address.ResumeLayout(false);
             this.tabPage_address.PerformLayout();
             this.tabPage_file.ResumeLayout(false);
+            this.tabPage_primColor.ResumeLayout(false);
+            this.tabPage_primColor.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,5 +307,16 @@
         private System.Windows.Forms.Button okBtn;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TabPage tabPage_empty;
+        private System.Windows.Forms.TabPage tabPage_primColor;
+        private System.Windows.Forms.TextBox primColorLodFrac;
+        private System.Windows.Forms.Label primColorLodFracLabel;
+        private System.Windows.Forms.Label primColorRLabel;
+        private System.Windows.Forms.TextBox primColorR;
+        private System.Windows.Forms.Label primColorALabel;
+        private System.Windows.Forms.TextBox primColorA;
+        private System.Windows.Forms.Label primColorBLabel;
+        private System.Windows.Forms.TextBox primColorB;
+        private System.Windows.Forms.Label primColorGLabel;
+        private System.Windows.Forms.TextBox primColorG;
     }
 }

@@ -24,6 +24,7 @@ namespace Z64.Forms
         const string SRC_IDENT_MTX = "Ident Matrices";
         const string SRC_NULL = "Null Bytes";
         const string SRC_EMPTY_DLIST = "Empty Dlist";
+        const string SRC_PRIM_COLOR = "Prim Color";
 
         public Memory.Segment ResultSegment { get; set; }
 
@@ -45,6 +46,7 @@ namespace Z64.Forms
             comboBox1.Items.Add(SRC_IDENT_MTX);
             comboBox1.Items.Add(SRC_NULL);
             comboBox1.Items.Add(SRC_EMPTY_DLIST);
+            comboBox1.Items.Add(SRC_PRIM_COLOR);
 
             comboBox1.SelectedItem = SRC_EMPTY;
             DialogResult = DialogResult.Cancel;
@@ -73,6 +75,10 @@ namespace Z64.Forms
                     tabControl1.SelectedTab = tabPage_file;
                     okBtn.Enabled = _fileName != null;
                     button1.ForeColor = _fileName == null ? Color.Black : Color.Green;
+                    break;
+                case SRC_PRIM_COLOR: // Prim Color
+                    tabControl1.SelectedTab = tabPage_primColor;
+                    okBtn.Enabled = IsPrimColorOK();
                     break;
                 case SRC_EMPTY: // Empty
                 case SRC_IDENT_MTX: // Ident Matrices
@@ -133,15 +139,30 @@ namespace Z64.Forms
                         0,0,   0,0,   0,0,   0,0,
                     });
                     break;
+
                 case SRC_NULL:
                     ResultSegment = Memory.Segment.FromFill("Null Bytes");
                     break;
+
                 case SRC_EMPTY:
                     ResultSegment = Memory.Segment.Empty();
                     break;
 
                 case SRC_EMPTY_DLIST:
                     ResultSegment = Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    break;
+
+                case SRC_PRIM_COLOR:
+                    string lodFracText = primColorLodFrac.Text;
+                    if (lodFracText.StartsWith("0x"))
+                        lodFracText = lodFracText.Substring(2);
+
+                    byte locFrac = byte.Parse(lodFracText, NumberStyles.HexNumber);
+                    byte r = byte.Parse(primColorR.Text, NumberStyles.Number);
+                    byte g = byte.Parse(primColorG.Text, NumberStyles.Number);
+                    byte b = byte.Parse(primColorB.Text, NumberStyles.Number);
+                    byte a = byte.Parse(primColorA.Text, NumberStyles.Number);
+                    ResultSegment = Memory.Segment.FromFill("Prim Color", new byte[] { 0xFA, 0x00, 0x00, locFrac, r, g, b, a, 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
                     break;
 
                 default:
@@ -152,9 +173,48 @@ namespace Z64.Forms
             Close();
         }
 
+        private bool IsPrimColorOK()
+        {
+            string lodFracText = primColorLodFrac.Text;
+            if (lodFracText.StartsWith("0x"))
+                lodFracText = lodFracText.Substring(2);
+
+            bool lodFracOK = byte.TryParse(lodFracText, NumberStyles.HexNumber, new CultureInfo("en-US"), out byte primColorLodFracResult);
+            bool rOK = byte.TryParse(primColorR.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorRResult);
+            bool gOK = byte.TryParse(primColorG.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorGResult);
+            bool bOK = byte.TryParse(primColorB.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorBResult);
+            bool aOK = byte.TryParse(primColorA.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte primColorAResult);
+            return lodFracOK && rOK && gOK && bOK && aOK;
+        }
+
         private void addressValue_TextChanged(object sender, EventArgs e)
         {
             okBtn.Enabled = SegmentedAddress.TryParse(addressValue.Text, true, out var _);
+        }
+
+        private void primColorLodFrac_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsPrimColorOK();
+        }
+
+        private void primColorR_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsPrimColorOK();
+        }
+
+        private void primColorG_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsPrimColorOK();
+        }
+
+        private void primColorB_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsPrimColorOK();
+        }
+
+        private void primColorA_TextChanged(object sender, EventArgs e)
+        {
+            okBtn.Enabled = IsPrimColorOK();
         }
     }
 }
