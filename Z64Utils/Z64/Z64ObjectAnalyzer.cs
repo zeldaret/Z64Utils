@@ -506,7 +506,7 @@ namespace Z64
         public static void FindLinkAnimations(Z64Object obj, byte[] data, int segmentId)
         {
             // only search in gameplay_keep
-            if (obj.FileName != "gameplay_keep")
+            if (!obj.FileName.Contains("gameplay_keep"))
                 return;
 
             if (obj.Game == null)

@@ -482,6 +482,8 @@ namespace Z64
             public short FrameCount { get; set; }
             public SegmentedAddress LinkAnimationSegment { get; set; }
 
+            public bool extAnim { get; set; }
+
             public LinkAnimationHolder(string name, byte[] data) : base(name)
             {
                 SetData(data);
