@@ -184,6 +184,11 @@ namespace Z64
 
         public Z64FileType GetFileType(int vrom) => Version.GetFileType(vrom);
 
+        public Z64File GetFileByName(string fileName)
+        {
+            return _files.Find((f) => GetFileName(f.VRomStart) == fileName);
+        }
+
         public bool GetVrom(string name, out int vrom)
         {
             var fileVrom = Version.GetVrom(name);

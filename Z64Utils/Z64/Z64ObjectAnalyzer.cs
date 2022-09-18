@@ -455,7 +455,7 @@ namespace Z64
                 if (frameCount > 0 &&
                     data[i + 2] == 0 && data[i + 3] == 0 && data[i + 14] == 0 && data[i + 15] == 0)
                 {
-                    if (!(obj.IsOffsetFree(i) && obj.IsOffsetFree(i + Z64Object.AnimationHolder.HEADER_SIZE)))
+                    if (!(obj.IsOffsetFree(i) && obj.IsOffsetFree(i + Z64Object.AnimationHolder.HEADER_SIZE - 1)))
                         continue;
                     
                     var frameDataSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i+4));
@@ -503,6 +503,349 @@ namespace Z64
             }
         }
 
+        public static void FindLinkAnimations(Z64Object obj, byte[] data, int segmentId)
+        {
+            // only search in gameplay_keep
+            if (obj.FileName != "gameplay_keep")
+                return;
+
+            if (obj.Game == null)
+                return;
+
+            Z64File linkAnimetion = obj.Game.GetFileByName("link_animetion");
+            // only search if the link_animetion file is known
+            if (linkAnimetion == null)
+                return;
+
+            int linkAnimetionSize = linkAnimetion.VRomEnd - linkAnimetion.VRomStart;
+
+            for (int i = 0; i <= data.Length - Z64Object.LinkAnimationHolder.SIZE; i += 4)
+            {
+                var frameCount = ArrayUtil.ReadInt16BE(data, i);
+
+                // Check frame count > 0 and struct padding
+                if (frameCount > 0 && data[i + 2] == 0 && data[i + 3] == 0)
+                {
+                    var animationSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 4));
+
+                    // Check if the segment address is a valid pointer into link_animetion
+                    if (animationSeg.SegmentId == 7 && animationSeg.SegmentOff < linkAnimetionSize)
+                    {
+                        // Check if free
+                        if (!(obj.IsOffsetFree(i) && obj.IsOffsetFree(i + Z64Object.LinkAnimationHolder.SIZE - 1)))
+                            continue;
+
+                        // Check if the data pointed to in link_animetion is valid? TODO
+
+                        obj.AddLinkAnimation(off: i);
+                    }
+                }
+            }
+        }
+        public static void FindCollisionData(Z64Object obj, byte[] data, int segmentId)
+        {
+            // Search for Collision Headers
+            // Structure: XX XX YY YY ZZ ZZ XX XX YY YY ZZ ZZ NN NN 00 00
+            //            SS OO OO OO NN NN 00 00 SS OO OO OO SS OO OO OO
+            //            SS OO OO OO NN NN 00 00 SS OO OO OO
+            for (int i = 0; i < data.Length - Z64Object.ColHeaderHolder.COLHEADER_SIZE; i += 4)
+            {
+                // check free and skip whole region if occupied
+                if (!obj.IsOffsetFree(i))
+                {
+                    Z64Object.ObjectHolder holder = obj.GetHolderAtOffset(i);
+                    i = obj.OffsetOf(holder) + holder.GetSize();
+                    if (i % 4 != 0)
+                        i += (4 - i % 4);
+                    i -= 4; // gets incremented by 4 in continue
+                    continue;
+                }
+
+                // check struct padding zeroes and that MinBounds <= MaxBounds
+                if (data[i + 14] == 0 && data[i + 15] == 0 && data[i + 22] == 0 && data[i + 23] == 0 &&
+                    data[i + 38] == 0 && data[i + 39] == 0 &&
+                    ArrayUtil.ReadInt16BE(data, i + 0) <= ArrayUtil.ReadInt16BE(data, i + 6 + 0) &&
+                    ArrayUtil.ReadInt16BE(data, i + 2) <= ArrayUtil.ReadInt16BE(data, i + 6 + 2) &&
+                    ArrayUtil.ReadInt16BE(data, i + 4) <= ArrayUtil.ReadInt16BE(data, i + 6 + 4))
+                {
+                    var verticesSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 0x10));
+                    var polygonsSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 0x18));
+                    var surfaceTypesSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 0x1C));
+                    var camDataSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 0x20));
+                    var waterBoxesSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 0x28));
+
+                    var nVertices = ArrayUtil.ReadInt16BE(data, i + 0xC);
+                    var nPolygons = ArrayUtil.ReadInt16BE(data, i + 0x14);
+                    var nWaterBoxes = ArrayUtil.ReadInt16BE(data, i + 0x24);
+
+                    int surfaceTypesSize = (int)(polygonsSeg.SegmentOff - surfaceTypesSeg.SegmentOff);
+                    int camDataSize = (int)(surfaceTypesSeg.SegmentOff - camDataSeg.SegmentOff);
+                    if (camDataSeg.VAddr == 0)
+                        camDataSize = 0;
+
+                    int surfaceTypesPadLen = surfaceTypesSize % Z64Object.CollisionSurfaceTypesHolder.ENTRY_SIZE;
+                    int camDataPadLen = camDataSize % Z64Object.CollisionCamDataHolder.ENTRY_SIZE;
+
+                    surfaceTypesSize -= surfaceTypesPadLen;
+                    camDataSize -= camDataPadLen;
+
+                    // check segment address validity
+                    // (same segment number and points to in-bounds free space or null with 0 count, has suitable alignment)
+                    Func<SegmentedAddress, int, int, bool, bool> validSegmentAddr = (seg, num, align, allowNull) =>
+                        ((seg.SegmentId == segmentId && seg.SegmentOff < data.Length &&
+                          obj.IsOffsetFree((int)seg.SegmentOff) && seg.SegmentOff % align == 0) ||
+                         (allowNull && num == 0 && seg.VAddr == 0));
+
+                    if (validSegmentAddr(verticesSeg, nVertices, 2, false) &&
+                        validSegmentAddr(polygonsSeg, nPolygons, 2, false) &&
+                        validSegmentAddr(surfaceTypesSeg, surfaceTypesSize / Z64Object.CollisionSurfaceTypesHolder.ENTRY_SIZE, 4, false) &&
+                        validSegmentAddr(camDataSeg, camDataSize / Z64Object.CollisionCamDataHolder.ENTRY_SIZE, 2, true) &&
+                        validSegmentAddr(waterBoxesSeg, nWaterBoxes, 4, true))
+                    {
+                        // check padding between surface types and polygons
+                        if (surfaceTypesSize != 0 && surfaceTypesPadLen != 0)
+                        {
+                            byte[] possiblePadding = new byte[surfaceTypesPadLen];
+
+                            // 'Offset and length were out of bounds for the array or count is greater than the number of
+                            // elements from index to the end of the source collection.'
+                            Buffer.BlockCopy(data, (int)surfaceTypesSeg.SegmentOff + surfaceTypesSize, possiblePadding,
+                                0, surfaceTypesPadLen);
+                            // if assumed struct padding is nonzero, consider invalid
+                            if (possiblePadding.Any(b => b != 0))
+                                continue;
+                        }
+                        // check padding between cam data and surface types
+                        if (camDataSeg.VAddr != 0 && camDataSize != 0 && camDataPadLen != 0)
+                        {
+                            byte[] possiblePadding = new byte[camDataPadLen];
+                            Buffer.BlockCopy(data, (int)surfaceTypesSeg.SegmentOff + camDataSize, possiblePadding,
+                                0, camDataPadLen);
+                            // if assumed struct padding is nonzero, consider invalid
+                            if (possiblePadding.Any(b => b != 0))
+                                continue;
+                        }
+
+                        Z64Object.ColHeaderHolder colHeader = obj.AddCollisionHeader(off: i);
+
+                        colHeader.VerticesHolder = obj.AddCollisionVertices(nVertices, off: (int)verticesSeg.SegmentOff);
+                        colHeader.PolygonsHolder = obj.AddCollisionPolygons(nPolygons, off: (int)polygonsSeg.SegmentOff);
+                        colHeader.SurfaceTypesHolder = obj.AddCollisionSurfaceTypes(
+                            surfaceTypesSize / Z64Object.CollisionSurfaceTypesHolder.ENTRY_SIZE,
+                            off: (int)surfaceTypesSeg.SegmentOff);
+
+                        if (camDataSeg.VAddr != 0)
+                            colHeader.CamDataHolder = obj.AddCollisionCamData(
+                                camDataSize / Z64Object.CollisionCamDataHolder.ENTRY_SIZE,
+                                off: (int)camDataSeg.SegmentOff);
+
+                        if (waterBoxesSeg.VAddr != 0)
+                            colHeader.WaterBoxHolder = obj.AddWaterBoxes(nWaterBoxes, off: (int)waterBoxesSeg.SegmentOff);
+
+                        i += Z64Object.ColHeaderHolder.COLHEADER_SIZE;
+                    }
+                }
+            }
+        }
+
+        public struct SegmentedTextureAttrs
+        {
+            public int Width;
+            public int Height;
+            public N64TexFormat Fmt;
+        }
+
+        public static void FindMaterialAnimations(Z64Object obj, byte[] data, int segmentId, Dictionary<int, SegmentedTextureAttrs> textureLoads)
+        {
+            if (obj.Game == null || obj.Game.Version.Game != Z64GameType.Mm) // material animations are MM only
+                return;
+
+            // Search for Material Animations
+            // Header Structure: SS 00 TT TT SS OO OO OO
+            // Segment address points to 1 of 6 possible parameter structures
+
+            for (int i = 0; i <= data.Length - Z64Object.MatAnimHeaderHolder.SIZE; i += 4)
+            {
+                // check free and skip whole region if occupied
+                if (!obj.IsOffsetFree(i))
+                {
+                    Z64Object.ObjectHolder holder = obj.GetHolderAtOffset(i);
+                    i = obj.OffsetOf(holder) + holder.GetSize();
+                    if (i % 4 != 0)
+                        i += (4 - i % 4);
+                    i -= 4; // gets incremented by 4 in continue
+                    continue;
+                }
+
+                int texSegment = (sbyte)data[i];
+
+                texSegment = ((texSegment < 0) ? -texSegment : texSegment) + 7;
+
+                short paramsType = ArrayUtil.ReadInt16BE(data, i + 2);
+
+                if (texSegment > 7 && texSegment < 14 &&
+                    paramsType >= 0 && paramsType < 6 &&
+                    data[i + 1] == 0)
+                {
+                    var paramsSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(data, i + 4));
+
+                    // check valid segment address
+                    if (paramsSeg.SegmentId != segmentId || paramsSeg.SegmentOff >= data.Length ||
+                        !obj.IsOffsetFree((int)paramsSeg.SegmentOff))
+                        continue;
+
+                    // params segment should always be before the header
+                    if (paramsSeg.SegmentOff > i)
+                        continue;
+
+                    // do params
+                    if (paramsType == 0 || paramsType == 1)
+                    {   // Tex Scroll
+                        // XX YY WW HH
+
+                        // Check if params fits inside the object
+                        if (paramsSeg.SegmentOff + Z64Object.MatAnimTexScrollParamsHolder.SIZE > data.Length ||
+                            !obj.IsOffsetFree((int)paramsSeg.SegmentOff + Z64Object.MatAnimTexScrollParamsHolder.SIZE - 1))
+                            continue;
+
+                        obj.AddMatAnimTexScrollParams(off: (int)paramsSeg.SegmentOff);
+                        // Two Tex Scroll types appear to have another params immediately following the first
+                        if (paramsType == 1)
+                            obj.AddMatAnimTexScrollParams(off: (int)paramsSeg.SegmentOff + 4);
+                    }
+                    else if (paramsType == 5)
+                    {   // Tex Cycle
+                        // KK KK 00 00 SS OO OO OO SS OO OO OO
+
+                        // Check if params fits inside the object
+                        if (paramsSeg.SegmentOff + Z64Object.MatAnimTexCycleParamsHolder.SIZE > data.Length ||
+                            !obj.IsOffsetFree((int)paramsSeg.SegmentOff + Z64Object.MatAnimTexCycleParamsHolder.SIZE - 1))
+                            continue;
+
+                        // Get params data
+                        byte[] paramsData = new byte[Z64Object.MatAnimTexCycleParamsHolder.SIZE];
+                        Buffer.BlockCopy(data, (int)paramsSeg.SegmentOff, paramsData, 0, Z64Object.MatAnimTexCycleParamsHolder.SIZE);
+
+                        var keyFrameLength = ArrayUtil.ReadUInt16BE(paramsData, 0);
+                        var textureListSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(paramsData, 4));
+                        var textureIndexListSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(paramsData, 8));
+
+                        // check struct padding and valid segmented addresses
+                        if (!(paramsData[2] == 0 && paramsData[3] == 0 &&
+                              textureListSeg.SegmentId == segmentId && textureListSeg.SegmentOff < data.Length &&
+                              textureIndexListSeg.SegmentId == segmentId && textureIndexListSeg.SegmentOff < data.Length &&
+                              textureIndexListSeg.SegmentOff + keyFrameLength <= data.Length))
+                            continue;
+
+                        // get texture indices data
+                        byte[] textureIndices = new byte[keyFrameLength];
+                        Buffer.BlockCopy(data, (int)textureIndexListSeg.SegmentOff, textureIndices, 0, keyFrameLength);
+
+                        // the number of textures in the texture list is assumed to be the largest index used + 1
+                        int nTextures = textureIndices.Max() + 1;
+
+                        // check if the texture list length fits within the object
+                        if (textureListSeg.SegmentOff + nTextures * 4 > data.Length)
+                            continue;
+
+                        // get texture list data (list of segmented addresses to textures)
+                        byte[] textureListData = new byte[nTextures * 4];
+                        Buffer.BlockCopy(data, (int)textureListSeg.SegmentOff, textureListData, 0, nTextures * 4);
+
+                        // check the texture segments for validity
+                        bool texturesOk = true;
+                        for (int j = 0; j < nTextures * 4; j += 4)
+                        {
+                            var textureSegment = new SegmentedAddress(ArrayUtil.ReadUint32BE(textureListData, j));
+                            if (!(textureSegment.SegmentId == segmentId && textureSegment.SegmentOff < data.Length))
+                            {
+                                texturesOk = false;
+                                break;
+                            }
+                        }
+                        if (!texturesOk)
+                            continue;
+
+                        // add the textures if the format is known from any display lists
+                        // this assumes the segment is only used for the texture, which may not always be the case
+                        //  in practice
+                        SegmentedTextureAttrs texAttrs;
+
+                        if (textureLoads.TryGetValue(texSegment, out texAttrs))
+                        {
+                            for (int j = 0; j < nTextures * 4; j += 4)
+                            {
+                                var textureSegment = new SegmentedAddress(ArrayUtil.ReadUint32BE(textureListData, j));
+                                obj.AddTexture(texAttrs.Width, texAttrs.Height, texAttrs.Fmt, off: (int)textureSegment.SegmentOff);
+                            }
+                        }
+
+                        obj.AddMatAnimTextureIndexList(keyFrameLength, off: (int)textureIndexListSeg.SegmentOff);
+                        obj.AddMatAnimTextureList(nTextures, off: (int)textureListSeg.SegmentOff);
+
+                        obj.AddMatAnimTexCycleParams(off: (int)paramsSeg.SegmentOff);
+                    }
+                    else
+                    {   // Color
+                        // LL LL CC CC SS OO OO OO SS OO OO OO SS OO OO OO
+
+                        // Check if params fits inside the object
+                        if (paramsSeg.SegmentOff + Z64Object.MatAnimColorParamsHolder.SIZE > data.Length ||
+                            !obj.IsOffsetFree((int)paramsSeg.SegmentOff + Z64Object.MatAnimColorParamsHolder.SIZE - 1))
+                            continue;
+
+                        // Get params data
+                        byte[] paramsData = new byte[Z64Object.MatAnimColorParamsHolder.SIZE];
+                        Buffer.BlockCopy(data, (int)paramsSeg.SegmentOff, paramsData, 0, Z64Object.MatAnimColorParamsHolder.SIZE);
+
+                        var keyFrameLength = ArrayUtil.ReadUInt16BE(paramsData, 0);
+                        var keyFrameCount = ArrayUtil.ReadUInt16BE(paramsData, 2);
+                        var primColors = new SegmentedAddress(ArrayUtil.ReadUint32BE(paramsData, 4)); // size 5 per elem
+                        var envColors = new SegmentedAddress(ArrayUtil.ReadUint32BE(paramsData, 8)); // size 4 per elem
+                        var keyFrames = new SegmentedAddress(ArrayUtil.ReadUint32BE(paramsData, 0xC)); // size 2 per elem
+
+                        var arrayLengths = (paramsType == 2) ? keyFrameLength : keyFrameCount;
+
+                        // check valid & unoccupied segmented addresses
+                        if (!(primColors.SegmentId == segmentId && primColors.SegmentOff < data.Length))
+                            continue;
+                        if (!obj.IsOffsetFree((int)primColors.SegmentOff) ||
+                            primColors.SegmentOff + arrayLengths * 5 > data.Length ||
+                            !obj.IsOffsetFree((int)primColors.SegmentOff + arrayLengths * 5 - 1))
+                            continue;
+                        // envColors may be null
+                        if (!((envColors.SegmentId == segmentId && envColors.SegmentOff < data.Length) || envColors.VAddr == 0))
+                            continue;
+                        if (envColors.VAddr != 0 &&
+                            (!obj.IsOffsetFree((int)envColors.SegmentOff) ||
+                            envColors.SegmentOff + arrayLengths * 4 > data.Length ||
+                            !obj.IsOffsetFree((int)envColors.SegmentOff + arrayLengths * 4 - 1)))
+                            continue;
+                        // type 2 doesn't use keyFrames, so it may be null in that case only
+                        if (!((keyFrames.SegmentId == segmentId && keyFrames.SegmentOff < data.Length) || (paramsType == 2 && keyFrames.VAddr == 0)))
+                            continue;
+                        if (keyFrames.VAddr != 0 &&
+                            (!obj.IsOffsetFree((int)keyFrames.SegmentOff) ||
+                            keyFrames.SegmentOff + arrayLengths * 2 > data.Length ||
+                            !obj.IsOffsetFree((int)keyFrames.SegmentOff + arrayLengths * 2 - 1) ||
+                            keyFrames.SegmentOff % 2 != 0))
+                            continue;
+
+                        if (primColors.VAddr != 0)
+                            obj.AddMatAnimPrimColors(arrayLengths, off: (int)primColors.SegmentOff);
+                        if (envColors.VAddr != 0)
+                            obj.AddMatAnimEnvColors(arrayLengths, off: (int)envColors.SegmentOff);
+                        if (keyFrames.VAddr != 0)
+                            obj.AddMatAnimKeyFrames(arrayLengths, off: (int)keyFrames.SegmentOff);
+
+                        obj.AddMatAnimColorParams(off: (int)paramsSeg.SegmentOff);
+                    }
+
+                    obj.AddMatAnimHeader(off: i);
+                }
+            }
+        }
+
         public static void FindDlists(Z64Object obj, byte[] data, int segmentId, Config cfg)
         {
             obj.Entries.Clear();
@@ -529,6 +872,8 @@ namespace Z64
         public static List<string> AnalyzeDlists(Z64Object obj, byte[] data, int segmentId)
         {
             List<string> errors = new List<string>();
+            Dictionary<int, SegmentedTextureAttrs> segmentedTextureLoads = new Dictionary<int, SegmentedTextureAttrs>();
+            bool[] ambigiousSegments = new bool[16];
 
             List<int> dlists = new List<int>();
             for (int i = 0; i < obj.Entries.Count; i++)
@@ -640,6 +985,32 @@ namespace Z64
                                         errors.Add($"Error in Dlist 0x{new SegmentedAddress(segmentId, dlist).VAddr:X8} : {ex.Message}");
                                     }
                                 }
+                                else if (addr.Segmented && addr.SegmentId >= 8 && addr.SegmentOff == 0 && lastFmt != G_IM_FMT.G_IM_FMT_CI
+                                        && !ambigiousSegments[addr.SegmentId])
+                                { // enumerate texture loads from segment 8+ for animated material detection
+                                    SegmentedTextureAttrs lastAttrs;
+                                    SegmentedTextureAttrs attrs = new SegmentedTextureAttrs()
+                                    {
+                                        Width = (int)(settilesize.lrs.Float() + 1),
+                                        Height = (int)(settilesize.lrt.Float() + 1),
+                                        Fmt = N64Texture.ConvertFormat(lastFmt, lastSiz)
+                                    };
+
+                                    if (segmentedTextureLoads.TryGetValue(addr.SegmentId, out lastAttrs))
+                                    {
+                                        if (lastAttrs.Fmt != attrs.Fmt || lastAttrs.Width != attrs.Width || lastAttrs.Height != attrs.Height)
+                                        {
+                                            // Segment usage is ambiguous
+                                            segmentedTextureLoads.Remove(addr.SegmentId);
+                                            ambigiousSegments[addr.SegmentId] = true;
+                                            errors.Add($"Error in Dlist 0x{new SegmentedAddress(segmentId, dlist).VAddr:X8} : Usage of segment 0x{addr.SegmentId:X2} is ambiguous");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        segmentedTextureLoads.Add(addr.SegmentId, attrs);
+                                    }
+                                }
 
                                 lastFmt = (G_IM_FMT)(-1);
                                 lastSiz = (G_IM_SIZ)(-1);
@@ -678,7 +1049,10 @@ namespace Z64
             // Having lots of the object already mapped out reduces possible mis-identifications.
             FindSkeletons(obj, data, segmentId);
             FindAnimations(obj, data, segmentId);
-            
+            FindCollisionData(obj, data, segmentId);
+            FindMaterialAnimations(obj, data, segmentId, segmentedTextureLoads);
+            FindLinkAnimations(obj, data, segmentId);
+
             obj.GroupUnkEntries();
             obj.FixNames();
             obj.SetData(data);

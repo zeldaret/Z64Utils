@@ -567,7 +567,7 @@ namespace Z64.Forms
             {
                 _animFile = File.ReadAllBytes(of.FileName);
 
-                using (var form = new ObjectAnalyzerForm(_game, _animFile, _curSegment))
+                using (var form = new ObjectAnalyzerForm(_game, _animFile, of.FileName, _curSegment))
                 {
                     _anims.Clear();
 

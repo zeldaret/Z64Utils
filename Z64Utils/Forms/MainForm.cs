@@ -115,7 +115,7 @@ namespace Z64.Forms
             listView_files.EndUpdate();
         }
 
-        private void OpenObjectAnalyzer(Z64Game game, string fileName, byte[] data, string title)
+        private void OpenObjectAnalyzer(Z64Game game, byte[] data, string fileName, string title)
         {
             int defaultSegment = -1;
 
@@ -139,7 +139,7 @@ namespace Z64.Forms
 
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                var form = new ObjectAnalyzerForm(game, data, int.Parse(valueForm.Result));
+                var form = new ObjectAnalyzerForm(game, data, fileName, int.Parse(valueForm.Result));
                 form.Text += $" - {title}";
                 form.Show();
             }
@@ -295,7 +295,7 @@ namespace Z64.Forms
             }
         }
 
-        private void OpenObjectViewerForExternalFile(byte[] data)
+        private void OpenObjectViewerForExternalFile(byte[] data, string fileName)
         {
             var valueForm = new EditValueForm("Choose Segment", "Plase enter a segment id.", (v) =>
             {
@@ -306,7 +306,7 @@ namespace Z64.Forms
 
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                var form = new ObjectAnalyzerForm(_game, data, int.Parse(valueForm.Result));
+                var form = new ObjectAnalyzerForm(_game, data, fileName, int.Parse(valueForm.Result));
                 form.Text += "External file";
                 form.Show();
             }
@@ -334,7 +334,7 @@ namespace Z64.Forms
             string defaultValue = null;
             string fileName = _game.GetFileName(file.VRomStart).ToLower();
             string title = $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
-            OpenObjectAnalyzer(_game, fileName, file.Data, title);
+            OpenObjectAnalyzer(_game, file.Data, fileName, title);
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -406,7 +406,7 @@ namespace Z64.Forms
             if (DR == DialogResult.OK)
             {
                 byte[] b = File.ReadAllBytes(OF.FileName);
-                OpenObjectViewerForExternalFile(b);
+                OpenObjectViewerForExternalFile(b, OF.FileName);
             }
         }
     }

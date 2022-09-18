@@ -26,7 +26,12 @@ namespace Z64
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
-    
+
+    public struct Vec3s
+    {
+        public short X, Y, Z;
+    };
+
     public class Z64Object
     {
         public enum EntryType
@@ -469,6 +474,46 @@ namespace Z64
             }
             public override int GetSize() => HEADER_SIZE;
         }
+
+        public class LinkAnimationHolder : ObjectHolder
+        {
+            public const int SIZE = 0x8;
+
+            public short FrameCount { get; set; }
+            public SegmentedAddress LinkAnimationSegment { get; set; }
+
+            public LinkAnimationHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+
+            public override EntryType GetEntryType() => EntryType.LinkAnimationHeader;
+
+            public override byte[] GetData()
+            {
+                using (var ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+                    bw.Write(FrameCount);
+                    bw.Write(new byte[2]); // padding
+                    bw.Write(LinkAnimationSegment.VAddr);
+                    return ms.ToArray().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (var ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+                    FrameCount = br.ReadInt16();
+                    br.ReadBytes(2); // padding
+                    LinkAnimationSegment = new SegmentedAddress(br.ReadUInt32());
+                }
+            }
+            public override int GetSize() => SIZE;
+        }
+
         public class AnimationFrameDataHolder : ObjectHolder
         {
             public short[] FrameData { get; set; }
@@ -562,14 +607,815 @@ namespace Z64
             public override int GetSize() => JointIndices.Length * ENTRY_SIZE;
         }
 
+        public class ColHeaderHolder : ObjectHolder
+        {
+            public const int COLHEADER_SIZE = 0x2C;
+
+            public Vec3s MinBounds { get; set; }
+            public Vec3s MaxBounds { get; set; }
+            public ushort NbVertices { get; set; }
+            public SegmentedAddress VertexListSeg { get; set; }
+            public ushort NbPolygons { get; set; }
+            public SegmentedAddress PolyListSeg { get; set; }
+            public SegmentedAddress SurfaceTypeSeg { get; set; }
+            public SegmentedAddress CamDataSeg { get; set; }
+            public ushort NbWaterBoxes { get; set; }
+            public SegmentedAddress WaterBoxSeg { get; set; }
+
+            public CollisionVerticesHolder VerticesHolder { get; set; }
+            public CollisionPolygonsHolder PolygonsHolder { get; set; }
+            public CollisionSurfaceTypesHolder SurfaceTypesHolder { get; set; }
+            public CollisionCamDataHolder CamDataHolder { get; set; }
+            public WaterBoxHolder WaterBoxHolder { get; set; }
+
+            public ColHeaderHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+                VerticesHolder = null;
+                PolygonsHolder = null;
+                SurfaceTypesHolder = null;
+                CamDataHolder = null;
+                WaterBoxHolder = null;
+            }
+
+            public override EntryType GetEntryType() => EntryType.CollisionHeader;
+
+            public override byte[] GetData()
+            {
+                using (var ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+                    bw.Write(MinBounds.X);
+                    bw.Write(MinBounds.Y);
+                    bw.Write(MinBounds.Z);
+                    bw.Write(MaxBounds.X);
+                    bw.Write(MaxBounds.Y);
+                    bw.Write(MaxBounds.Z);
+                    bw.Write(NbVertices);
+                    bw.WriteInt16(0);
+                    bw.Write(VertexListSeg.VAddr);
+                    bw.Write(NbPolygons);
+                    bw.WriteInt16(0);
+                    bw.Write(PolyListSeg.VAddr);
+                    bw.Write(SurfaceTypeSeg.VAddr);
+                    bw.Write(CamDataSeg.VAddr);
+                    bw.Write(NbWaterBoxes);
+                    bw.WriteInt16(0);
+                    bw.Write(WaterBoxSeg.VAddr);
+                    return ms.ToArray().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+                    MinBounds = new Vec3s() { X = br.ReadInt16(), Y = br.ReadInt16(), Z = br.ReadInt16() };
+                    MaxBounds = new Vec3s() { X = br.ReadInt16(), Y = br.ReadInt16(), Z = br.ReadInt16() };
+                    NbVertices = br.ReadUInt16();
+                    br.ReadUInt16();
+                    VertexListSeg = new SegmentedAddress(br.ReadUInt32());
+                    NbPolygons = br.ReadUInt16();
+                    br.ReadUInt16();
+                    PolyListSeg = new SegmentedAddress(br.ReadUInt32());
+                    SurfaceTypeSeg = new SegmentedAddress(br.ReadUInt32());
+                    CamDataSeg = new SegmentedAddress(br.ReadUInt32());
+                    NbWaterBoxes = br.ReadUInt16();
+                    br.ReadUInt16();
+                    WaterBoxSeg = new SegmentedAddress(br.ReadUInt32());
+                }
+            }
+            public override int GetSize() => COLHEADER_SIZE;
+        }
+
+        public class CollisionVerticesHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 6;
+
+            public Vec3s[] Points { get; set; }
+
+            public CollisionVerticesHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.CollisionVertices;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < Points.Length; i++)
+                    {
+                        bw.Write(Points[i].X);
+                        bw.Write(Points[i].Y);
+                        bw.Write(Points[i].Z);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 6");
+
+                Points = new Vec3s[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < Points.Length; i++)
+                        Points[i] = new Vec3s()
+                        {
+                            X = br.ReadInt16(),
+                            Y = br.ReadInt16(),
+                            Z = br.ReadInt16()
+                        };
+                }
+            }
+            public override int GetSize() => Points.Length * ENTRY_SIZE;
+        }
+        public class CollisionPolygonsHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 0x10;
+
+            public struct CollisionPoly
+            {
+                public ushort Type;
+                public ushort[] Data;
+                public Vec3s Normal;
+                public short Dist;
+            }
+
+            public CollisionPoly[] CollisionPolys { get; set; }
+
+            public CollisionPolygonsHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.CollisionPolygons;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < CollisionPolys.Length; i++)
+                    {
+                        bw.Write(CollisionPolys[i].Type);
+                        bw.Write(CollisionPolys[i].Data[0]);
+                        bw.Write(CollisionPolys[i].Data[1]);
+                        bw.Write(CollisionPolys[i].Data[2]);
+                        bw.Write(CollisionPolys[i].Normal.X);
+                        bw.Write(CollisionPolys[i].Normal.Y);
+                        bw.Write(CollisionPolys[i].Normal.Z);
+                        bw.Write(CollisionPolys[i].Dist);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 6");
+
+                CollisionPolys = new CollisionPoly[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < CollisionPolys.Length; i++)
+                        CollisionPolys[i] = new CollisionPoly()
+                        {
+                            Type = br.ReadUInt16(),
+                            Data = new ushort[3] { br.ReadUInt16(), br.ReadUInt16(), br.ReadUInt16() },
+                            Normal = new Vec3s() { X = br.ReadInt16(), Y = br.ReadInt16(), Z = br.ReadInt16() },
+                            Dist = br.ReadInt16()
+                        };
+                }
+            }
+            public override int GetSize() => CollisionPolys.Length * ENTRY_SIZE;
+
+            public ushort LargestPolyType()
+            {
+                return CollisionPolys.Max(poly => poly.Type);
+            }
+        }
+        public class CollisionSurfaceTypesHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 8;
+
+            public uint[][] SurfaceTypes { get; set; }
+
+            public CollisionSurfaceTypesHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.CollisionSurfaceTypes;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < SurfaceTypes.Length; i++)
+                    {
+                        bw.Write(SurfaceTypes[i][0]);
+                        bw.Write(SurfaceTypes[i][1]);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 8");
+
+                SurfaceTypes = new uint[data.Length / ENTRY_SIZE][];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < SurfaceTypes.Length; i++)
+                        SurfaceTypes[i] = new uint[2] { br.ReadUInt32(), br.ReadUInt32() };
+                }
+            }
+            public override int GetSize() => SurfaceTypes.Length * ENTRY_SIZE;
+        }
+        public class CollisionCamDataHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 8;
+
+            public struct ColCamData
+            {
+                public ushort CameraSType;
+                public short NumCameras;
+                public SegmentedAddress CamPosData;
+            };
+
+            public ColCamData[] CamData { get; set; }
+
+            public CollisionCamDataHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.CollisionCamData;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < CamData.Length; i++)
+                    {
+                        bw.Write(CamData[i].CameraSType);
+                        bw.Write(CamData[i].NumCameras);
+                        bw.Write(CamData[i].CamPosData.VAddr);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 8");
+
+                CamData = new ColCamData[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < CamData.Length; i++)
+                        CamData[i] = new ColCamData
+                        {
+                            CameraSType = br.ReadUInt16(),
+                            NumCameras = br.ReadInt16(),
+                            CamPosData = new SegmentedAddress(br.ReadUInt32())
+                        };
+                }
+            }
+            public override int GetSize() => CamData.Length * ENTRY_SIZE;
+        }
+        public class WaterBoxHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 0x10;
+
+            public struct WaterBox
+            {
+                public short XMin;
+                public short YSurface;
+                public short ZMin;
+                public short XLength, ZLength;
+                public uint Properties;
+            };
+
+            public WaterBox[] WaterBoxes { get; set; }
+
+            public WaterBoxHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.WaterBox;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < WaterBoxes.Length; i++)
+                    {
+                        bw.Write(WaterBoxes[i].XMin);
+                        bw.Write(WaterBoxes[i].YSurface);
+                        bw.Write(WaterBoxes[i].ZMin);
+                        bw.Write(WaterBoxes[i].XLength);
+                        bw.Write(WaterBoxes[i].ZLength);
+                        bw.WriteUInt16(0);
+                        bw.Write(WaterBoxes[i].Properties);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 0x10");
+
+                WaterBoxes = new WaterBox[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < WaterBoxes.Length; i++)
+                    {
+                        WaterBoxes[i] = new WaterBox
+                        {
+                            XMin = br.ReadInt16(),
+                            YSurface = br.ReadInt16(),
+                            ZMin = br.ReadInt16(),
+                            XLength = br.ReadInt16(),
+                            ZLength = br.ReadInt16(),
+                        };
+                        br.ReadUInt16();
+                        WaterBoxes[i].Properties = br.ReadUInt32();
+                    }
+                }
+            }
+            public override int GetSize() => WaterBoxes.Length * ENTRY_SIZE;
+        }
+
+        public class MatAnimHeaderHolder : ObjectHolder
+        {
+            public const int SIZE = 8;
+
+            public byte SegmentId { get; set; }
+            public short Type { get; set; }
+            public SegmentedAddress ParamsSeg { get; set; }
+
+            public MatAnimHeaderHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimHeader;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    bw.Write(SegmentId);
+                    bw.Write((byte)0);
+                    bw.Write(Type);
+                    bw.Write(ParamsSeg.VAddr);
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    SegmentId = br.Read1Byte();
+                    br.Read1Byte();
+                    Type = br.ReadInt16();
+                    ParamsSeg = new SegmentedAddress(br.ReadUInt32());
+                }
+            }
+            public override int GetSize() => SIZE;
+        }
+        public class MatAnimTexScrollParamsHolder : ObjectHolder
+        {
+            public const int SIZE = 4;
+
+            public byte StepX { get; set; }
+            public byte StepY { get; set; }
+            public byte Width { get; set; }
+            public byte Height { get; set; }
+
+            public MatAnimTexScrollParamsHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimTexScrollParams;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    bw.Write(StepX);
+                    bw.Write(StepY);
+                    bw.Write(Width);
+                    bw.Write(Height);
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    StepX = br.Read1Byte();
+                    StepY = br.Read1Byte();
+                    Width = br.Read1Byte();
+                    Height = br.Read1Byte();
+                }
+            }
+            public override int GetSize() => SIZE;
+        }
+        public class MatAnimColorParamsHolder : ObjectHolder
+        {
+            public const int SIZE = 0x10;
+
+            public ushort KeyFrameLength { get; set; }
+            public ushort KeyFrameCount { get; set; }
+            public SegmentedAddress PrimColors { get; set; }
+            public SegmentedAddress EnvColors { get; set; }
+            public SegmentedAddress KeyFrames { get; set; }
+
+            public MatAnimColorParamsHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimColorParams;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    bw.Write(KeyFrameLength);
+                    bw.Write(KeyFrameCount);
+                    bw.Write(PrimColors.VAddr);
+                    bw.Write(EnvColors.VAddr);
+                    bw.Write(KeyFrames.VAddr);
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    KeyFrameLength = br.ReadUInt16();
+                    KeyFrameCount = br.ReadUInt16();
+                    PrimColors = new SegmentedAddress(br.ReadUInt32());
+                    EnvColors = new SegmentedAddress(br.ReadUInt32());
+                    KeyFrames = new SegmentedAddress(br.ReadUInt32());
+                }
+            }
+            public override int GetSize() => SIZE;
+        }
+        public class MatAnimPrimColorsHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 5;
+            public struct MatAnimPrimColor
+            {
+                public byte R, G, B, A, LodFrac;
+            };
+
+            public MatAnimPrimColor[] PrimColors { get; set; }
+
+            public MatAnimPrimColorsHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimPrimColors;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < PrimColors.Length; i++)
+                    {
+                        bw.Write(PrimColors[i].R);
+                        bw.Write(PrimColors[i].G);
+                        bw.Write(PrimColors[i].B);
+                        bw.Write(PrimColors[i].A);
+                        bw.Write(PrimColors[i].LodFrac);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 5");
+
+                PrimColors = new MatAnimPrimColor[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < PrimColors.Length; i++)
+                        PrimColors[i] = new MatAnimPrimColor()
+                        {
+                            R = br.Read1Byte(),
+                            G = br.Read1Byte(),
+                            B = br.Read1Byte(),
+                            A = br.Read1Byte(),
+                            LodFrac = br.Read1Byte()
+                        };
+                }
+            }
+            public override int GetSize() => PrimColors.Length * ENTRY_SIZE;
+        }
+        public class MatAnimEnvColorsHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 4;
+            public struct MatAnimEnvColor
+            {
+                public byte R, G, B, A;
+            };
+
+            public MatAnimEnvColor[] EnvColors { get; set; }
+
+            public MatAnimEnvColorsHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimEnvColors;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < EnvColors.Length; i++)
+                    {
+                        bw.Write(EnvColors[i].R);
+                        bw.Write(EnvColors[i].G);
+                        bw.Write(EnvColors[i].B);
+                        bw.Write(EnvColors[i].A);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 4");
+
+                EnvColors = new MatAnimEnvColor[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < EnvColors.Length; i++)
+                        EnvColors[i] = new MatAnimEnvColor()
+                        {
+                            R = br.Read1Byte(),
+                            G = br.Read1Byte(),
+                            B = br.Read1Byte(),
+                            A = br.Read1Byte()
+                        };
+                }
+            }
+            public override int GetSize() => EnvColors.Length * ENTRY_SIZE;
+        }
+        public class MatAnimKeyFramesHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 2;
+
+            public ushort[] KeyFrames { get; set; }
+
+            public MatAnimKeyFramesHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimKeyFrames;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < KeyFrames.Length; i++)
+                    {
+                        bw.Write(KeyFrames[i]);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 2");
+
+                KeyFrames = new ushort[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < KeyFrames.Length; i++)
+                        KeyFrames[i] = br.ReadUInt16();
+                }
+            }
+            public override int GetSize() => KeyFrames.Length * ENTRY_SIZE;
+        }
+        public class MatAnimTexCycleParamsHolder : ObjectHolder
+        {
+            public const int SIZE = 0xC;
+
+            public ushort KeyFrameLength { get; set; }
+            public SegmentedAddress TextureList { get; set; }
+            public SegmentedAddress TextureIndexList { get; set; }
+
+            public MatAnimTexCycleParamsHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimTexCycleParams;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    bw.Write(KeyFrameLength);
+                    bw.WriteUInt16(0);
+                    bw.Write(TextureList.VAddr);
+                    bw.Write(TextureIndexList.VAddr);
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    KeyFrameLength = br.ReadUInt16();
+                    br.ReadUInt16();
+                    TextureList = new SegmentedAddress(br.ReadUInt32());
+                    TextureIndexList = new SegmentedAddress(br.ReadUInt32());
+                }
+            }
+            public override int GetSize() => SIZE;
+        }
+        public class MatAnimTextureIndexListHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 1;
+
+            public byte[] TextureIndices { get; set; }
+
+            public MatAnimTextureIndexListHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimTextureIndexList;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < TextureIndices.Length; i++)
+                    {
+                        bw.Write(TextureIndices[i]);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                TextureIndices = new byte[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < TextureIndices.Length; i++)
+                    {
+                        TextureIndices[i] = br.Read1Byte();
+                    }
+                }
+            }
+            public override int GetSize() => TextureIndices.Length * ENTRY_SIZE;
+        }
+
+        public class MatAnimTextureListHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 4;
+
+            public SegmentedAddress[] TextureSegments { get; set; }
+
+            public MatAnimTextureListHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.MatAnimTextureList;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < TextureSegments.Length; i++)
+                    {
+                        bw.Write(TextureSegments[i].VAddr);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                if ((data.Length % ENTRY_SIZE) != 0)
+                    throw new Z64ObjectException($"Invalid data size (0x{data.Length:X}) should be a multiple of 0x10");
+
+                TextureSegments = new SegmentedAddress[data.Length / ENTRY_SIZE];
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int i = 0; i < TextureSegments.Length; i++)
+                    {
+                        TextureSegments[i] = new SegmentedAddress(br.ReadUInt32());
+                    }
+                }
+            }
+            public override int GetSize() => TextureSegments.Length * ENTRY_SIZE;
+        }
+
+        public Z64Game Game;
+        public string FileName;
         public List<ObjectHolder> Entries { get; set; }
 
         public Z64Object()
         {
+            Game = null;
             Entries = new List<ObjectHolder>();
         }
-        public Z64Object(byte[] data) : this()
+        public Z64Object(Z64Game game, byte[] data, string fileName) : this()
         {
+            Game = game;
+            FileName = fileName;
+
             AddUnknow(data.Length);
             SetData(data);
         }
@@ -816,6 +1662,12 @@ namespace Z64
             var holder = new FlexSkeletonHolder(name ?? $"skel_{off:X8}", new byte[FlexSkeletonHolder.HEADER_SIZE]);
             return (FlexSkeletonHolder)AddHolder(holder, off);
         }
+        public LinkAnimationHolder AddLinkAnimation(string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new LinkAnimationHolder(name ?? $"linkanim_{off:X8}", new byte[LinkAnimationHolder.SIZE]);
+            return (LinkAnimationHolder)AddHolder(holder, off);
+        }
         public AnimationHolder AddAnimation(string name = null, int off = -1)
         {
             if (off == -1) off = GetSize();
@@ -834,6 +1686,96 @@ namespace Z64
             var holder = new AnimationJointIndicesHolder(name ?? $"jointindices_{off:X8}", new byte[count*AnimationJointIndicesHolder.ENTRY_SIZE]);
             return (AnimationJointIndicesHolder)AddHolder(holder, off);
         }
+        public ColHeaderHolder AddCollisionHeader(string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new ColHeaderHolder(name ?? $"colheader_{off:X8}", new byte[ColHeaderHolder.COLHEADER_SIZE]);
+            return (ColHeaderHolder)AddHolder(holder, off);
+        }
+        public CollisionVerticesHolder AddCollisionVertices(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new CollisionVerticesHolder(name ?? $"colvertices_{off:X8}", new byte[count * CollisionVerticesHolder.ENTRY_SIZE]);
+            return (CollisionVerticesHolder)AddHolder(holder, off);
+        }
+        public CollisionPolygonsHolder AddCollisionPolygons(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new CollisionPolygonsHolder(name ?? $"colpolys_{off:X8}", new byte[count * CollisionPolygonsHolder.ENTRY_SIZE]);
+            return (CollisionPolygonsHolder)AddHolder(holder, off);
+        }
+        public CollisionSurfaceTypesHolder AddCollisionSurfaceTypes(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new CollisionSurfaceTypesHolder(name ?? $"colsurfacetypes_{off:X8}", new byte[count * CollisionSurfaceTypesHolder.ENTRY_SIZE]);
+            return (CollisionSurfaceTypesHolder)AddHolder(holder, off);
+        }
+        public CollisionCamDataHolder AddCollisionCamData(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new CollisionCamDataHolder(name ?? $"colcamdata_{off:X8}", new byte[count * CollisionCamDataHolder.ENTRY_SIZE]);
+            return (CollisionCamDataHolder)AddHolder(holder, off);
+        }
+        public WaterBoxHolder AddWaterBoxes(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new WaterBoxHolder(name ?? $"waterbox_{off:X8}", new byte[count * WaterBoxHolder.ENTRY_SIZE]);
+            return (WaterBoxHolder)AddHolder(holder, off);
+        }
+        public MatAnimHeaderHolder AddMatAnimHeader(string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimHeaderHolder(name ?? $"matanimheader_{off:X8}", new byte[MatAnimHeaderHolder.SIZE]);
+            return (MatAnimHeaderHolder)AddHolder(holder, off);
+        }
+        public MatAnimTexScrollParamsHolder AddMatAnimTexScrollParams(string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimTexScrollParamsHolder(name ?? $"texscrollparams_{off:X8}", new byte[MatAnimTexScrollParamsHolder.SIZE]);
+            return (MatAnimTexScrollParamsHolder)AddHolder(holder, off);
+        }
+        public MatAnimColorParamsHolder AddMatAnimColorParams(string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimColorParamsHolder(name ?? $"colorparams_{off:X8}", new byte[MatAnimColorParamsHolder.SIZE]);
+            return (MatAnimColorParamsHolder)AddHolder(holder, off);
+        }
+        public MatAnimPrimColorsHolder AddMatAnimPrimColors(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimPrimColorsHolder(name ?? $"primcolors_{off:X8}", new byte[count * MatAnimPrimColorsHolder.ENTRY_SIZE]);
+            return (MatAnimPrimColorsHolder)AddHolder(holder, off);
+        }
+        public MatAnimEnvColorsHolder AddMatAnimEnvColors(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimEnvColorsHolder(name ?? $"envcolors_{off:X8}", new byte[count * MatAnimEnvColorsHolder.ENTRY_SIZE]);
+            return (MatAnimEnvColorsHolder)AddHolder(holder, off);
+        }
+        public MatAnimKeyFramesHolder AddMatAnimKeyFrames(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimKeyFramesHolder(name ?? $"keyframes_{off:X8}", new byte[count * MatAnimKeyFramesHolder.ENTRY_SIZE]);
+            return (MatAnimKeyFramesHolder)AddHolder(holder, off);
+        }
+        public MatAnimTexCycleParamsHolder AddMatAnimTexCycleParams(string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimTexCycleParamsHolder(name ?? $"texcycleparams_{off:X8}", new byte[MatAnimTexCycleParamsHolder.SIZE]);
+            return (MatAnimTexCycleParamsHolder)AddHolder(holder, off);
+        }
+        public MatAnimTextureIndexListHolder AddMatAnimTextureIndexList(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimTextureIndexListHolder(name ?? $"waterbox_{off:X8}", new byte[count * MatAnimTextureIndexListHolder.ENTRY_SIZE]);
+            return (MatAnimTextureIndexListHolder)AddHolder(holder, off);
+        }
+        public MatAnimTextureListHolder AddMatAnimTextureList(int count, string name = null, int off = -1)
+        {
+            if (off == -1) off = GetSize();
+            var holder = new MatAnimTextureListHolder(name ?? $"waterbox_{off:X8}", new byte[count * MatAnimTextureListHolder.ENTRY_SIZE]);
+            return (MatAnimTextureListHolder)AddHolder(holder, off);
+        }
 
         public void FixNames()
         {
@@ -842,6 +1784,9 @@ namespace Z64
             {
                 switch (entry.GetEntryType())
                 {
+                    case EntryType.LinkAnimationHeader:
+                        entry.Name = "linkanim_" + entryOff.ToString("X8");
+                        break;
                     case EntryType.AnimationHeader:
                         entry.Name = "anim_" + entryOff.ToString("X8");
                         break;
@@ -875,6 +1820,51 @@ namespace Z64
                         break;
                     case EntryType.Vertex:
                         entry.Name = "vtx_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.CollisionHeader:
+                        entry.Name = "colheader_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.CollisionVertices:
+                        entry.Name = "colvertices_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.CollisionPolygons:
+                        entry.Name = "colpolys_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.CollisionSurfaceTypes:
+                        entry.Name = "colsurfacetypes_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.CollisionCamData:
+                        entry.Name = "colcamdata_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.WaterBox:
+                        entry.Name = "waterbox_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimHeader:
+                        entry.Name = "matanimheader_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimTexScrollParams:
+                        entry.Name = "texscrollparams_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimColorParams:
+                        entry.Name = "colorparams_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimPrimColors:
+                        entry.Name = "primcolors_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimEnvColors:
+                        entry.Name = "envcolors_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimKeyFrames:
+                        entry.Name = "keyframes_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimTextureIndexList:
+                        entry.Name = "texindexlist_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimTextureList:
+                        entry.Name = "texlist_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.MatAnimTexCycleParams:
+                        entry.Name = "texcycleparams_" + entryOff.ToString("X8");
                         break;
                     case EntryType.Mtx:
                         entry.Name = "mtx_" + entryOff.ToString("X8");
@@ -911,6 +1901,19 @@ namespace Z64
                 }
             }
         }
+
+        public ObjectHolder GetHolderAtOffset(int target)
+        {
+            int entryOff = 0;
+            foreach (var entry in Entries)
+            {
+                if (target >= entryOff && target < entryOff + entry.GetSize())
+                    return entry;
+                entryOff += entry.GetSize();
+            }
+            return null;
+        }
+
         public bool IsOffsetFree(int off)
         {
             int entryOff = 0;
@@ -1085,6 +2088,83 @@ namespace Z64
                             });
                             break;
                         }
+                    case EntryType.CollisionVertices:
+                        {
+                            var holder = (CollisionVerticesHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.Points.Length
+                            });
+                            break;
+                        }
+                    case EntryType.CollisionPolygons:
+                        {
+                            var holder = (CollisionPolygonsHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.CollisionPolys.Length
+                            });
+                            break;
+                        }
+                    case EntryType.CollisionSurfaceTypes:
+                        {
+                            var holder = (CollisionSurfaceTypesHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.SurfaceTypes.Length
+                            });
+                            break;
+                        }
+                    case EntryType.CollisionCamData:
+                        {
+                            var holder = (CollisionCamDataHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.CamData.Length
+                            });
+                            break;
+                        }
+                    case EntryType.WaterBox:
+                        {
+                            var holder = (WaterBoxHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.WaterBoxes.Length
+                            });
+                            break;
+                        }
+                    case EntryType.MatAnimTextureIndexList:
+                        {
+                            var holder = (MatAnimTextureIndexListHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.TextureIndices.Length
+                            });
+                            break;
+                        }
+                    case EntryType.MatAnimTextureList:
+                        {
+                            var holder = (MatAnimTextureListHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.TextureSegments.Length
+                            });
+                            break;
+                        }
                     case EntryType.Mtx:
                     case EntryType.SkeletonHeader:
                     case EntryType.FlexSkeletonHeader:
@@ -1092,12 +2172,51 @@ namespace Z64
                     case EntryType.LODLimb:
                     case EntryType.SkinLimb:
                     case EntryType.AnimationHeader:
+                    case EntryType.LinkAnimationHeader:
+                    case EntryType.CollisionHeader:
+                    case EntryType.MatAnimHeader:
+                    case EntryType.MatAnimTexScrollParams:
+                    case EntryType.MatAnimColorParams:
+                    case EntryType.MatAnimTexCycleParams:
                         {
                             list.Add(new JsonObjectHolder()
                             {
                                 Name = iter.Name,
                                 EntryType = iter.GetEntryType()
                             });
+                            break;
+                        }
+                    case EntryType.MatAnimPrimColors:
+                        {
+                            var holder = (MatAnimPrimColorsHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.PrimColors.Length
+                            }); ;
+                            break;
+                        }
+                    case EntryType.MatAnimEnvColors:
+                        {
+                            var holder = (MatAnimEnvColorsHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.EnvColors.Length
+                            }); ;
+                            break;
+                        }
+                    case EntryType.MatAnimKeyFrames:
+                        {
+                            var holder = (MatAnimKeyFramesHolder)iter;
+                            list.Add(new JsonArrayHolder()
+                            {
+                                Name = iter.Name,
+                                EntryType = iter.GetEntryType(),
+                                Count = holder.KeyFrames.Length
+                            }); ;
                             break;
                         }
                     default:
@@ -1162,6 +2281,11 @@ namespace Z64
                             obj.AddAnimation();
                             break;
                         }
+                    case EntryType.LinkAnimationHeader:
+                        {
+                            obj.AddLinkAnimation();
+                            break;
+                        }
                     case EntryType.SkeletonLimbs:
                         {
                             var holder = iter.ToObject<JsonArrayHolder>();
@@ -1183,6 +2307,91 @@ namespace Z64
                     case EntryType.Mtx:
                         {
                             obj.AddMtx(1);
+                            break;
+                        }
+                    case EntryType.CollisionHeader:
+                        {
+                            obj.AddCollisionHeader();
+                            break;
+                        }
+                    case EntryType.CollisionVertices:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddCollisionVertices(holder.Count);
+                            break;
+                        }
+                    case EntryType.CollisionPolygons:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddCollisionPolygons(holder.Count);
+                            break;
+                        }
+                    case EntryType.CollisionSurfaceTypes:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddCollisionSurfaceTypes(holder.Count);
+                            break;
+                        }
+                    case EntryType.CollisionCamData:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddCollisionCamData(holder.Count);
+                            break;
+                        }
+                    case EntryType.WaterBox:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddWaterBoxes(holder.Count);
+                            break;
+                        }
+                    case EntryType.MatAnimHeader:
+                        {
+                            obj.AddMatAnimHeader();
+                            break;
+                        }
+                    case EntryType.MatAnimTexScrollParams:
+                        {
+                            obj.AddMatAnimTexScrollParams();
+                            break;
+                        }
+                    case EntryType.MatAnimColorParams:
+                        {
+                            obj.AddMatAnimColorParams();
+                            break;
+                        }
+                    case EntryType.MatAnimTextureIndexList:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddMatAnimTextureIndexList(holder.Count);
+                            break;
+                        }
+                    case EntryType.MatAnimTextureList:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddMatAnimTextureList(holder.Count);
+                            break;
+                        }
+                    case EntryType.MatAnimTexCycleParams:
+                        {
+                            obj.AddMatAnimTexCycleParams();
+                            break;
+                        }
+                    case EntryType.MatAnimPrimColors:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddMatAnimPrimColors(holder.Count);
+                            break;
+                        }
+                    case EntryType.MatAnimEnvColors:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddMatAnimEnvColors(holder.Count);
+                            break;
+                        }
+                    case EntryType.MatAnimKeyFrames:
+                        {
+                            var holder = iter.ToObject<JsonArrayHolder>();
+                            obj.AddMatAnimKeyFrames(holder.Count);
                             break;
                         }
                     default: throw new Z64ObjectException($"Invalid entry type ({type})");
