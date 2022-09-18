@@ -15,6 +15,7 @@ using Syroot.BinaryData;
 using System.Diagnostics;
 using Common;
 using System.Threading;
+using ByteConverter = Syroot.BinaryData.ByteConverter;
 
 namespace Z64.Forms
 {
@@ -46,9 +47,11 @@ namespace Z64.Forms
         List<F3DZEX.Command.Dlist> _limbDlists;
 
         AnimationHolder _curAnim;
-        PlayerAnimationHolder _curPlayerAnim;
         short[] _frameData;
         AnimationJointIndicesHolder.JointIndex[] _curJoints;
+
+        PlayerAnimationHolder _curPlayerAnim;
+        PlayerAnimationJointTableHolder.JointTableEntry[,] _curPlayerJointTable;
 
         byte[] _animFile;
         int _curSegment = 6;
@@ -98,8 +101,6 @@ namespace Z64.Forms
         void RenderLimb(int limbIdx, bool overlay = false)
         {
             _renderer.RdpMtxStack.Push();
-
-
 
             _renderer.RdpMtxStack.Load(CalcMatrix(_renderer.RdpMtxStack.Top(), limbIdx));
 
@@ -277,11 +278,19 @@ namespace Z64.Forms
         float DegToRad(float x) => x * (float)Math.PI / 180.0f;
 
         short GetFrameData(int frameDataIdx) => _frameData[frameDataIdx < _curAnim.StaticIndexMax ? frameDataIdx : frameDataIdx + trackBar_anim.Value];
-        Vector3 GetLimbPos(int limbIdx) => (_curJoints == null) 
+        Vector3 GetLimbPos(int limbIdx)
+        {
+            if (_curPlayerAnim != null)
+            {
+                return new Vector3(_limbs[limbIdx].JointX, _limbs[limbIdx].JointY, _limbs[limbIdx].JointZ);
+            }
+
+            return (_curJoints == null)
                 ? new Vector3(0, 0, 0)
-                :    (limbIdx == 0)
+                : (limbIdx == 0)
                     ? new Vector3(_curJoints[limbIdx].X, _curJoints[limbIdx].Y, _curJoints[limbIdx].Z)
                     : new Vector3(_limbs[limbIdx].JointX, _limbs[limbIdx].JointY, _limbs[limbIdx].JointZ);
+        } 
 
         // Update anims -> matrices
         void UpdateAnim()
@@ -324,7 +333,33 @@ namespace Z64.Forms
             UpdateMatrixBuf();
         }
 
+        void UpdatePlayerAnim()
+        {
+            trackBar_anim.Minimum = 0;
+            trackBar_anim.Maximum = _curPlayerAnim.FrameCount - 1;
+            trackBar_anim.Value = 0;
+
+            var Saved = _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId];
+            _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] = F3DZEX.Memory.Segment.FromBytes("link_animetion", _game.GetFileByName("link_animetion").Data);
+
+            byte[] buff = _renderer.Memory.ReadBytes(_curPlayerAnim.PlayerAnimationSegment, ((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * _curPlayerAnim.FrameCount * 2);
+            _curPlayerJointTable = new PlayerAnimationJointTableHolder("joints", buff).JointTable;
+
+            _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] = Saved;
+            UpdateMatrixBuf();
+        }
+
         Matrix4 CalcMatrix(Matrix4 src, int limbIdx)
+        {
+            if (_curPlayerAnim != null)
+            {
+                return CalcMatrixPlayer(src, limbIdx);
+            }
+
+            return CalcMatrixNormal(src, limbIdx);
+        }
+
+        Matrix4 CalcMatrixNormal(Matrix4 src, int limbIdx)
         {
             if (_curAnim == null || _curJoints == null)
                 return src;
@@ -334,6 +369,26 @@ namespace Z64.Forms
             short rotX = GetFrameData(_curJoints[limbIdx + 1].X);
             short rotY = GetFrameData(_curJoints[limbIdx + 1].Y);
             short rotZ = GetFrameData(_curJoints[limbIdx + 1].Z);
+
+            src = Matrix4.CreateRotationX(S16ToRad(rotX)) *
+                Matrix4.CreateRotationY(S16ToRad(rotY)) *
+                Matrix4.CreateRotationZ(S16ToRad(rotZ)) *
+                Matrix4.CreateTranslation(pos) *
+                src;
+
+            return src;
+        }
+
+        Matrix4 CalcMatrixPlayer(Matrix4 src, int limbIdx)
+        {
+            if (_curPlayerJointTable == null)
+                return src;
+
+            Vector3 pos = GetLimbPos(limbIdx);
+
+            short rotX = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].X;
+            short rotY = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].Y;
+            short rotZ = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].Z;
 
             src = Matrix4.CreateRotationX(S16ToRad(rotX)) *
                 Matrix4.CreateRotationY(S16ToRad(rotY)) *
@@ -483,7 +538,7 @@ namespace Z64.Forms
                 else
                 {
                     _curPlayerAnim = _playerAnims[listBox_anims.SelectedIndex - _anims.Count];
-                    Debug.WriteLine($"Selected {_curPlayerAnim.Name}");
+                    UpdatePlayerAnim();
                 }
                 
                 NewRender();

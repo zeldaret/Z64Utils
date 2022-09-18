@@ -50,6 +50,7 @@ namespace Z64
             LODLimb,
             SkinLimb,
             PlayerAnimationHeader,
+            PlayerAnimationJointTable,
             CollisionHeader,
             CollisionVertices,
             CollisionPolygons,
@@ -475,47 +476,6 @@ namespace Z64
             public override int GetSize() => HEADER_SIZE;
         }
 
-        public class PlayerAnimationHolder : ObjectHolder
-        {
-            public const int SIZE = 0x8;
-
-            public short FrameCount { get; set; }
-            public SegmentedAddress PlayerAnimationSegment { get; set; }
-
-            public bool extAnim { get; set; }
-
-            public PlayerAnimationHolder(string name, byte[] data) : base(name)
-            {
-                SetData(data);
-            }
-
-            public override EntryType GetEntryType() => EntryType.PlayerAnimationHeader;
-
-            public override byte[] GetData()
-            {
-                using (var ms = new MemoryStream())
-                {
-                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
-                    bw.Write(FrameCount);
-                    bw.Write(new byte[2]); // padding
-                    bw.Write(PlayerAnimationSegment.VAddr);
-                    return ms.ToArray().Take((int)ms.Length).ToArray();
-                }
-            }
-
-            public override void SetData(byte[] data)
-            {
-                using (var ms = new MemoryStream(data))
-                {
-                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
-                    FrameCount = br.ReadInt16();
-                    br.ReadBytes(2); // padding
-                    PlayerAnimationSegment = new SegmentedAddress(br.ReadUInt32());
-                }
-            }
-            public override int GetSize() => SIZE;
-        }
-
         public class AnimationFrameDataHolder : ObjectHolder
         {
             public short[] FrameData { get; set; }
@@ -554,6 +514,7 @@ namespace Z64
             }
             public override int GetSize() => FrameData.Length * 2;
         }
+
         public class AnimationJointIndicesHolder : ObjectHolder
         {
             public const int ENTRY_SIZE = 6;
@@ -607,6 +568,119 @@ namespace Z64
                 }
             }
             public override int GetSize() => JointIndices.Length * ENTRY_SIZE;
+        }
+
+        public class PlayerAnimationHolder : ObjectHolder
+        {
+            public const int SIZE = 0x8;
+            public const int PLAYER_LIMB_COUNT = 22;
+
+            public short FrameCount { get; set; }
+            public SegmentedAddress PlayerAnimationSegment { get; set; }
+            public bool extAnim { get; set; }
+
+            public PlayerAnimationHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+
+            public override EntryType GetEntryType() => EntryType.PlayerAnimationHeader;
+
+            public override byte[] GetData()
+            {
+                using (var ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+                    bw.Write(FrameCount);
+                    bw.Write(new byte[2]); // padding
+                    bw.Write(PlayerAnimationSegment.VAddr);
+                    return ms.ToArray().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                using (var ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+                    FrameCount = br.ReadInt16();
+                    br.ReadBytes(2); // padding
+                    PlayerAnimationSegment = new SegmentedAddress(br.ReadUInt32());
+                }
+            }
+            public override int GetSize() => SIZE;
+        }
+
+        public class PlayerAnimationJointTableHolder : ObjectHolder
+        {
+            public const int ENTRY_SIZE = 6;
+            public struct JointTableEntry
+            {
+                public short X, Y, Z;
+            };
+
+            public JointTableEntry[,] JointTable { get; set; }
+            public short[] Unknown { get; set; }
+
+            public PlayerAnimationJointTableHolder(string name, byte[] data) : base(name)
+            {
+                SetData(data);
+            }
+            public override EntryType GetEntryType() => EntryType.PlayerAnimationJointTable;
+
+            public override byte[] GetData()
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
+
+                    int frameCount = JointTable.GetLength(0);
+
+                    for (int frame = 0; frame < frameCount; frame++)
+                    {
+                        for (int i = 0; i < JointTable.GetLength(1); i++)
+                        {
+                            bw.Write(JointTable[frame, i].X);
+                            bw.Write(JointTable[frame, i].Y);
+                            bw.Write(JointTable[frame, i].Z);
+                        }
+
+                        bw.Write(Unknown[frame]);
+                    }
+
+                    return ms.GetBuffer().Take((int)ms.Length).ToArray();
+                }
+            }
+
+            public override void SetData(byte[] data)
+            {
+                // TODO: Validate size
+
+                int frameCount = data.Length / (((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * 2);
+                JointTable = new JointTableEntry[frameCount, PlayerAnimationHolder.PLAYER_LIMB_COUNT];
+                Unknown = new short[frameCount];
+
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
+
+                    for (int frame = 0; frame < frameCount; frame++)
+                    {
+                        for (int i = 0; i < JointTable.GetLength(1); i++)
+                        {
+                            JointTable[frame, i] = new JointTableEntry()
+                            {
+                                X = br.ReadInt16(),
+                                Y = br.ReadInt16(),
+                                Z = br.ReadInt16()
+                            };
+                        }
+
+                        Unknown[frame] = br.ReadInt16();
+                    }
+                }
+            }
+            public override int GetSize() => JointTable.Length * ENTRY_SIZE;
         }
 
         public class ColHeaderHolder : ObjectHolder
@@ -1728,7 +1802,17 @@ namespace Z64
         {
             if (off == -1) off = GetSize();
             var holder = new MatAnimHeaderHolder(name ?? $"matanimheader_{off:X8}", new byte[MatAnimHeaderHolder.SIZE]);
-            return (MatAnimHeaderHolder)AddHolder(holder, off);
+
+            // TODO: REALLY stupid hack to get object_link_goron to load
+            try
+            {
+                return (MatAnimHeaderHolder)AddHolder(holder, off);
+            }
+            catch (Exception)
+            {
+                return holder;
+            }
+            
         }
         public MatAnimTexScrollParamsHolder AddMatAnimTexScrollParams(string name = null, int off = -1)
         {
