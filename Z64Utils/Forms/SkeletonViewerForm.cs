@@ -74,6 +74,7 @@ namespace Z64.Forms
 
             if ((Control.ModifierKeys & Keys.Control) == 0)
             {
+                _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes("gameplay_keep", game.GetFileByName("gameplay_keep").Data);
                 for (int i = 8; i < 16; i++)
                 {
                     _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
