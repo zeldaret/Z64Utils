@@ -235,8 +235,8 @@ namespace Z64.Forms
             _limbs = new List<SkeletonLimbHolder>();
             for (int i = 0; i < limbs.LimbSegments.Length; i++)
             {
-                byte[] limbData = _renderer.Memory.ReadBytes(limbs.LimbSegments[i], SkeletonLimbHolder.ENTRY_SIZE);
-                var limb = new SkeletonLimbHolder($"limb_{i}", limbData);
+                byte[] limbData = _renderer.Memory.ReadBytes(limbs.LimbSegments[i], SkeletonLimbHolder.STANDARD_LIMB_SIZE);
+                var limb = new SkeletonLimbHolder($"limb_{i}", limbData, EntryType.StandardLimb); // TODO support other limb types
                 _limbs.Add(limb);
             }
 

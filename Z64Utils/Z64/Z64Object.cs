@@ -41,7 +41,25 @@ namespace Z64
             SkeletonHeader,
             FlexSkeletonHeader,
             SkeletonLimbs,
-            SkeletonLimb,
+            StandardLimb,
+            LODLimb,
+            SkinLimb,
+            LinkAnimationHeader,
+            CollisionHeader,
+            CollisionVertices,
+            CollisionPolygons,
+            CollisionSurfaceTypes,
+            CollisionCamData,
+            WaterBox,
+            MatAnimHeader,
+            MatAnimTexScrollParams,
+            MatAnimColorParams,
+            MatAnimPrimColors,
+            MatAnimEnvColors,
+            MatAnimKeyFrames,
+            MatAnimTexCycleParams,
+            MatAnimTextureIndexList,
+            MatAnimTextureList,
             Unknown,
         }
 
@@ -207,21 +225,33 @@ namespace Z64
         }
         public class SkeletonLimbHolder : ObjectHolder
         {
-            public const int ENTRY_SIZE = 0xC;
+            public const int STANDARD_LIMB_SIZE = 0xC;
+            public const int LOD_LIMB_SIZE = 0x10;
+            public const int SKIN_LIMB_SIZE = 0x10;
+
+            public EntryType Type;
 
             public short JointX { get; set; }
             public short JointY { get; set; }
             public short JointZ { get; set; }
             public byte Child { get; set; }
             public byte Sibling { get; set; }
-            public SegmentedAddress DListSeg { get; set; }
 
-            public SkeletonLimbHolder(string name, byte[] data) : base(name)
+            // Standard and LOD Limb Only
+            public SegmentedAddress DListSeg { get; set; }
+            // LOD Limb Only
+            public SegmentedAddress DListFarSeg { get; set; }
+            // Skin Limb Only
+            public int SegmentType { get; set; } // indicates the type of data pointed to by SkinSeg
+            public SegmentedAddress SkinSeg { get; set; }
+
+            public SkeletonLimbHolder(string name, byte[] data, EntryType type) : base(name)
             {
+                Type = type;
                 SetData(data);
             }
 
-            public override EntryType GetEntryType() => EntryType.SkeletonLimb;
+            public override EntryType GetEntryType() => Type;
 
             public override byte[] GetData()
             {
@@ -233,7 +263,17 @@ namespace Z64
                     bw.Write(JointZ);
                     bw.Write(Child);
                     bw.Write(Sibling);
-                    bw.Write(DListSeg.VAddr);
+
+                    if (Type != EntryType.SkinLimb)
+                        bw.Write(DListSeg.VAddr);
+                    if (Type == EntryType.LODLimb)
+                        bw.Write(DListFarSeg.VAddr);
+                    else if (Type == EntryType.SkinLimb)
+                    {
+                        bw.Write(SegmentType);
+                        bw.Write(SkinSeg.VAddr);
+                    }
+
                     return ms.ToArray().Take((int)ms.Length).ToArray();
                 }
             }
@@ -248,10 +288,21 @@ namespace Z64
                     JointZ = br.ReadInt16();
                     Child = br.Read1Byte();
                     Sibling = br.Read1Byte();
-                    DListSeg = new SegmentedAddress(br.ReadUInt32());
+
+                    if (Type != EntryType.SkinLimb)
+                        DListSeg = new SegmentedAddress(br.ReadUInt32());
+                    if (Type == EntryType.LODLimb)
+                        DListFarSeg = new SegmentedAddress(br.ReadUInt32());
+                    else if (Type == EntryType.SkinLimb)
+                    {
+                        SegmentType = br.ReadInt32();
+                        SkinSeg = new SegmentedAddress(br.ReadUInt32());
+                    }
                 }
             }
-            public override int GetSize() => ENTRY_SIZE;
+            public override int GetSize() => (Type == EntryType.StandardLimb) ? STANDARD_LIMB_SIZE :
+                                            ((Type == EntryType.LODLimb) ? LOD_LIMB_SIZE :
+                                              SKIN_LIMB_SIZE);
         }
         public class SkeletonLimbsHolder : ObjectHolder
         {
@@ -735,10 +786,16 @@ namespace Z64
             var holder = new MtxHolder(name ?? $"mtx_{off:X8}", new byte[mtxCount * Mtx.SIZE]);
             return (MtxHolder)AddHolder(holder, off);
         }
-        public SkeletonLimbHolder AddSkeletonLimb(string name = null, int off = -1, int skel_off = -1)
+        public SkeletonLimbHolder AddSkeletonLimb(EntryType type, string name = null, int off = -1, int skel_off = -1)
         {
             if (off == -1) off = GetSize();
-            var holder = new SkeletonLimbHolder(name?? $"skel_{skel_off:X8}_limb_{off:X8}", new byte[SkeletonLimbHolder.ENTRY_SIZE]);
+            var limbTypeName =
+                    (type == EntryType.StandardLimb) ? "standardlimb" : ((type == EntryType.LODLimb) ? "lodlimb" : "skinlimb");
+            var limbTypeSize =
+                    (type == EntryType.StandardLimb) ? SkeletonLimbHolder.STANDARD_LIMB_SIZE :
+                    ((type == EntryType.LODLimb) ? SkeletonLimbHolder.LOD_LIMB_SIZE :
+                    SkeletonLimbHolder.SKIN_LIMB_SIZE);
+            var holder = new SkeletonLimbHolder(name ?? $"skel_{skel_off:X8}_{limbTypeName}_{off:X8}", new byte[limbTypeSize], type);
             return (SkeletonLimbHolder)AddHolder(holder, off);
         }
         public SkeletonLimbsHolder AddSkeletonLimbs(int count, string name = null, int off = -1, int skel_off = -1)
@@ -801,8 +858,14 @@ namespace Z64
                     case EntryType.SkeletonLimbs:
                         entry.Name = "limbs_" + entryOff.ToString("X8");
                         break;
-                    case EntryType.SkeletonLimb:
-                        entry.Name = "limb_" + entryOff.ToString("X8");
+                    case EntryType.StandardLimb:
+                        entry.Name = "standardlimb_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.LODLimb:
+                        entry.Name = "lodlimb_" + entryOff.ToString("X8");
+                        break;
+                    case EntryType.SkinLimb:
+                        entry.Name = "skinlimb_" + entryOff.ToString("X8");
                         break;
                     case EntryType.DList:
                         entry.Name = "dlist_" + entryOff.ToString("X8");
@@ -1025,7 +1088,9 @@ namespace Z64
                     case EntryType.Mtx:
                     case EntryType.SkeletonHeader:
                     case EntryType.FlexSkeletonHeader:
-                    case EntryType.SkeletonLimb:
+                    case EntryType.StandardLimb:
+                    case EntryType.LODLimb:
+                    case EntryType.SkinLimb:
                     case EntryType.AnimationHeader:
                         {
                             list.Add(new JsonObjectHolder()
@@ -1085,9 +1150,11 @@ namespace Z64
                             obj.AddFlexSkeleton();
                             break;
                         }
-                    case EntryType.SkeletonLimb:
+                    case EntryType.StandardLimb:
+                    case EntryType.LODLimb:
+                    case EntryType.SkinLimb:
                         {
-                            obj.AddSkeletonLimb();
+                            obj.AddSkeletonLimb(type);
                             break;
                         }
                     case EntryType.AnimationHeader:

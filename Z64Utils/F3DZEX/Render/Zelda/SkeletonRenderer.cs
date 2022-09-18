@@ -119,8 +119,8 @@ namespace F3DZEX.Render.Zelda
                     ? $"{i + 1} {limbNameBase}"
                     // no callback or the callback didn't provide a name, use a default limb name
                     : $"limb_{i + 1}";
-                byte[] limbData = mem.ReadBytes(limbs.LimbSegments[i], SkeletonLimbHolder.ENTRY_SIZE);
-                var limb = new SkeletonLimbHolder(limbName, limbData);
+                byte[] limbData = mem.ReadBytes(limbs.LimbSegments[i], SkeletonLimbHolder.STANDARD_LIMB_SIZE);
+                var limb = new SkeletonLimbHolder($"limb_{i}", limbData, EntryType.StandardLimb); // TODO support other limb types
                 _limbs.Add(limb);
             }
 
