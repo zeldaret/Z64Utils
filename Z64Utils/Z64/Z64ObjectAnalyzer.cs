@@ -362,6 +362,13 @@ namespace Z64
                     Z64Object.EntryType limbType;
 
                     var firstLimbSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(limbsData, 0));
+                    // Quick fix for one-limb skeletons
+                    // TODO: Maybe do this right somehow
+                    if (limbsData.Length <= 4)
+                    {
+                        limbType = Z64Object.EntryType.StandardLimb;
+                        goto found_limb_type;
+                    }
                     var secondLimbSeg = new SegmentedAddress(ArrayUtil.ReadUint32BE(limbsData, 4));
 
                     if (secondLimbSeg.VAddr - firstLimbSeg.VAddr == Z64Object.SkeletonLimbHolder.STANDARD_LIMB_SIZE)
