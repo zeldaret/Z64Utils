@@ -503,7 +503,7 @@ namespace Z64
             }
         }
 
-        public static void FindLinkAnimations(Z64Object obj, byte[] data, int segmentId)
+        public static void FindPlayerAnimations(Z64Object obj, byte[] data, int segmentId)
         {
             // only search in gameplay_keep
             if (!obj.FileName.Contains("gameplay_keep"))
@@ -519,7 +519,7 @@ namespace Z64
 
             int linkAnimetionSize = linkAnimetion.VRomEnd - linkAnimetion.VRomStart;
 
-            for (int i = 0; i <= data.Length - Z64Object.LinkAnimationHolder.SIZE; i += 4)
+            for (int i = 0; i <= data.Length - Z64Object.PlayerAnimationHolder.SIZE; i += 4)
             {
                 var frameCount = ArrayUtil.ReadInt16BE(data, i);
 
@@ -532,12 +532,12 @@ namespace Z64
                     if (animationSeg.SegmentId == 7 && animationSeg.SegmentOff < linkAnimetionSize)
                     {
                         // Check if free
-                        if (!(obj.IsOffsetFree(i) && obj.IsOffsetFree(i + Z64Object.LinkAnimationHolder.SIZE - 1)))
+                        if (!(obj.IsOffsetFree(i) && obj.IsOffsetFree(i + Z64Object.PlayerAnimationHolder.SIZE - 1)))
                             continue;
 
                         // Check if the data pointed to in link_animetion is valid? TODO
 
-                        obj.AddLinkAnimation(off: i);
+                        obj.AddPlayerAnimation(off: i);
                     }
                 }
             }
@@ -1051,7 +1051,7 @@ namespace Z64
             FindAnimations(obj, data, segmentId);
             FindCollisionData(obj, data, segmentId);
             FindMaterialAnimations(obj, data, segmentId, segmentedTextureLoads);
-            FindLinkAnimations(obj, data, segmentId);
+            FindPlayerAnimations(obj, data, segmentId);
 
             obj.GroupUnkEntries();
             obj.FixNames();

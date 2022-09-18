@@ -554,14 +554,14 @@ namespace Z64.Forms
                         textBox_holderInfo.Text = sw.ToString();
                         break;
                     }
-                case Z64Object.EntryType.LinkAnimationHeader:
+                case Z64Object.EntryType.PlayerAnimationHeader:
                     {
                         tabControl1.SelectedTab = tabPage_text;
-                        var anim = (Z64Object.LinkAnimationHolder)holder;
+                        var anim = (Z64Object.PlayerAnimationHolder)holder;
 
                         StringWriter sw = new StringWriter();
                         sw.WriteLine($"Frame Count: {anim.FrameCount}");
-                        sw.WriteLine($"Animation Data Segment: 0x{anim.LinkAnimationSegment.VAddr:X8}");
+                        sw.WriteLine($"Animation Data Segment: 0x{anim.PlayerAnimationSegment.VAddr:X8}");
 
                         textBox_holderInfo.Text = sw.ToString();
                         break;
@@ -811,10 +811,10 @@ namespace Z64.Forms
                                 sw.WriteLine("};");
                                 break;
                             }
-                        case Z64Object.EntryType.LinkAnimationHeader:
+                        case Z64Object.EntryType.PlayerAnimationHeader:
                             {
-                                var holder = (Z64Object.LinkAnimationHolder)entry;
-                                sw.WriteLine($"LinkAnimationHeader {entry.Name} = {{ {{ {holder.FrameCount} }}, 0x{holder.LinkAnimationSegment} }};");
+                                var holder = (Z64Object.PlayerAnimationHolder)entry;
+                                sw.WriteLine($"PlayerAnimationHeader {entry.Name} = {{ {{ {holder.FrameCount} }}, 0x{holder.PlayerAnimationSegment} }};");
                                 break;
                             }
                         case Z64Object.EntryType.AnimationHeader:

@@ -41,12 +41,12 @@ namespace Z64.Forms
 
         SkeletonHolder _skel;
         List<AnimationHolder> _anims;
-        List<LinkAnimationHolder> _linkAnims;
+        List<PlayerAnimationHolder> _playerAnims;
         List<SkeletonLimbHolder> _limbs;
         List<F3DZEX.Command.Dlist> _limbDlists;
 
         AnimationHolder _curAnim;
-        LinkAnimationHolder _curLinkAnim;
+        PlayerAnimationHolder _curPlayerAnim;
         short[] _frameData;
         AnimationJointIndicesHolder.JointIndex[] _curJoints;
 
@@ -193,7 +193,7 @@ namespace Z64.Forms
         {
             _skel = skel;
             _anims = anims;
-            _linkAnims = new List<LinkAnimationHolder>();
+            _playerAnims = new List<PlayerAnimationHolder>();
 
             listBox_anims.Items.Clear();
             _anims.ForEach(a => listBox_anims.Items.Add(a.Name));
@@ -471,7 +471,7 @@ namespace Z64.Forms
             trackBar_anim.Enabled = listBox_anims.SelectedIndex >= 0;
 
             _curAnim = null;
-            _curLinkAnim = null;
+            _curPlayerAnim = null;
             if (listBox_anims.SelectedIndex >= 0)
             {
                 if (listBox_anims.SelectedIndex < _anims.Count)
@@ -481,8 +481,8 @@ namespace Z64.Forms
                 }
                 else
                 {
-                    _curLinkAnim = _linkAnims[listBox_anims.SelectedIndex - _anims.Count];
-                    Debug.WriteLine($"Selected {_curLinkAnim.Name}");
+                    _curPlayerAnim = _playerAnims[listBox_anims.SelectedIndex - _anims.Count];
+                    Debug.WriteLine($"Selected {_curPlayerAnim.Name}");
                 }
                 
                 NewRender();
@@ -588,7 +588,7 @@ namespace Z64.Forms
                 using (var form = new ObjectAnalyzerForm(_game, _animFile, of.FileName, segment))
                 {
                     _anims.Clear();
-                    _linkAnims.Clear();
+                    _playerAnims.Clear();
 
                     form._obj.Entries.ForEach(e =>
                     {
@@ -598,18 +598,18 @@ namespace Z64.Forms
                             (e as Z64Object.AnimationHolder).Name = "ext_" + (e as Z64Object.AnimationHolder).Name;
                             _anims.Add((Z64Object.AnimationHolder)e);
                         }
-                        if (e is Z64Object.LinkAnimationHolder)
+                        if (e is Z64Object.PlayerAnimationHolder)
                         {
-                            (e as Z64Object.LinkAnimationHolder).extAnim = true;
-                            (e as Z64Object.LinkAnimationHolder).Name = "ext_" + (e as Z64Object.LinkAnimationHolder).Name;
-                            _linkAnims.Add((Z64Object.LinkAnimationHolder)e);
+                            (e as Z64Object.PlayerAnimationHolder).extAnim = true;
+                            (e as Z64Object.PlayerAnimationHolder).Name = "ext_" + (e as Z64Object.PlayerAnimationHolder).Name;
+                            _playerAnims.Add((Z64Object.PlayerAnimationHolder)e);
                         }
                     });
                 }
 
                 listBox_anims.Items.Clear();
                 _anims.ForEach(a => listBox_anims.Items.Add(a.Name));
-                _linkAnims.ForEach(a => listBox_anims.Items.Add(a.Name));
+                _playerAnims.ForEach(a => listBox_anims.Items.Add(a.Name));
             }
 
         }

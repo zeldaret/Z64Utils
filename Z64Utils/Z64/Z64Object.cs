@@ -49,7 +49,7 @@ namespace Z64
             StandardLimb,
             LODLimb,
             SkinLimb,
-            LinkAnimationHeader,
+            PlayerAnimationHeader,
             CollisionHeader,
             CollisionVertices,
             CollisionPolygons,
@@ -475,21 +475,21 @@ namespace Z64
             public override int GetSize() => HEADER_SIZE;
         }
 
-        public class LinkAnimationHolder : ObjectHolder
+        public class PlayerAnimationHolder : ObjectHolder
         {
             public const int SIZE = 0x8;
 
             public short FrameCount { get; set; }
-            public SegmentedAddress LinkAnimationSegment { get; set; }
+            public SegmentedAddress PlayerAnimationSegment { get; set; }
 
             public bool extAnim { get; set; }
 
-            public LinkAnimationHolder(string name, byte[] data) : base(name)
+            public PlayerAnimationHolder(string name, byte[] data) : base(name)
             {
                 SetData(data);
             }
 
-            public override EntryType GetEntryType() => EntryType.LinkAnimationHeader;
+            public override EntryType GetEntryType() => EntryType.PlayerAnimationHeader;
 
             public override byte[] GetData()
             {
@@ -498,7 +498,7 @@ namespace Z64
                     BinaryStream bw = new BinaryStream(ms, ByteConverter.Big);
                     bw.Write(FrameCount);
                     bw.Write(new byte[2]); // padding
-                    bw.Write(LinkAnimationSegment.VAddr);
+                    bw.Write(PlayerAnimationSegment.VAddr);
                     return ms.ToArray().Take((int)ms.Length).ToArray();
                 }
             }
@@ -510,7 +510,7 @@ namespace Z64
                     BinaryStream br = new BinaryStream(ms, ByteConverter.Big);
                     FrameCount = br.ReadInt16();
                     br.ReadBytes(2); // padding
-                    LinkAnimationSegment = new SegmentedAddress(br.ReadUInt32());
+                    PlayerAnimationSegment = new SegmentedAddress(br.ReadUInt32());
                 }
             }
             public override int GetSize() => SIZE;
@@ -1664,11 +1664,11 @@ namespace Z64
             var holder = new FlexSkeletonHolder(name ?? $"skel_{off:X8}", new byte[FlexSkeletonHolder.HEADER_SIZE]);
             return (FlexSkeletonHolder)AddHolder(holder, off);
         }
-        public LinkAnimationHolder AddLinkAnimation(string name = null, int off = -1)
+        public PlayerAnimationHolder AddPlayerAnimation(string name = null, int off = -1)
         {
             if (off == -1) off = GetSize();
-            var holder = new LinkAnimationHolder(name ?? $"linkanim_{off:X8}", new byte[LinkAnimationHolder.SIZE]);
-            return (LinkAnimationHolder)AddHolder(holder, off);
+            var holder = new PlayerAnimationHolder(name ?? $"playeranim_{off:X8}", new byte[PlayerAnimationHolder.SIZE]);
+            return (PlayerAnimationHolder)AddHolder(holder, off);
         }
         public AnimationHolder AddAnimation(string name = null, int off = -1)
         {
@@ -1786,8 +1786,8 @@ namespace Z64
             {
                 switch (entry.GetEntryType())
                 {
-                    case EntryType.LinkAnimationHeader:
-                        entry.Name = "linkanim_" + entryOff.ToString("X8");
+                    case EntryType.PlayerAnimationHeader:
+                        entry.Name = "playeranim_" + entryOff.ToString("X8");
                         break;
                     case EntryType.AnimationHeader:
                         entry.Name = "anim_" + entryOff.ToString("X8");
@@ -2174,7 +2174,7 @@ namespace Z64
                     case EntryType.LODLimb:
                     case EntryType.SkinLimb:
                     case EntryType.AnimationHeader:
-                    case EntryType.LinkAnimationHeader:
+                    case EntryType.PlayerAnimationHeader:
                     case EntryType.CollisionHeader:
                     case EntryType.MatAnimHeader:
                     case EntryType.MatAnimTexScrollParams:
@@ -2283,9 +2283,9 @@ namespace Z64
                             obj.AddAnimation();
                             break;
                         }
-                    case EntryType.LinkAnimationHeader:
+                    case EntryType.PlayerAnimationHeader:
                         {
-                            obj.AddLinkAnimation();
+                            obj.AddPlayerAnimation();
                             break;
                         }
                     case EntryType.SkeletonLimbs:
