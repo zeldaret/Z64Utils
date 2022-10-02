@@ -409,5 +409,29 @@ namespace Z64.Forms
                 OpenObjectViewerForExternalFile(b, OF.FileName);
             }
         }
+
+        private void listView_files_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView_files.SelectedIndices.Count != 1)
+                return;
+            var item = listView_files.SelectedItems[0];
+            var file = _game.GetFileFromIndex((int)item.Tag);
+
+            if (!file.Valid())
+            {
+                MessageBox.Show("Invalid File");
+                return;
+            }
+            if (file.Deleted)
+            {
+                MessageBox.Show("Deleted File");
+                return;
+            }
+
+            string defaultValue = null;
+            string fileName = _game.GetFileName(file.VRomStart).ToLower();
+            string title = $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
+            OpenObjectAnalyzer(_game, file.Data, fileName, title);
+        }
     }
 }

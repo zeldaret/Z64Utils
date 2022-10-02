@@ -61,12 +61,12 @@ namespace Z64.Forms
             this.f3DEXDisassemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ROMRAMConversionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectAnalyzerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.checkNewReleasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.objectAnalyzerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.contextMenuStrip_fs.SuspendLayout();
@@ -153,6 +153,7 @@ namespace Z64.Forms
             this.listView_files.TabIndex = 1;
             this.listView_files.UseCompatibleStateImageBehavior = false;
             this.listView_files.View = System.Windows.Forms.View.Details;
+            this.listView_files.DoubleClick += new System.EventHandler(this.listView_files_DoubleClick);
             // 
             // columnHeader1
             // 
@@ -326,6 +327,13 @@ namespace Z64.Forms
             this.textureViewerToolStripMenuItem.Text = "Texture Viewer";
             this.textureViewerToolStripMenuItem.Click += new System.EventHandler(this.textureViewerToolStripMenuItem_Click);
             // 
+            // objectAnalyzerToolStripMenuItem
+            // 
+            this.objectAnalyzerToolStripMenuItem.Name = "objectAnalyzerToolStripMenuItem";
+            this.objectAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.objectAnalyzerToolStripMenuItem.Text = "Object Analyzer";
+            this.objectAnalyzerToolStripMenuItem.Click += new System.EventHandler(this.objectAnalyzerToolStripMenuItem_Click);
+            // 
             // helpToolStripButton
             // 
             this.helpToolStripButton.AutoToolTip = false;
@@ -351,13 +359,6 @@ namespace Z64.Forms
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // objectAnalyzerToolStripMenuItem
-            // 
-            this.objectAnalyzerToolStripMenuItem.Name = "objectAnalyzerToolStripMenuItem";
-            this.objectAnalyzerToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.objectAnalyzerToolStripMenuItem.Text = "Object Analyzer";
-            this.objectAnalyzerToolStripMenuItem.Click += new System.EventHandler(this.objectAnalyzerToolStripMenuItem_Click);
             // 
             // MainForm
             // 

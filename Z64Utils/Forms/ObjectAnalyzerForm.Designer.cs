@@ -291,6 +291,7 @@
             this.listView_map.UseCompatibleStateImageBehavior = false;
             this.listView_map.View = System.Windows.Forms.View.Details;
             this.listView_map.SelectedIndexChanged += new System.EventHandler(this.listView_map_SelectedIndexChanged);
+            this.listView_map.DoubleClick += new System.EventHandler(this.listView_map_DoubleClick);
             // 
             // columnHeader1
             // 

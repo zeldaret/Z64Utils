@@ -21,6 +21,7 @@ namespace Z64.Forms
         public Z64Object _obj;
         int _segment;
         Z64Game _game;
+        Action _doubleClickAction;
 
         public ObjectAnalyzerForm(Z64Game game, byte[] data, string fileName, int segmentId)
         {
@@ -168,6 +169,14 @@ namespace Z64.Forms
                 : null;
         }
 
+        private void listView_map_DoubleClick(object sender, EventArgs e)
+        {
+            if (_doubleClickAction != null)
+            {
+                _doubleClickAction();
+            }
+        }
+
         private void listView_map_SelectedIndexChanged(object sender, EventArgs e)
         {
             var holder = GetCurrentHolder<Z64Object.ObjectHolder>();
@@ -180,6 +189,7 @@ namespace Z64.Forms
             openInDlistViewerMenuItem.Visible = 
             addToDlistViewerMenuItem.Visible =
             openSkeletonViewerMenuItem.Visible = false;
+            _doubleClickAction = null;
 
             switch (holder.GetEntryType())
             {
@@ -187,6 +197,7 @@ namespace Z64.Forms
                     {
                         openInDlistViewerMenuItem.Visible =
                         addToDlistViewerMenuItem.Visible = true;
+                        _doubleClickAction = this.openDisplayList;
 
                         tabControl1.SelectedTab = tabPage_text;
                         UpdateDisassembly();
@@ -495,6 +506,7 @@ namespace Z64.Forms
                 case Z64Object.EntryType.SkeletonHeader:
                     {
                         openSkeletonViewerMenuItem.Visible = true;
+                        _doubleClickAction = this.openSkeletonViewer;
                         tabControl1.SelectedTab = tabPage_text;
                         var skel = (Z64Object.SkeletonHolder)holder;
                         StringWriter sw = new StringWriter();
@@ -506,6 +518,7 @@ namespace Z64.Forms
                 case Z64Object.EntryType.FlexSkeletonHeader:
                     {
                         openSkeletonViewerMenuItem.Visible = true;
+                        _doubleClickAction = this.openSkeletonViewer;
                         tabControl1.SelectedTab = tabPage_text;
                         var skel = (Z64Object.FlexSkeletonHolder)holder;
 
@@ -641,6 +654,11 @@ namespace Z64.Forms
 
         private void openSkeletonViewerMenuItem_Click(object sender, EventArgs e)
         {
+            this.openSkeletonViewer();
+        }
+
+        private void openSkeletonViewer()
+        {
             var holder = GetCurrentHolder<Z64Object.ObjectHolder>();
             switch (holder.GetEntryType())
             {
@@ -694,6 +712,11 @@ namespace Z64.Forms
 
         private void openInDisplayViewerMenuItem_Click(object sender, EventArgs e)
         {
+            this.openDisplayList();
+        }
+
+        private void openDisplayList()
+        {
             var holder = GetCurrentHolder<Z64Object.ObjectHolder>();
             if (holder.GetEntryType() == Z64Object.EntryType.DList)
             {
@@ -703,7 +726,6 @@ namespace Z64.Forms
                 var dlist = GetCurrentHolder<Z64Object.DListHolder>();
                 DListViewerForm.Instance.SetSingleDlist(new SegmentedAddress(_segment, _obj.OffsetOf(dlist)).VAddr);
             }
-
         }
 
         private void disassemblySettingsToolStripMenuItem_Click(object sender, EventArgs e)
