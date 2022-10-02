@@ -53,6 +53,8 @@ namespace Z64.Forms
         PlayerAnimationHolder _curPlayerAnim;
         PlayerAnimationJointTableHolder.JointTableEntry[,] _curPlayerJointTable;
 
+        string _animationError;
+
         byte[] _animFile;
         int _curSegment = 6;
 
@@ -164,9 +166,18 @@ namespace Z64.Forms
             RenderLimb(0, true);
             */
 
-            toolStripErrorLabel.Text = _renderer.RenderFailed()
-                ? $"RENDER ERROR AT 0x{_renderer.RenderErrorAddr:X8}! ({_renderer.ErrorMsg})"
-                : "";
+            if (_renderer.RenderFailed())
+            {
+                toolStripErrorLabel.Text = $"RENDER ERROR AT 0x{_renderer.RenderErrorAddr:X8}! ({_renderer.ErrorMsg})";
+            }
+            else if (!string.IsNullOrEmpty(_animationError))
+            {
+                toolStripErrorLabel.Text = _animationError;
+            }
+            else
+            {
+                toolStripErrorLabel.Text = "";
+            }
         }
 
         private void TreeView_hierarchy_AfterSelect(object sender, EventArgs e)
@@ -322,11 +333,13 @@ namespace Z64.Forms
                 _curAnim = null;
                 _curJoints = null;
                 _frameData = null;
+                _animationError = "Animation is glitchy; displaying folded pose. To view this animation, load it in-game.";
             }
             else
             {
                 buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, bytesToRead);
                 _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
+                _animationError = "";
             }
 
             _renderer.Memory.Segments[_curSegment] = Saved;
