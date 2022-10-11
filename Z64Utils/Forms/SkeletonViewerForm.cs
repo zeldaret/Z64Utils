@@ -1,21 +1,13 @@
 ﻿using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using RDP;
 using static Z64.Z64Object;
 using System.IO;
 using Syroot.BinaryData;
-using System.Diagnostics;
-using Common;
-using System.Threading;
-using ByteConverter = Syroot.BinaryData.ByteConverter;
+using System.Drawing;
 
 namespace Z64.Forms
 {
@@ -45,6 +37,7 @@ namespace Z64.Forms
         List<PlayerAnimationHolder> _playerAnims;
         List<SkeletonLimbHolder> _limbs;
         List<F3DZEX.Command.Dlist> _limbDlists;
+        List<bool> _limbDlistRenderFlags;
 
         AnimationHolder _curAnim;
         short[] _frameData;
@@ -132,7 +125,7 @@ namespace Z64.Forms
                 var node = treeView_hierarchy.SelectedNode;
                 _renderer.SetHightlightEnabled(node?.Tag?.Equals(_limbs[limbIdx]) ?? false);
 
-                if (_limbDlists[limbIdx] != null)
+                if (_limbDlists[limbIdx] != null && _limbDlistRenderFlags[limbIdx])
                     _renderer.RenderDList(_limbDlists[limbIdx]);
             }
 
@@ -195,6 +188,28 @@ namespace Z64.Forms
             NewRender();
         }
 
+        private void treeView_hierarchy_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var tag = e.Node.Tag ?? null;
+                if (tag != null && tag is SkeletonLimbHolder)
+                {
+                    var index = _limbs.IndexOf((SkeletonLimbHolder)tag);
+                    _limbDlistRenderFlags[index] = !_limbDlistRenderFlags[index];
+                    if (!_limbDlistRenderFlags[index])
+                        e.Node.ForeColor = Color.Gray;
+                    else
+                        e.Node.ForeColor = Color.Black;
+
+                    treeView_hierarchy.SelectedNode = e.Node;
+                    
+                }
+
+                NewRender();
+            }
+        }
+
         private void NewRender(object sender = null, EventArgs e = null)
         {
             _renderer.ClearErrors();
@@ -249,11 +264,13 @@ namespace Z64.Forms
             var limbs = new SkeletonLimbsHolder("limbs", limbsData);
 
             _limbs = new List<SkeletonLimbHolder>();
+            _limbDlistRenderFlags = new List<bool>();
             for (int i = 0; i < limbs.LimbSegments.Length; i++)
             {
                 byte[] limbData = _renderer.Memory.ReadBytes(limbs.LimbSegments[i], SkeletonLimbHolder.STANDARD_LIMB_SIZE);
                 var limb = new SkeletonLimbHolder($"limb_{i}", limbData, EntryType.StandardLimb); // TODO support other limb types
                 _limbs.Add(limb);
+                _limbDlistRenderFlags.Add(true);
             }
 
             UpdateLimbsDlists();
@@ -682,5 +699,7 @@ namespace Z64.Forms
             }
 
         }
+
+
     }
 }

@@ -77,6 +77,7 @@ namespace Z64.Forms
             this.treeView_hierarchy.Size = new System.Drawing.Size(176, 264);
             this.treeView_hierarchy.TabIndex = 1;
             this.treeView_hierarchy.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_hierarchy_AfterSelect);
+            this.treeView_hierarchy.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_hierarchy_NodeMouseClick);
             // 
             // label1
             // 
@@ -221,6 +222,8 @@ namespace Z64.Forms
             // 
             // numUpDown_playbackSpeed
             // 
+            this.numUpDown_playbackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numUpDown_playbackSpeed.Location = new System.Drawing.Point(585, 566);
             this.numUpDown_playbackSpeed.Maximum = new decimal(new int[] {
             65535,
@@ -244,6 +247,8 @@ namespace Z64.Forms
             // 
             // label_playbackSpeed
             // 
+            this.label_playbackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label_playbackSpeed.AutoSize = true;
             this.label_playbackSpeed.Location = new System.Drawing.Point(585, 550);
             this.label_playbackSpeed.Name = "label_playbackSpeed";
