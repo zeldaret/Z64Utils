@@ -32,25 +32,23 @@ namespace Z64.Forms
         Z64Game _game;
         F3DZEX.Render.Renderer _renderer;
         F3DZEX.Render.Renderer.Config _rendererCfg;
+        SettingsForm _settingsForm;
 
         Z64Object.ColHeaderHolder _colHeader;
         RenderColPoly[] _polygons;
 
-        bool _wireframe;
-        bool _shaded;
         bool _cullBack;
 
         private CollisionViewerForm(Z64Game game)
         {
             _game = game;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
+            _rendererCfg.HighlightColor = Color.Gray;
             _renderer = new F3DZEX.Render.Renderer(game, _rendererCfg);
 
             _colHeader = null;
             _polygons = null;
 
-            _wireframe = true;
-            _shaded = true;
             _cullBack = true;
 
             InitializeComponent();
@@ -86,6 +84,7 @@ namespace Z64.Forms
                 return;
 
             _renderer.RenderStart(proj, view);
+            _renderer.PrepareForCollisionRender();
 
             if (_cullBack)
             {
@@ -97,34 +96,15 @@ namespace Z64.Forms
                 GL.Disable(EnableCap.CullFace);
             }
 
-            if (_wireframe)
+            GL.Begin(PrimitiveType.Triangles);
+            foreach (var poly in _polygons)
             {
-                GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-                GL.Color3(Color.Black);
-                GL.Begin(PrimitiveType.Triangles);
-                foreach (var poly in _polygons)
-                {
-                    GL.Normal3(poly.Normal.X, poly.Normal.Y, poly.Normal.Z);
-                    GL.Vertex3(poly.Points[0]);
-                    GL.Vertex3(poly.Points[1]);
-                    GL.Vertex3(poly.Points[2]);
-                }
-                GL.End();
+                GL.Normal3(poly.Normal.X, poly.Normal.Y, poly.Normal.Z);
+                GL.Vertex3(poly.Points[0]);
+                GL.Vertex3(poly.Points[1]);
+                GL.Vertex3(poly.Points[2]);
             }
-            if (_shaded)
-            {
-                GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
-                GL.Color3(Color.Gray);
-                GL.Begin(PrimitiveType.Triangles);
-                foreach (var poly in _polygons)
-                {
-                    GL.Normal3(poly.Normal.X, poly.Normal.Y, poly.Normal.Z);
-                    GL.Vertex3(poly.Points[0]);
-                    GL.Vertex3(poly.Points[1]);
-                    GL.Vertex3(poly.Points[2]);
-                }
-                GL.End();
-            }
+            GL.End();
         }
 
         private void NewRender()
@@ -166,6 +146,39 @@ namespace Z64.Forms
         private void ColViewerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Instance = null;
+            _settingsForm?.Close();
+        }
+
+        private void toolStripRenderCfgBtn_Click(object sender, EventArgs e)
+        {
+            if (_settingsForm != null)
+            {
+                _settingsForm.Activate();
+            }
+            else
+            {
+                _settingsForm = new SettingsForm(_rendererCfg);
+                _settingsForm.FormClosed += (sender, e) => _settingsForm = null;
+                _settingsForm.SettingsChanged += (sender, e) => { modelViewer.Render(); };
+                _settingsForm.Show();
+            }
+        }
+
+        private void cullingCfgBtn_Click(object sender, EventArgs e)
+        {
+            if (_cullBack)
+            {
+                _cullBack = false;
+                cullingCfgBtn.Text = "Enable Backface Culling";
+                cullingCfgBtn.ToolTipText = "Enable Backface Culling";
+            }
+            else
+            {
+                _cullBack = true;
+                cullingCfgBtn.Text = "Disable Backface Culling";
+                cullingCfgBtn.ToolTipText = "Disable Backface Culling";
+            }
+            modelViewer.Render();
         }
 
         private void saveScreenToolStripMenuItem_Click(object sender, EventArgs e)

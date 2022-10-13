@@ -37,8 +37,12 @@
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.modelViewer = new Z64.Forms.ModelViewerControl();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripRenderCfgBtn = new System.Windows.Forms.ToolStripButton();
+            this.cullingCfgBtn = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -82,8 +86,8 @@
             // 
             // modelViewer
             // 
-            this.modelViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.modelViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.modelViewer.BackColor = System.Drawing.Color.DodgerBlue;
             this.modelViewer.Location = new System.Drawing.Point(0, 3);
@@ -92,14 +96,42 @@
             this.modelViewer.RenderCallback = null;
             this.modelViewer.Size = new System.Drawing.Size(871, 610);
             this.modelViewer.TabIndex = 4;
-            this.modelViewer.VSync = false;
+            this.modelViewer.VSync = true;
             this.modelViewer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.modelViewer_MouseClick);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripRenderCfgBtn,
+            this.cullingCfgBtn});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(883, 25);
+            this.toolStrip1.TabIndex = 10;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripRenderCfgBtn
+            // 
+            this.toolStripRenderCfgBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripRenderCfgBtn.Name = "toolStripRenderCfgBtn";
+            this.toolStripRenderCfgBtn.Size = new System.Drawing.Size(93, 22);
+            this.toolStripRenderCfgBtn.Text = "Render Settings";
+            this.toolStripRenderCfgBtn.Click += new System.EventHandler(this.toolStripRenderCfgBtn_Click);
+            // 
+            // cullingCfgBtn
+            // 
+            this.cullingCfgBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.cullingCfgBtn.Name = "cullingCfgBtn";
+            this.cullingCfgBtn.Size = new System.Drawing.Size(140, 22);
+            this.cullingCfgBtn.Text = "Disable Backface Culling";
+            this.cullingCfgBtn.Click += new System.EventHandler(this.cullingCfgBtn_Click);
             // 
             // CollisionViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(883, 638);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.modelViewer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -110,6 +142,8 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,5 +157,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripRenderCfgBtn;
+        private System.Windows.Forms.ToolStripButton cullingCfgBtn;
     }
 }
