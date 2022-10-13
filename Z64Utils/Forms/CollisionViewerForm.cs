@@ -44,6 +44,7 @@ namespace Z64.Forms
             _game = game;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
             _rendererCfg.HighlightColor = Color.Gray;
+            _rendererCfg.RenderMode = F3DZEX.Render.RdpVertexDrawer.ModelRenderMode.Wireframe;
             _renderer = new F3DZEX.Render.Renderer(game, _rendererCfg);
 
             _colHeader = null;
