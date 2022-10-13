@@ -188,7 +188,8 @@ namespace Z64.Forms
 
             openInDlistViewerMenuItem.Visible = 
             addToDlistViewerMenuItem.Visible =
-            openSkeletonViewerMenuItem.Visible = false;
+            openSkeletonViewerMenuItem.Visible = 
+            openInCollisionViewerMenuItem.Visible = false;
             _doubleClickAction = null;
 
             switch (holder.GetEntryType())
@@ -243,6 +244,9 @@ namespace Z64.Forms
                     }
                 case Z64Object.EntryType.CollisionHeader:
                     {
+                        openInCollisionViewerMenuItem.Visible = true;
+                        _doubleClickAction = this.openCollisionHeader;
+
                         tabControl1.SelectedTab = tabPage_text;
                         var colHdr = (Z64Object.ColHeaderHolder)holder;
 
@@ -725,6 +729,21 @@ namespace Z64.Forms
 
                 var dlist = GetCurrentHolder<Z64Object.DListHolder>();
                 DListViewerForm.Instance.SetSingleDlist(new SegmentedAddress(_segment, _obj.OffsetOf(dlist)).VAddr);
+            }
+        }
+
+        private void showInCollisionViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.openCollisionHeader();
+        }
+
+        private void openCollisionHeader()
+        {
+            var holder = GetCurrentHolder<Z64Object.ColHeaderHolder>();
+            if (holder.GetEntryType() == Z64Object.EntryType.CollisionHeader)
+            {
+                CollisionViewerForm.OpenInstance(_game);
+                CollisionViewerForm.Instance.SetColHeader(holder);
             }
         }
 

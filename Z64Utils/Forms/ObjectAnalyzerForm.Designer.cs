@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "06000000",
             "-32767, -32767, -32767",
             "0xFFFF",
             "-32767, -32767",
             "255, 255, 255, 255"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "00000000",
             "cube_vtx",
             "Vertex"}, -1);
@@ -64,6 +64,7 @@
             this.openInDlistViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToDlistViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSkeletonViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openInCollisionViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -207,7 +208,7 @@
             this.listView_vtx.FullRowSelect = true;
             this.listView_vtx.HideSelection = false;
             this.listView_vtx.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem3});
             this.listView_vtx.Location = new System.Drawing.Point(6, 6);
             this.listView_vtx.Name = "listView_vtx";
             this.listView_vtx.Size = new System.Drawing.Size(619, 461);
@@ -282,7 +283,7 @@
             this.listView_map.FullRowSelect = true;
             this.listView_map.HideSelection = false;
             this.listView_map.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem4});
             this.listView_map.Location = new System.Drawing.Point(12, 49);
             this.listView_map.MultiSelect = false;
             this.listView_map.Name = "listView_map";
@@ -314,43 +315,51 @@
             this.openInDlistViewerMenuItem,
             this.addToDlistViewerMenuItem,
             this.openSkeletonViewerMenuItem,
+            this.openInCollisionViewerMenuItem,
             this.addToolStripMenuItem,
             this.deleteToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(203, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 136);
             // 
             // openInDlistViewerMenuItem
             // 
             this.openInDlistViewerMenuItem.Name = "openInDlistViewerMenuItem";
-            this.openInDlistViewerMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.openInDlistViewerMenuItem.Size = new System.Drawing.Size(203, 22);
             this.openInDlistViewerMenuItem.Text = "Open In Dlist Viewer";
             this.openInDlistViewerMenuItem.Click += new System.EventHandler(this.openInDisplayViewerMenuItem_Click);
             // 
             // addToDlistViewerMenuItem
             // 
             this.addToDlistViewerMenuItem.Name = "addToDlistViewerMenuItem";
-            this.addToDlistViewerMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.addToDlistViewerMenuItem.Size = new System.Drawing.Size(203, 22);
             this.addToDlistViewerMenuItem.Text = "Add to Dlist Viewer";
             this.addToDlistViewerMenuItem.Click += new System.EventHandler(this.addToDisplayViewerMenuItem_Click);
             // 
             // openSkeletonViewerMenuItem
             // 
             this.openSkeletonViewerMenuItem.Name = "openSkeletonViewerMenuItem";
-            this.openSkeletonViewerMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.openSkeletonViewerMenuItem.Size = new System.Drawing.Size(203, 22);
             this.openSkeletonViewerMenuItem.Text = "Open in Skeleton Viewer";
             this.openSkeletonViewerMenuItem.Click += new System.EventHandler(this.openSkeletonViewerMenuItem_Click);
+            // 
+            // openInCollisionViewerMenuItem
+            // 
+            this.openInCollisionViewerMenuItem.Name = "openInCollisionViewerMenuItem";
+            this.openInCollisionViewerMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.openInCollisionViewerMenuItem.Text = "Open in Collision Viewer";
+            this.openInCollisionViewerMenuItem.Click += new System.EventHandler(this.showInCollisionViewerToolStripMenuItem_Click);
             // 
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.addToolStripMenuItem.Text = "Add";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -541,5 +550,6 @@
         private System.Windows.Forms.Label label_textureInfo;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem openInCollisionViewerMenuItem;
     }
 }
