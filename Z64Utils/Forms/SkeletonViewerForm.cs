@@ -50,6 +50,7 @@ namespace Z64.Forms
 
         byte[] _animFile;
         int _curSegment = 6;
+        int _extAnimSegment = 6;
 
         public SkeletonViewerForm(Z64Game game, int curSegment)
         {
@@ -330,7 +331,7 @@ namespace Z64.Forms
             var Saved = _renderer.Memory.Segments[_curSegment];
 
             if (_curAnim.extAnim)
-                _renderer.Memory.Segments[_curSegment] = F3DZEX.Memory.Segment.FromBytes("", _animFile);
+                _renderer.Memory.Segments[_extAnimSegment] = F3DZEX.Memory.Segment.FromBytes("", _animFile);
 
             byte[] buff = _renderer.Memory.ReadBytes(_curAnim.JointIndices, (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE);
             _curJoints = new AnimationJointIndicesHolder("joints", buff).JointIndices;
@@ -670,6 +671,15 @@ namespace Z64.Forms
                 {
                     segment = 4;
                 }
+                else if (of.FileName.Contains("gameplay_dangeon_keep") || of.FileName.Contains("gameplay_field_keep"))
+                {
+                    segment = 5;
+                }
+                else if ((segment == 4 || segment == 5) && !of.FileName.Contains("keep"))
+                {
+                    segment = 6;
+                }
+                _extAnimSegment = segment;
 
                 using (var form = new ObjectAnalyzerForm(_game, _animFile, of.FileName, segment))
                 {
