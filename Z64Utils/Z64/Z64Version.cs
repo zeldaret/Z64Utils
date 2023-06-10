@@ -30,6 +30,7 @@ namespace Z64
         Unknow,
         Oot,
         Mm,
+        Af,
     }
 
     public enum Z64FileCompression

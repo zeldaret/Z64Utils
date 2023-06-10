@@ -63,6 +63,7 @@ namespace Z64
             {
                 Z64GameType.Oot => 6,
                 Z64GameType.Mm => 7,
+                Z64GameType.Af => 10,
                 _ => 0,
             };
             if (_game.Version.Memory.GameStateTable.HasValue)
@@ -73,6 +74,7 @@ namespace Z64
             {
                 Z64GameType.Oot => 471,
                 Z64GameType.Mm => 690,
+                Z64GameType.Af => 201,
                 _ => 0,
             };
             if (_game.Version.Memory.ActorTable.HasValue)
