@@ -3,7 +3,7 @@ name: CSharpier formatting check
 on: [push, pull_request]
 
 jobs:
-  black-lint:
+  format-check:
     permissions: {} # Remove all permissions
     runs-on: windows-latest
     steps:
