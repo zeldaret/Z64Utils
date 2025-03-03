@@ -433,13 +433,25 @@ namespace F3DZEX.Render
             CheckGLErros();
 
             GL.Enable(EnableCap.DepthTest);
+            CheckGLErros();
             //GL.DepthFunc(DepthFunction.Lequal);
             //GL.DepthMask(false);
             //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND)
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)EnableCap.Blend);
             GL.Enable(EnableCap.Blend);
+            CheckGLErros();
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            CheckGLErros();
             GL.Enable(EnableCap.Texture2D);
+            var err = GL.GetError();
+            if (err == ErrorCode.InvalidEnum)
+            {
+                // Ignore
+            }
+            else if (err != ErrorCode.NoError)
+            {
+                throw new Exception($"GL.GetError() -> {err}");
+            }
             CheckGLErros();
 
             if (CurrentConfig.ShowGrid)
