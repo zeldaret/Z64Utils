@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -174,11 +175,12 @@ namespace Common
 
         public static GithubRelease GetLatestRelease()
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(ReleaseURL);
-            req.UserAgent = "Z64Utils Updater";
-            var resp = req.GetResponse();
+            HttpClient client = new();
+            var request = new HttpRequestMessage(HttpMethod.Get, ReleaseURL);
+            request.Headers.UserAgent.ParseAdd("Z64Utils Updater");
+            var resp = client.Send(request);
 
-            using (var stream = resp.GetResponseStream())
+            using (var stream = resp.Content.ReadAsStream())
             {
                 StreamReader sr = new StreamReader(stream);
                 string json = sr.ReadToEnd();
