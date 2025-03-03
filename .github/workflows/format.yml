@@ -1,0 +1,22 @@
+name: CSharpier formatting check
+
+on: [push, pull_request]
+
+jobs:
+  format-check:
+    permissions: {} # Remove all permissions
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install CSharpier
+        shell: bash
+        run: |
+          dotnet tool install --global csharpier --version 0.30.6
+
+      - name: Check formatting
+        shell: bash
+        run: |
+          dotnet csharpier --check .

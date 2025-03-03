@@ -129,6 +129,20 @@ namespace Z64.Forms
             }
         }
 
+        // csharpier-ignore
+        private static readonly byte[] IdentityMtxData = new byte[]
+        {
+            0,1,   0,0,   0,0,   0,0,
+            0,0,   0,1,   0,0,   0,0,
+            0,0,   0,0,   0,1,   0,0,
+            0,0,   0,0,   0,0,   0,1,
+
+            0,0,   0,0,   0,0,   0,0,
+            0,0,   0,0,   0,0,   0,0,
+            0,0,   0,0,   0,0,   0,0,
+            0,0,   0,0,   0,0,   0,0,
+        };
+
         private void okBtn_Click(object sender, EventArgs e)
         {
             switch (comboBox1.SelectedItem)
@@ -139,76 +153,7 @@ namespace Z64.Forms
                     break;
 
                 case SRC_IDENT_MTX:
-                    ResultSegment = Memory.Segment.FromFill(
-                        "Ident Matrices",
-                        new byte[]
-                        {
-                            0,
-                            1,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            1,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            1,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            1,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                        }
-                    );
+                    ResultSegment = Memory.Segment.FromFill("Ident Matrices", IdentityMtxData);
                     break;
 
                 case SRC_NULL:
