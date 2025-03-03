@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Syroot.BinaryData;
 
+#nullable enable
+
 namespace N64
 {
     [Serializable]
