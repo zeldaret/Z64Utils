@@ -339,9 +339,12 @@ namespace F3DZEX.Render
             CheckGLErros();
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             var err = GL.GetError();
-            if (err == ErrorCode.InvalidEnum) {
+            if (err == ErrorCode.InvalidEnum)
+            {
                 // Ignore
-            } else if (err != ErrorCode.NoError) {
+            }
+            else if (err != ErrorCode.NoError)
+            {
                 throw new Exception($"GL.GetError() -> {err}");
             }
 
