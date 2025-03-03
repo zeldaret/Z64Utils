@@ -2,22 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Globalization;
-using System.IO;
-using Z64;
-using N64;
-using Syroot.BinaryData;
-using System.Text.RegularExpressions;
-using RDP;
 using Common;
-using System.Diagnostics;
+using N64;
+using RDP;
+using Syroot.BinaryData;
+using Z64;
 
 namespace Z64.Forms
 {
@@ -41,13 +41,15 @@ namespace Z64.Forms
 
                 action.Invoke();
 
-                Invoke(new Action(() => {
-                    label_loadProgress.Text = "...";
-                    progressBar1.Value = 0;
-                    SystemSounds.Asterisk.Play();
-                    UpdateControls(false);
-                }));
-
+                Invoke(
+                    new Action(() =>
+                    {
+                        label_loadProgress.Text = "...";
+                        progressBar1.Value = 0;
+                        SystemSounds.Asterisk.Play();
+                        UpdateControls(false);
+                    })
+                );
             })
             {
                 IsBackground = true,
@@ -56,24 +58,27 @@ namespace Z64.Forms
 
         public void ProcessCallback(float progress, string text)
         {
-            Invoke(new Action(() => {
-                progressBar1.Value = (int)(progress * progressBar1.Maximum);
-                label_loadProgress.Text = text;
-            }));
+            Invoke(
+                new Action(() =>
+                {
+                    progressBar1.Value = (int)(progress * progressBar1.Maximum);
+                    label_loadProgress.Text = text;
+                })
+            );
         }
 
         private void UpdateControls(bool inTask = false)
         {
-            mainToolStrip.Enabled = 
-            tabControl1.Enabled = !inTask;
+            mainToolStrip.Enabled = tabControl1.Enabled = !inTask;
 
-            tabControl1.Enabled = 
-            romExportFsItem.Enabled = 
-            romSaveItem.Enabled = 
-            romImportNamesItem.Enabled = 
-            romExportNamesItem.Enabled = 
-            ROMRAMConversionsToolStripMenuItem.Enabled = 
-            textureViewerToolStripMenuItem.Enabled = _game != null;
+            tabControl1.Enabled =
+                romExportFsItem.Enabled =
+                romSaveItem.Enabled =
+                romImportNamesItem.Enabled =
+                romExportNamesItem.Enabled =
+                ROMRAMConversionsToolStripMenuItem.Enabled =
+                textureViewerToolStripMenuItem.Enabled =
+                    _game != null;
         }
 
         private void UpdateFileList(bool forceReload)
@@ -130,16 +135,26 @@ namespace Z64.Forms
             else if (fileName.StartsWith("gameplay_"))
                 defaultSegment = 5;
 
-            var valueForm = new EditValueForm("Choose Segment", "Plase enter a segment id.", (v) =>
-            {
-                return (int.TryParse(v, out int ret) && ret >= 0 && ret < 16)
-                ? null
-                : "Segment ID must be a value between 0 and 15";
-            }, defaultSegment < 0 ? "" : $"{defaultSegment}");
+            var valueForm = new EditValueForm(
+                "Choose Segment",
+                "Plase enter a segment id.",
+                (v) =>
+                {
+                    return (int.TryParse(v, out int ret) && ret >= 0 && ret < 16)
+                        ? null
+                        : "Segment ID must be a value between 0 and 15";
+                },
+                defaultSegment < 0 ? "" : $"{defaultSegment}"
+            );
 
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                var form = new ObjectAnalyzerForm(game, data, fileName, int.Parse(valueForm.Result));
+                var form = new ObjectAnalyzerForm(
+                    game,
+                    data,
+                    fileName,
+                    int.Parse(valueForm.Result)
+                );
                 form.Text += $" - {title}";
                 form.Show();
             }
@@ -152,46 +167,63 @@ namespace Z64.Forms
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 _game = null;
-                Application.OpenForms.OfType<Form>().ToList().ForEach(f =>
-                {
-                    if (f != this)
-                        f.Close();
-                });
+                Application
+                    .OpenForms.OfType<Form>()
+                    .ToList()
+                    .ForEach(f =>
+                    {
+                        if (f != this)
+                            f.Close();
+                    });
 
-                StartTask(() => {
+                StartTask(() =>
+                {
                     try
                     {
                         _game = new Z64Game(openFileDialog1.FileName, ProcessCallback);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
-                        Invoke(new Action(() =>
-                        {
-                            MessageBox.Show(ex.Message + "\r\n\r\nIf this issue is related to config files, consider downloading the latest version at github.com/Random06457/Z64Utils-Config", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }));
+                        Invoke(
+                            new Action(() =>
+                            {
+                                MessageBox.Show(
+                                    ex.Message
+                                        + "\r\n\r\nIf this issue is related to config files, consider downloading the latest version at github.com/Random06457/Z64Utils-Config",
+                                    "Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error
+                                );
+                            })
+                        );
                     }
 
-                    Invoke(new Action(() =>
-                    {
-                        if (_game != null)
+                    Invoke(
+                        new Action(() =>
                         {
-                            Text = $"Z64 Utils - {Path.GetFileName(openFileDialog1.FileName)} [ver. {_game.Version.VersionName} ({_game.Version.Identifier.BuildTeam} {_game.Version.Identifier.BuildDate})]";
-
-                            _fileItemsText = new string[_game.GetFileCount()];
-                            for (int i = 0; i < _game.GetFileCount(); i++)
+                            if (_game != null)
                             {
-                                var file = _game.GetFileFromIndex(i);
-                                if (!file.Valid())
-                                    continue;
+                                Text =
+                                    $"Z64 Utils - {Path.GetFileName(openFileDialog1.FileName)} [ver. {_game.Version.VersionName} ({_game.Version.Identifier.BuildTeam} {_game.Version.Identifier.BuildDate})]";
 
-                                _fileItemsText[i] = ($"{_game.GetFileName(file.VRomStart).ToLower()} {file.VRomStart:x8} {file.VRomEnd:x8}");
+                                _fileItemsText = new string[_game.GetFileCount()];
+                                for (int i = 0; i < _game.GetFileCount(); i++)
+                                {
+                                    var file = _game.GetFileFromIndex(i);
+                                    if (!file.Valid())
+                                        continue;
+
+                                    _fileItemsText[i] = (
+                                        $"{_game.GetFileName(file.VRomStart).ToLower()} {file.VRomStart:x8} {file.VRomEnd:x8}"
+                                    );
+                                }
+
+                                UpdateFileList(true);
                             }
-
-                            UpdateFileList(true);
-                        }
-                        UpdateControls();
-                        GC.Collect();
-                    }));
+                            UpdateControls();
+                            GC.Collect();
+                        })
+                    );
                 });
             }
         }
@@ -208,23 +240,29 @@ namespace Z64.Forms
             }
         }
 
-
         private void RomExportFsItem_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = "";
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                StartTask(() => {
+                StartTask(() =>
+                {
                     for (int i = 0; i < _game.GetFileCount(); i++)
                     {
                         var file = _game.GetFileFromIndex(i);
-                        ProcessCallback((float)i/_game.GetFileCount(), $"Writing Files... {i}/{_game.GetFileCount()}");
+                        ProcessCallback(
+                            (float)i / _game.GetFileCount(),
+                            $"Writing Files... {i}/{_game.GetFileCount()}"
+                        );
                         if (file.Data != null)
                         {
                             string name = $"{_game.GetFileName(file.VRomStart):X8}";
                             if (string.IsNullOrEmpty(name) || Utils.IsValidFileName(name))
                                 name = $"{file.VRomStart:X8}-{file.VRomEnd:X8}";
-                            File.WriteAllBytes($"{folderBrowserDialog1.SelectedPath}/{name}.bin", file.Data);
+                            File.WriteAllBytes(
+                                $"{folderBrowserDialog1.SelectedPath}/{name}.bin",
+                                file.Data
+                            );
                         }
                     }
                 });
@@ -252,7 +290,6 @@ namespace Z64.Forms
             }
         }
 
-
         private void InjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView_files.SelectedIndices.Count != 1)
@@ -268,6 +305,7 @@ namespace Z64.Forms
                 SystemSounds.Asterisk.Play();
             }
         }
+
         private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (listView_files.SelectedIndices.Count != 1)
@@ -297,21 +335,30 @@ namespace Z64.Forms
 
         private void OpenObjectViewerForExternalFile(byte[] data, string fileName)
         {
-            var valueForm = new EditValueForm("Choose Segment", "Plase enter a segment id.", (v) =>
-            {
-                return (int.TryParse(v, out int ret) && ret >= 0 && ret < 16)
-                ? null
-                : "Segment ID must be a value between 0 and 15";
-            }, "6");
+            var valueForm = new EditValueForm(
+                "Choose Segment",
+                "Plase enter a segment id.",
+                (v) =>
+                {
+                    return (int.TryParse(v, out int ret) && ret >= 0 && ret < 16)
+                        ? null
+                        : "Segment ID must be a value between 0 and 15";
+                },
+                "6"
+            );
 
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                var form = new ObjectAnalyzerForm(_game, data, fileName, int.Parse(valueForm.Result));
+                var form = new ObjectAnalyzerForm(
+                    _game,
+                    data,
+                    fileName,
+                    int.Parse(valueForm.Result)
+                );
                 form.Text += "External file";
                 form.Show();
             }
         }
-
 
         private void OpenObjectViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -333,7 +380,8 @@ namespace Z64.Forms
 
             string defaultValue = null;
             string fileName = _game.GetFileName(file.VRomStart).ToLower();
-            string title = $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
+            string title =
+                $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
             OpenObjectAnalyzer(_game, file.Data, fileName, title);
         }
 
@@ -344,15 +392,18 @@ namespace Z64.Forms
             var item = listView_files.SelectedItems[0];
             var file = _game.GetFileFromIndex((int)item.Tag);
 
-            var valueForm = new EditValueForm("Rename File", "Please enter the new file name.",
-                v => v.IndexOfAny(Path.GetInvalidFileNameChars()) == -1 ? null : "Invalid File Name",
-                _game.GetFileName(file.VRomStart));
+            var valueForm = new EditValueForm(
+                "Rename File",
+                "Please enter the new file name.",
+                v =>
+                    v.IndexOfAny(Path.GetInvalidFileNameChars()) == -1 ? null : "Invalid File Name",
+                _game.GetFileName(file.VRomStart)
+            );
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
                 _game.Version.RenameFile(file.VRomStart, valueForm.Result);
                 listView_files.SelectedItems[0].Text = valueForm.Result;
             }
-
         }
 
         private void TextBox_fileFilter_TextChanged(object sender, EventArgs e)
@@ -390,7 +441,11 @@ namespace Z64.Forms
             var release = UpdateChecker.GetLatestRelease();
             if (UpdateChecker.CurrentTag != release.TagName)
             {
-                var res = MessageBox.Show($"A new release is available on github (tag {release.TagName}).\r\nWould you like to open the release page?", "New Release Available", MessageBoxButtons.YesNo);
+                var res = MessageBox.Show(
+                    $"A new release is available on github (tag {release.TagName}).\r\nWould you like to open the release page?",
+                    "New Release Available",
+                    MessageBoxButtons.YesNo
+                );
                 if (res == DialogResult.Yes)
                     Utils.OpenBrowser(UpdateChecker.ReleaseURL);
             }
@@ -430,7 +485,8 @@ namespace Z64.Forms
 
             string defaultValue = null;
             string fileName = _game.GetFileName(file.VRomStart).ToLower();
-            string title = $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
+            string title =
+                $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
             OpenObjectAnalyzer(_game, file.Data, fileName, title);
         }
     }

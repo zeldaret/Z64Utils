@@ -1,13 +1,13 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using RDP;
-using static Z64.Z64Object;
-using System.IO;
 using Syroot.BinaryData;
-using System.Drawing;
+using static Z64.Z64Object;
 
 namespace Z64.Forms
 {
@@ -58,8 +58,6 @@ namespace Z64.Forms
             _curSegment = curSegment;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
 
-            
-
             InitializeComponent();
             Toolkit.Init();
 
@@ -70,13 +68,18 @@ namespace Z64.Forms
             _timer.Elapsed += Timer_Elapsed;
             _timer.Interval = (int)numUpDown_playbackSpeed.Value;
 
-
             if ((Control.ModifierKeys & Keys.Control) == 0)
             {
-                _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes("gameplay_keep", game.GetFileByName("gameplay_keep").Data);
+                _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
+                    "gameplay_keep",
+                    game.GetFileByName("gameplay_keep").Data
+                );
                 for (int i = 8; i < 16; i++)
                 {
-                    _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill(
+                        "Empty Dlist",
+                        new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+                    );
                 }
             }
 
@@ -92,7 +95,6 @@ namespace Z64.Forms
             };
             _playState = PlayState.Pause;
         }
-
 
         void RenderLimb(int limbIdx, bool overlay = false)
         {
@@ -130,9 +132,6 @@ namespace Z64.Forms
                     _renderer.RenderDList(_limbDlists[limbIdx]);
             }
 
-
-
-
             if (_limbs[limbIdx].Child != 0xFF)
                 RenderLimb(_limbs[limbIdx].Child, overlay);
 
@@ -162,7 +161,8 @@ namespace Z64.Forms
 
             if (_renderer.RenderFailed())
             {
-                toolStripErrorLabel.Text = $"RENDER ERROR AT 0x{_renderer.RenderErrorAddr:X8}! ({_renderer.ErrorMsg})";
+                toolStripErrorLabel.Text =
+                    $"RENDER ERROR AT 0x{_renderer.RenderErrorAddr:X8}! ({_renderer.ErrorMsg})";
             }
             else if (!string.IsNullOrEmpty(_animationError))
             {
@@ -204,7 +204,6 @@ namespace Z64.Forms
                         e.Node.ForeColor = Color.Black;
 
                     treeView_hierarchy.SelectedNode = e.Node;
-                    
                 }
 
                 NewRender();
@@ -247,7 +246,8 @@ namespace Z64.Forms
                 catch (Exception ex)
                 {
                     if (_dlistError == null)
-                        _dlistError = $"Error while decoding dlist 0x{limb.DListSeg.VAddr:X8} : {ex.Message}";
+                        _dlistError =
+                            $"Error while decoding dlist 0x{limb.DListSeg.VAddr:X8} : {ex.Message}";
                 }
                 _limbDlists.Add(dlist);
             }
@@ -268,7 +268,10 @@ namespace Z64.Forms
             _limbDlistRenderFlags = new List<bool>();
             for (int i = 0; i < limbs.LimbSegments.Length; i++)
             {
-                byte[] limbData = _renderer.Memory.ReadBytes(limbs.LimbSegments[i], SkeletonLimbHolder.STANDARD_LIMB_SIZE);
+                byte[] limbData = _renderer.Memory.ReadBytes(
+                    limbs.LimbSegments[i],
+                    SkeletonLimbHolder.STANDARD_LIMB_SIZE
+                );
                 var limb = new SkeletonLimbHolder($"limb_{i}", limbData, EntryType.StandardLimb); // TODO support other limb types
                 _limbs.Add(limb);
                 _limbDlistRenderFlags.Add(true);
@@ -297,29 +300,52 @@ namespace Z64.Forms
             if (_limbs[i].Sibling != 0xFF)
                 AddLimbRoutine(parent, _limbs[i].Sibling, x, y, z);
             if (_limbs[i].Child != 0xFF)
-                AddLimbRoutine(node, _limbs[i].Child, x + _limbs[i].JointX, y + _limbs[i].JointY, z + _limbs[i].JointZ);
+                AddLimbRoutine(
+                    node,
+                    _limbs[i].Child,
+                    x + _limbs[i].JointX,
+                    y + _limbs[i].JointY,
+                    z + _limbs[i].JointZ
+                );
         }
 
-
-
         float S16ToRad(short x) => x * (float)Math.PI / 0x7FFF;
+
         float S16ToDeg(short x) => x * 360.0f / 0xFFFF;
+
         float DegToRad(float x) => x * (float)Math.PI / 180.0f;
 
-        short GetFrameData(int frameDataIdx) => _frameData[frameDataIdx < _curAnim.StaticIndexMax ? frameDataIdx : frameDataIdx + trackBar_anim.Value];
+        short GetFrameData(int frameDataIdx) =>
+            _frameData[
+                frameDataIdx < _curAnim.StaticIndexMax
+                    ? frameDataIdx
+                    : frameDataIdx + trackBar_anim.Value
+            ];
+
         Vector3 GetLimbPos(int limbIdx)
         {
             if (_curPlayerAnim != null)
             {
-                return new Vector3(_limbs[limbIdx].JointX, _limbs[limbIdx].JointY, _limbs[limbIdx].JointZ);
+                return new Vector3(
+                    _limbs[limbIdx].JointX,
+                    _limbs[limbIdx].JointY,
+                    _limbs[limbIdx].JointZ
+                );
             }
 
-            return (_curJoints == null)
-                ? new Vector3(0, 0, 0)
+            return (_curJoints == null) ? new Vector3(0, 0, 0)
                 : (limbIdx == 0)
-                    ? new Vector3(_curJoints[limbIdx].X, _curJoints[limbIdx].Y, _curJoints[limbIdx].Z)
-                    : new Vector3(_limbs[limbIdx].JointX, _limbs[limbIdx].JointY, _limbs[limbIdx].JointZ);
-        } 
+                    ? new Vector3(
+                        _curJoints[limbIdx].X,
+                        _curJoints[limbIdx].Y,
+                        _curJoints[limbIdx].Z
+                    )
+                : new Vector3(
+                    _limbs[limbIdx].JointX,
+                    _limbs[limbIdx].JointY,
+                    _limbs[limbIdx].JointZ
+                );
+        }
 
         // Update anims -> matrices
         void UpdateAnim()
@@ -331,9 +357,15 @@ namespace Z64.Forms
             var Saved = _renderer.Memory.Segments[_curSegment];
 
             if (_curAnim.extAnim)
-                _renderer.Memory.Segments[_extAnimSegment] = F3DZEX.Memory.Segment.FromBytes("", _animFile);
+                _renderer.Memory.Segments[_extAnimSegment] = F3DZEX.Memory.Segment.FromBytes(
+                    "",
+                    _animFile
+                );
 
-            byte[] buff = _renderer.Memory.ReadBytes(_curAnim.JointIndices, (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE);
+            byte[] buff = _renderer.Memory.ReadBytes(
+                _curAnim.JointIndices,
+                (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE
+            );
             _curJoints = new AnimationJointIndicesHolder("joints", buff).JointIndices;
 
             int max = 0;
@@ -344,14 +376,19 @@ namespace Z64.Forms
                 max = Math.Max(max, joint.Z);
             }
 
-            int bytesToRead = (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2;
+            int bytesToRead =
+                (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2;
 
-            if (bytesToRead + _curAnim.FrameData.SegmentOff > _renderer.Memory.Segments[_curSegment].Data.Length)
+            if (
+                bytesToRead + _curAnim.FrameData.SegmentOff
+                > _renderer.Memory.Segments[_curSegment].Data.Length
+            )
             {
                 _curAnim = null;
                 _curJoints = null;
                 _frameData = null;
-                _animationError = "Animation is glitchy; displaying folded pose. To view this animation, load it in-game.";
+                _animationError =
+                    "Animation is glitchy; displaying folded pose. To view this animation, load it in-game.";
             }
             else
             {
@@ -371,9 +408,16 @@ namespace Z64.Forms
             trackBar_anim.Value = 0;
 
             var Saved = _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId];
-            _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] = F3DZEX.Memory.Segment.FromBytes("link_animetion", _game.GetFileByName("link_animetion").Data);
+            _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] =
+                F3DZEX.Memory.Segment.FromBytes(
+                    "link_animetion",
+                    _game.GetFileByName("link_animetion").Data
+                );
 
-            byte[] buff = _renderer.Memory.ReadBytes(_curPlayerAnim.PlayerAnimationSegment, ((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * _curPlayerAnim.FrameCount * 2);
+            byte[] buff = _renderer.Memory.ReadBytes(
+                _curPlayerAnim.PlayerAnimationSegment,
+                ((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * _curPlayerAnim.FrameCount * 2
+            );
             _curPlayerJointTable = new PlayerAnimationJointTableHolder("joints", buff).JointTable;
 
             _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] = Saved;
@@ -401,11 +445,12 @@ namespace Z64.Forms
             short rotY = GetFrameData(_curJoints[limbIdx + 1].Y);
             short rotZ = GetFrameData(_curJoints[limbIdx + 1].Z);
 
-            src = Matrix4.CreateRotationX(S16ToRad(rotX)) *
-                Matrix4.CreateRotationY(S16ToRad(rotY)) *
-                Matrix4.CreateRotationZ(S16ToRad(rotZ)) *
-                Matrix4.CreateTranslation(pos) *
-                src;
+            src =
+                Matrix4.CreateRotationX(S16ToRad(rotX))
+                * Matrix4.CreateRotationY(S16ToRad(rotY))
+                * Matrix4.CreateRotationZ(S16ToRad(rotZ))
+                * Matrix4.CreateTranslation(pos)
+                * src;
 
             return src;
         }
@@ -421,11 +466,12 @@ namespace Z64.Forms
             short rotY = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].Y;
             short rotZ = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].Z;
 
-            src = Matrix4.CreateRotationX(S16ToRad(rotX)) *
-                Matrix4.CreateRotationY(S16ToRad(rotY)) *
-                Matrix4.CreateRotationZ(S16ToRad(rotZ)) *
-                Matrix4.CreateTranslation(pos) *
-                src;
+            src =
+                Matrix4.CreateRotationX(S16ToRad(rotX))
+                * Matrix4.CreateRotationY(S16ToRad(rotY))
+                * Matrix4.CreateRotationZ(S16ToRad(rotZ))
+                * Matrix4.CreateTranslation(pos)
+                * src;
 
             return src;
         }
@@ -445,8 +491,12 @@ namespace Z64.Forms
                 UpdateMatrixBuf(bw, 0, 0, Matrix4.Identity);
             }
 
-            _renderer.Memory.Segments[0xD] = F3DZEX.Memory.Segment.FromBytes("[RESERVED] Anim Matrices", mtxBuff);
+            _renderer.Memory.Segments[0xD] = F3DZEX.Memory.Segment.FromBytes(
+                "[RESERVED] Anim Matrices",
+                mtxBuff
+            );
         }
+
         int UpdateMatrixBuf(BinaryStream bw, int limbIdx, int dlistIdx, Matrix4 src)
         {
             Matrix4 mtx = CalcMatrix(src, limbIdx);
@@ -457,7 +507,6 @@ namespace Z64.Forms
                 Mtx.FromMatrix4(mtx).Write(bw);
             }
 
-
             if (_limbs[limbIdx].Child != 0xFF)
                 dlistIdx = UpdateMatrixBuf(bw, _limbs[limbIdx].Child, dlistIdx, mtx);
 
@@ -466,8 +515,6 @@ namespace Z64.Forms
 
             return dlistIdx;
         }
-
-
 
         private void ToolStripRenderCfgBtn_Click(object sender, System.EventArgs e)
         {
@@ -478,7 +525,10 @@ namespace Z64.Forms
             else
             {
                 _settingsForm = new SettingsForm(_rendererCfg);
-                _settingsForm.FormClosed += (sender, e) => { _settingsForm = null; };
+                _settingsForm.FormClosed += (sender, e) =>
+                {
+                    _settingsForm = null;
+                };
                 _settingsForm.SettingsChanged += NewRender;
                 _settingsForm.Show();
             }
@@ -523,6 +573,7 @@ namespace Z64.Forms
             if (_limbs != null)
                 UpdateLimbsDlists();
         }
+
         private void ToolStripSegmentsBtn_Click(object sender, System.EventArgs e)
         {
             if (_segForm != null)
@@ -537,7 +588,10 @@ namespace Z64.Forms
                     int idx = (int)sender;
 
                     if (idx == 0xD && _skel is FlexSkeletonHolder)
-                        MessageBox.Show("Error", "Cannot set segment 13 (reserved for animation matrices)");
+                        MessageBox.Show(
+                            "Error",
+                            "Cannot set segment 13 (reserved for animation matrices)"
+                        );
                     else
                     {
                         _renderer.Memory.Segments[(int)sender] = seg;
@@ -554,8 +608,9 @@ namespace Z64.Forms
         private void listBox_anims_SelectedIndexChanged(object sender, EventArgs e)
         {
             button_playAnim.Enabled =
-            button_playbackAnim.Enabled =
-            trackBar_anim.Enabled = listBox_anims.SelectedIndex >= 0;
+                button_playbackAnim.Enabled =
+                trackBar_anim.Enabled =
+                    listBox_anims.SelectedIndex >= 0;
 
             _curAnim = null;
             _curPlayerAnim = null;
@@ -571,7 +626,7 @@ namespace Z64.Forms
                     _curPlayerAnim = _playerAnims[listBox_anims.SelectedIndex - _anims.Count];
                     UpdatePlayerAnim();
                 }
-                
+
                 NewRender();
             }
 
@@ -595,21 +650,27 @@ namespace Z64.Forms
                 return;
             }
 
-            Invoke(new Action(() =>
-            {
-                if (_playState == PlayState.Forward)
+            Invoke(
+                new Action(() =>
                 {
-                    trackBar_anim.Value = trackBar_anim.Value < trackBar_anim.Maximum
-                        ? trackBar_anim.Value + 1 : 0;
-                }
-                else
-                {
-                    trackBar_anim.Value = trackBar_anim.Value > 0
-                        ? trackBar_anim.Value - 1
-                        : trackBar_anim.Maximum;
-                }
-            }));
+                    if (_playState == PlayState.Forward)
+                    {
+                        trackBar_anim.Value =
+                            trackBar_anim.Value < trackBar_anim.Maximum
+                                ? trackBar_anim.Value + 1
+                                : 0;
+                    }
+                    else
+                    {
+                        trackBar_anim.Value =
+                            trackBar_anim.Value > 0
+                                ? trackBar_anim.Value - 1
+                                : trackBar_anim.Maximum;
+                    }
+                })
+            );
         }
+
         private void button_playbackAnim_Click(object sender, EventArgs e)
         {
             if (_playState == PlayState.Backward)
@@ -671,7 +732,10 @@ namespace Z64.Forms
                 {
                     segment = 4;
                 }
-                else if (of.FileName.Contains("gameplay_dangeon_keep") || of.FileName.Contains("gameplay_field_keep"))
+                else if (
+                    of.FileName.Contains("gameplay_dangeon_keep")
+                    || of.FileName.Contains("gameplay_field_keep")
+                )
                 {
                     segment = 5;
                 }
@@ -691,13 +755,15 @@ namespace Z64.Forms
                         if (e is Z64Object.AnimationHolder)
                         {
                             (e as Z64Object.AnimationHolder).extAnim = true;
-                            (e as Z64Object.AnimationHolder).Name = "ext_" + (e as Z64Object.AnimationHolder).Name;
+                            (e as Z64Object.AnimationHolder).Name =
+                                "ext_" + (e as Z64Object.AnimationHolder).Name;
                             _anims.Add((Z64Object.AnimationHolder)e);
                         }
                         if (e is Z64Object.PlayerAnimationHolder)
                         {
                             (e as Z64Object.PlayerAnimationHolder).extAnim = true;
-                            (e as Z64Object.PlayerAnimationHolder).Name = "ext_" + (e as Z64Object.PlayerAnimationHolder).Name;
+                            (e as Z64Object.PlayerAnimationHolder).Name =
+                                "ext_" + (e as Z64Object.PlayerAnimationHolder).Name;
                             _playerAnims.Add((Z64Object.PlayerAnimationHolder)e);
                         }
                     });
@@ -707,9 +773,6 @@ namespace Z64.Forms
                 _anims.ForEach(a => listBox_anims.Items.Add(a.Name));
                 _playerAnims.ForEach(a => listBox_anims.Items.Add(a.Name));
             }
-
         }
-
-
     }
 }
