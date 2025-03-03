@@ -10,6 +10,7 @@ using F3DZEX.Command;
 using N64;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Platform;
 using RDP;
 using Syroot.BinaryData;

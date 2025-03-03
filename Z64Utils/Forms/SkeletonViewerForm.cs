@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using RDP;
 using Syroot.BinaryData;
 using static Z64.Z64Object;

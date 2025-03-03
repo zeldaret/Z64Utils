@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Common;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Platform;
 using RDP;
 using Syroot.BinaryData;
