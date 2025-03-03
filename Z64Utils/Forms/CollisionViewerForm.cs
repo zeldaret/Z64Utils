@@ -54,7 +54,6 @@ namespace Z64.Forms
             _cullBack = true;
 
             InitializeComponent();
-            Toolkit.Init();
 
             modelViewer.RenderCallback = RenderCallback;
 

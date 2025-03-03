@@ -61,7 +61,6 @@ namespace Z64.Forms
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
 
             InitializeComponent();
-            Toolkit.Init();
 
             _renderer = new F3DZEX.Render.Renderer(game, _rendererCfg);
             modelViewer.RenderCallback = RenderCallback;
