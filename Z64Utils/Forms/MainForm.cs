@@ -331,7 +331,6 @@ namespace Z64.Forms
                 return;
             }
 
-            string defaultValue = null;
             string fileName = _game.GetFileName(file.VRomStart).ToLower();
             string title = $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
             OpenObjectAnalyzer(_game, file.Data, fileName, title);
@@ -428,7 +427,6 @@ namespace Z64.Forms
                 return;
             }
 
-            string defaultValue = null;
             string fileName = _game.GetFileName(file.VRomStart).ToLower();
             string title = $"\"{_game.GetFileName(file.VRomStart)}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
             OpenObjectAnalyzer(_game, file.Data, fileName, title);
