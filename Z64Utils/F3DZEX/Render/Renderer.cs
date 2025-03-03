@@ -334,10 +334,16 @@ namespace F3DZEX.Render
 
         private void Init()
         {
-            CheckGLErros();
             /* Init Texture */
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+
             CheckGLErros();
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+            var err = GL.GetError();
+            if (err == ErrorCode.InvalidEnum) {
+                // Ignore
+            } else if (err != ErrorCode.NoError) {
+                throw new Exception($"GL.GetError() -> {err}");
+            }
 
             _tex0 = new TextureHandler();
             _tex1 = new TextureHandler();
