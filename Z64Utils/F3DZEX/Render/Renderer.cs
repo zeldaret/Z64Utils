@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using F3DZEX.Command;
+using N64;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
-using OpenTK;
-using System.Drawing;
-using N64;
+using RDP;
 using Syroot.BinaryData;
 using Z64;
-using RDP;
-using System.Diagnostics;
-using F3DZEX.Command;
 
 namespace F3DZEX.Render
 {
@@ -25,10 +25,11 @@ namespace F3DZEX.Render
 
             private float _gridScale = 5000;
 
-
-            public float GridScale {
+            public float GridScale
+            {
                 get => _gridScale;
-                set {
+                set
+                {
                     _gridScale = value;
                     OnGridScaleChanged?.Invoke(this, new EventArgs());
                 }
@@ -36,7 +37,8 @@ namespace F3DZEX.Render
             public bool ShowGrid { get; set; } = true;
             public bool ShowAxis { get; set; } = true;
             public bool ShowGLInfo { get; set; } = false;
-            public RdpVertexDrawer.ModelRenderMode RenderMode { get; set; } = RdpVertexDrawer.ModelRenderMode.Textured;
+            public RdpVertexDrawer.ModelRenderMode RenderMode { get; set; } =
+                RdpVertexDrawer.ModelRenderMode.Textured;
             public bool EnabledLighting { get; set; } = true;
             public bool DrawNormals { get; set; } = false;
             public Color NormalColor { get; set; } = Color.Yellow;
@@ -120,8 +122,12 @@ namespace F3DZEX.Render
                     ? TextureWrapMode.ClampToEdge
                     : (mirrorV ? TextureWrapMode.MirroredRepeat : TextureWrapMode.Repeat);
 
-                wrapS = cmT.HasFlag(G_TX_TEXWRAP.G_TX_CLAMP) ? TextureWrapMode.ClampToEdge : TextureWrapMode.Repeat;
-                wrapT = cmT.HasFlag(G_TX_TEXWRAP.G_TX_CLAMP) ? TextureWrapMode.ClampToEdge : TextureWrapMode.Repeat;
+                wrapS = cmT.HasFlag(G_TX_TEXWRAP.G_TX_CLAMP)
+                    ? TextureWrapMode.ClampToEdge
+                    : TextureWrapMode.Repeat;
+                wrapT = cmT.HasFlag(G_TX_TEXWRAP.G_TX_CLAMP)
+                    ? TextureWrapMode.ClampToEdge
+                    : TextureWrapMode.Repeat;
                 //wrapS = (mirrorH ? TextureWrapMode.MirroredRepeat : TextureWrapMode.Repeat);
                 //wrapT = (mirrorV ? TextureWrapMode.MirroredRepeat : TextureWrapMode.Repeat);
 
@@ -187,10 +193,12 @@ namespace F3DZEX.Render
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    if (this[i].a1 == G_ACMUX.G_ACMUX_TEXEL0 ||
-                        this[i].a2 == G_ACMUX.G_ACMUX_TEXEL0 ||
-                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL0 ||
-                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL0)
+                    if (
+                        this[i].a1 == G_ACMUX.G_ACMUX_TEXEL0
+                        || this[i].a2 == G_ACMUX.G_ACMUX_TEXEL0
+                        || this[i].c1 == G_CCMUX.G_CCMUX_TEXEL0
+                        || this[i].c1 == G_CCMUX.G_CCMUX_TEXEL0
+                    )
                         return true;
                 }
 
@@ -201,10 +209,12 @@ namespace F3DZEX.Render
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    if (this[i].a1 == G_ACMUX.G_ACMUX_TEXEL1 ||
-                        this[i].a2 == G_ACMUX.G_ACMUX_TEXEL1 ||
-                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL1 ||
-                        this[i].c1 == G_CCMUX.G_CCMUX_TEXEL1)
+                    if (
+                        this[i].a1 == G_ACMUX.G_ACMUX_TEXEL1
+                        || this[i].a2 == G_ACMUX.G_ACMUX_TEXEL1
+                        || this[i].c1 == G_CCMUX.G_CCMUX_TEXEL1
+                        || this[i].c1 == G_CCMUX.G_CCMUX_TEXEL1
+                    )
                         return true;
                 }
                 return false;
@@ -236,6 +246,7 @@ namespace F3DZEX.Render
                 b.scale = cmd.scaleB;
                 b.width = cmd.widthB;
             }
+
             public void SetKeyR(GSetKeyR cmd)
             {
                 r.center = cmd.centerR;
@@ -252,7 +263,6 @@ namespace F3DZEX.Render
         // matrix that gets transforms the vertices loaded with G_VTX
         public MatrixStack RdpMtxStack { get; }
         public MatrixStack ModelMtxStack { get; }
-
 
         uint _curImgAddr;
         bool _reqDecodeTex = false;
@@ -278,10 +288,9 @@ namespace F3DZEX.Render
 
         public bool RenderFailed() => ErrorMsg != null;
 
-        public Renderer(Z64Game game, Config cfg, int depth = 10) : this(new Memory(game), cfg, depth)
-        {
+        public Renderer(Z64Game game, Config cfg, int depth = 10)
+            : this(new Memory(game), cfg, depth) { }
 
-        }
         public Renderer(Memory mem, Config cfg, int depth = 10)
         {
             Memory = mem;
@@ -290,7 +299,8 @@ namespace F3DZEX.Render
             RdpMtxStack = new MatrixStack();
             ModelMtxStack = new MatrixStack();
 
-            ModelMtxStack.OnTopMatrixChanged += (sender, e) => _rdpVtxDrawer.SendModelMatrix(e.newTop);
+            ModelMtxStack.OnTopMatrixChanged += (sender, e) =>
+                _rdpVtxDrawer.SendModelMatrix(e.newTop);
 
             _tiles = new Tile[8];
             for (int i = 0; i < _tiles.Length; i++)
@@ -300,11 +310,8 @@ namespace F3DZEX.Render
             _combiner = new ColorCombiner();
             _chromaKey = new ChromaKey();
         }
-        
+
         public void ClearErrors() => ErrorMsg = null;
-
-
-
 
         private void CheckGLErros()
         {
@@ -312,6 +319,7 @@ namespace F3DZEX.Render
             if (err != ErrorCode.NoError)
                 throw new Exception($"GL.GetError() -> {err}");
         }
+
         private void GLWrapper(Action callback)
         {
             callback();
@@ -344,11 +352,18 @@ namespace F3DZEX.Render
             vertices = RenderHelper.GenerateAxisvertices(CurrentConfig.GridScale);
             _axisDrawer.SetData(vertices, BufferUsageHint.StaticDraw);
 
-            _rdpVtxDrawer.SetData(new byte[32 * (Vertex.SIZE + 4*4*4)], BufferUsageHint.DynamicDraw);
+            _rdpVtxDrawer.SetData(
+                new byte[32 * (Vertex.SIZE + 4 * 4 * 4)],
+                BufferUsageHint.DynamicDraw
+            );
 
             CurrentConfig.OnGridScaleChanged += (o, e) =>
             {
-                float[] vertices = RenderHelper.GenerateGridVertices(CurrentConfig.GridScale, 6, false);
+                float[] vertices = RenderHelper.GenerateGridVertices(
+                    CurrentConfig.GridScale,
+                    6,
+                    false
+                );
                 _gridDrawer.SetSubData(vertices, 0);
             };
 
@@ -381,7 +396,6 @@ namespace F3DZEX.Render
             CheckGLErros();
             _tex1.Use();
             CheckGLErros();
-
 
             _gridDrawer.SendProjViewMatrices(ref proj, ref view);
             _axisDrawer.SendProjViewMatrices(ref proj, ref view);
@@ -425,11 +439,12 @@ namespace F3DZEX.Render
             if (CurrentConfig.ShowGLInfo)
             {
                 _textDrawer.DrawString(
-                    //$"Extensions: {GL.GetString(StringName.Extensions)}\n" + 
-                    $"Shading Language Version: {GL.GetString(StringName.ShadingLanguageVersion)}\n" +
-                    $"Version: {GL.GetString(StringName.Version)}\n" +
-                    $"Renderer: {GL.GetString(StringName.Renderer)}\n" +
-                    $"Vendor: {GL.GetString(StringName.Vendor)}");
+                    //$"Extensions: {GL.GetString(StringName.Extensions)}\n" +
+                    $"Shading Language Version: {GL.GetString(StringName.ShadingLanguageVersion)}\n"
+                        + $"Version: {GL.GetString(StringName.Version)}\n"
+                        + $"Renderer: {GL.GetString(StringName.Renderer)}\n"
+                        + $"Vendor: {GL.GetString(StringName.Vendor)}"
+                );
             }
 
             CheckGLErros();
@@ -471,7 +486,6 @@ namespace F3DZEX.Render
             {
                 foreach (var entry in dlist)
                 {
-                    
                     addr = entry.addr;
                     ProcessInstruction(entry.cmd);
                 }
@@ -497,11 +511,11 @@ namespace F3DZEX.Render
             byte[] dec = N64Texture.Decode(w * h, tile.fmt, tile.siz, data, tlut);
             tex.SetDataRGBA(dec, w, h);
 
-
             // texture wrap
             var wrap = tile.GetTextureWrap();
             tex.SetTextureWrap(wrap.Item1, wrap.Item2);
         }
+
         private void DecodeTexIfRequired()
         {
             if (_reqDecodeTex)
@@ -509,24 +523,25 @@ namespace F3DZEX.Render
                 var tile0 = _combiner.UsesTex0() ? _tiles[_selectedTile + 0] : null;
                 var tile1 = _combiner.UsesTex1() ? _tiles[_selectedTile + 1] : null;
 
-
                 byte[] tlut = null;
-                if ((tile0 != null && tile0.fmt == G_IM_FMT.G_IM_FMT_CI) || (tile1 != null && tile1.fmt == G_IM_FMT.G_IM_FMT_CI))
+                if (
+                    (tile0 != null && tile0.fmt == G_IM_FMT.G_IM_FMT_CI)
+                    || (tile1 != null && tile1.fmt == G_IM_FMT.G_IM_FMT_CI)
+                )
                 {
                     tlut = new byte[_tlutSize];
                     System.Buffer.BlockCopy(_tmem, _tlutTmem, tlut, 0, tlut.Length);
                 }
 
-
                 if (tile0 != null && tile0.on)
                     DecodeTex(_tex0, tile0, tlut);
-                
+
                 // todo: handle hilite correctly
                 if (tile1 != null && tile1.on)
                     DecodeTex(_tex1, tile1, tlut);
 
                 _reqDecodeTex = false;
-                
+
                 _rdpVtxDrawer.SendTile(0, _tiles[0]);
                 _rdpVtxDrawer.SendTile(1, _tiles[1]);
             }
@@ -538,73 +553,69 @@ namespace F3DZEX.Render
             {
                 case CmdID.G_SETOTHERMODE_L:
                 case CmdID.G_SETOTHERMODE_H:
-                    {
-                        var cmd = info.Convert<GSetOtherMode>();
+                {
+                    var cmd = info.Convert<GSetOtherMode>();
 
-                        ref uint x = ref _otherModeLO;
-                        if (info.ID == CmdID.G_SETOTHERMODE_H)
-                            x = ref _otherModeHI;
+                    ref uint x = ref _otherModeLO;
+                    if (info.ID == CmdID.G_SETOTHERMODE_H)
+                        x = ref _otherModeHI;
 
-                        x = x & ~((uint)((1 << cmd.len) - 1) << cmd.shift) | cmd.data;
+                    x = x & ~((uint)((1 << cmd.len) - 1) << cmd.shift) | cmd.data;
 
-                        _rdpVtxDrawer.SendOtherMode(info.ID, x);
-                        break;
-                    }
+                    _rdpVtxDrawer.SendOtherMode(info.ID, x);
+                    break;
+                }
                 case CmdID.G_GEOMETRYMODE:
-                    {
-                        var cmd = info.Convert<GGeometryMode>();
+                {
+                    var cmd = info.Convert<GGeometryMode>();
 
-                        _geoMode = (_geoMode & (uint)cmd.clearbits) | (uint)cmd.setbits;
-                        _rdpVtxDrawer.SendGeometryMode(_geoMode);
-                        
-                        break;
-                    }
+                    _geoMode = (_geoMode & (uint)cmd.clearbits) | (uint)cmd.setbits;
+                    _rdpVtxDrawer.SendGeometryMode(_geoMode);
+
+                    break;
+                }
 
                 case CmdID.G_SETKEYR:
-                    {
-                        var cmd = info.Convert<GSetKeyR>();
-                        _chromaKey.SetKeyR(cmd);
+                {
+                    var cmd = info.Convert<GSetKeyR>();
+                    _chromaKey.SetKeyR(cmd);
 
-                        _rdpVtxDrawer.SendChromaKey(_chromaKey);
-                        break;
-                    }
+                    _rdpVtxDrawer.SendChromaKey(_chromaKey);
+                    break;
+                }
                 case CmdID.G_SETKEYGB:
-                    {
-                        var cmd = info.Convert<GSetKeyGB>();
-                        _chromaKey.SetKeyGB(cmd);
+                {
+                    var cmd = info.Convert<GSetKeyGB>();
+                    _chromaKey.SetKeyGB(cmd);
 
-                        _rdpVtxDrawer.SendChromaKey(_chromaKey);
-                        break;
-                    }
-
+                    _rdpVtxDrawer.SendChromaKey(_chromaKey);
+                    break;
+                }
 
                 case CmdID.G_SETPRIMCOLOR:
-                    {
-                        var cmd = info.Convert<GSetPrimColor>();
+                {
+                    var cmd = info.Convert<GSetPrimColor>();
 
-                        _rdpVtxDrawer.SendPrimColor(cmd);
-                        
-                        break;
-                    }
+                    _rdpVtxDrawer.SendPrimColor(cmd);
+
+                    break;
+                }
                 case CmdID.G_SETBLENDCOLOR:
                 case CmdID.G_SETENVCOLOR:
                 case CmdID.G_SETFOGCOLOR:
-                    {
-                        var cmd = info.Convert<GSetColor>();
-                        _rdpVtxDrawer.SendColor(info.ID, cmd);
-                        break;
-                    }
+                {
+                    var cmd = info.Convert<GSetColor>();
+                    _rdpVtxDrawer.SendColor(info.ID, cmd);
+                    break;
+                }
                 case CmdID.G_SETCOMBINE:
-                    {
-                        var cmd = info.Convert<GSetCombine>();
-                        
-                        _combiner.SetCombine(cmd);
-                        _rdpVtxDrawer.SendCombiner(_combiner);
-                        break;
-                    }
+                {
+                    var cmd = info.Convert<GSetCombine>();
 
-
-
+                    _combiner.SetCombine(cmd);
+                    _rdpVtxDrawer.SendCombiner(_combiner);
+                    break;
+                }
 
                 case CmdID.G_VTX:
                     {
@@ -618,31 +629,40 @@ namespace F3DZEX.Render
                             BinaryWriter bw = new BinaryWriter(ms);
                             for (int i = 0; i < cmd.numv; i++)
                             {
-                                byte[] data = Memory.ReadBytes(cmd.vaddr + (uint)(Vertex.SIZE * i), Vertex.SIZE);
+                                byte[] data = Memory.ReadBytes(
+                                    cmd.vaddr + (uint)(Vertex.SIZE * i),
+                                    Vertex.SIZE
+                                );
                                 bw.Write(data);
 
                                 // send the rdp top matrix
                                 for (int y = 0; y < 4; y++)
-                                    for (int x = 0; x < 4; x++)
-                                        bw.Write(curMtx[y, x]);
+                                for (int x = 0; x < 4; x++)
+                                    bw.Write(curMtx[y, x]);
                             }
 
-                            _rdpVtxDrawer.SetSubData(ms.ToArray(), cmd.vbidx * (Vertex.SIZE + 4 * 4 * 4));
+                            _rdpVtxDrawer.SetSubData(
+                                ms.ToArray(),
+                                cmd.vbidx * (Vertex.SIZE + 4 * 4 * 4)
+                            );
                         }
                     }
                     break;
                 case CmdID.G_TRI1:
                     {
                         var cmd = info.Convert<GTri1>();
-                        
+
                         if (CurrentConfig.RenderMode == RdpVertexDrawer.ModelRenderMode.Textured)
                         {
                             DecodeTexIfRequired();
                         }
 
                         byte[] indices = new byte[] { cmd.v0, cmd.v1, cmd.v2 };
-                        _rdpVtxDrawer.Draw(PrimitiveType.Triangles, indices, CurrentConfig.DrawNormals);
-
+                        _rdpVtxDrawer.Draw(
+                            PrimitiveType.Triangles,
+                            indices,
+                            CurrentConfig.DrawNormals
+                        );
                     }
                     break;
                 case CmdID.G_TRI2:
@@ -654,22 +674,32 @@ namespace F3DZEX.Render
                             DecodeTexIfRequired();
                         }
 
-                        byte[] indices = new byte[] { cmd.v00, cmd.v01, cmd.v02, cmd.v10, cmd.v11, cmd.v12 };
-                        _rdpVtxDrawer.Draw(PrimitiveType.Triangles, indices, CurrentConfig.DrawNormals);
-
-
+                        byte[] indices = new byte[]
+                        {
+                            cmd.v00,
+                            cmd.v01,
+                            cmd.v02,
+                            cmd.v10,
+                            cmd.v11,
+                            cmd.v12,
+                        };
+                        _rdpVtxDrawer.Draw(
+                            PrimitiveType.Triangles,
+                            indices,
+                            CurrentConfig.DrawNormals
+                        );
                     }
                     break;
 
                 case CmdID.G_TEXTURE:
-                    {
-                        var cmd = info.Convert<GTexture>();
+                {
+                    var cmd = info.Convert<GTexture>();
 
-                        _selectedTile = (int)cmd.tile;
+                    _selectedTile = (int)cmd.tile;
 
-                        _tiles[(int)cmd.tile].Texture(cmd);
-                        break;
-                    }
+                    _tiles[(int)cmd.tile].Texture(cmd);
+                    break;
+                }
                 case CmdID.G_SETTILESIZE:
                     {
                         if (CurrentConfig.RenderMode != RdpVertexDrawer.ModelRenderMode.Textured)
@@ -736,7 +766,6 @@ namespace F3DZEX.Render
                     }
                     break;
 
-
                 /*
             case Command.OpCodeID.G_DL:
                 {
@@ -750,30 +779,30 @@ namespace F3DZEX.Render
 
 
                 case CmdID.G_POPMTX:
-                    {
-                        var cmd = info.Convert<GPopMtx>();
-                        for (uint i = 0; i < cmd.num; i++)
-                            RdpMtxStack.Pop();
+                {
+                    var cmd = info.Convert<GPopMtx>();
+                    for (uint i = 0; i < cmd.num; i++)
+                        RdpMtxStack.Pop();
 
-                        break;
-                    }
+                    break;
+                }
                 case CmdID.G_MTX:
-                    {
-                        var cmd = info.Convert<GMtx>();
-                        var mtx = new Mtx(Memory.ReadBytes(cmd.mtxaddr, Mtx.SIZE));
-                        var mtxf = mtx.ToMatrix4();
+                {
+                    var cmd = info.Convert<GMtx>();
+                    var mtx = new Mtx(Memory.ReadBytes(cmd.mtxaddr, Mtx.SIZE));
+                    var mtxf = mtx.ToMatrix4();
 
-                        if (cmd.param.HasFlag(G_MTX_PARAM.G_MTX_PUSH))
-                            RdpMtxStack.Push(mtxf);
+                    if (cmd.param.HasFlag(G_MTX_PARAM.G_MTX_PUSH))
+                        RdpMtxStack.Push(mtxf);
 
-                        // check G_MTX_MUL
-                        if (!cmd.param.HasFlag(G_MTX_PARAM.G_MTX_LOAD))
-                            //mtxf = curMtx * mtxf;
-                            mtxf *= RdpMtxStack.Top();
+                    // check G_MTX_MUL
+                    if (!cmd.param.HasFlag(G_MTX_PARAM.G_MTX_LOAD))
+                        //mtxf = curMtx * mtxf;
+                        mtxf *= RdpMtxStack.Top();
 
-                        RdpMtxStack.Load(mtxf);
-                        break;
-                    }
+                    RdpMtxStack.Load(mtxf);
+                    break;
+                }
                 default:
                     break;
             }

@@ -64,7 +64,6 @@ namespace F3DZEX.Command
         G_SETCIMG = 0xFF,
     }
 
-
     [System.AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
     sealed class CmdAttribute : Attribute
     {
@@ -75,7 +74,10 @@ namespace F3DZEX.Command
             this.id = id;
         }
 
-        public CmdID ID { get => id; }
+        public CmdID ID
+        {
+            get => id;
+        }
     }
 
     [Cmd(CmdID.G_TEXTURE)]
@@ -129,6 +131,7 @@ namespace F3DZEX.Command
         public G_TX_TILE tile { get; set; }
         public int count { get; set; }
     }
+
     [Cmd(CmdID.G_SETTILE)]
     public struct GSetTile
     {
@@ -243,6 +246,7 @@ namespace F3DZEX.Command
         public byte centerB { get; set; }
         public byte scaleB { get; set; }
     }
+
     [Cmd(CmdID.G_SETKEYR)]
     public struct GSetKeyR
     {
@@ -250,6 +254,7 @@ namespace F3DZEX.Command
         public byte centerR { get; set; }
         public byte scaleR { get; set; }
     }
+
     [Cmd(CmdID.G_SETSCISSOR)]
     public struct GSetScissor
     {
@@ -299,7 +304,6 @@ namespace F3DZEX.Command
         public uint data { get; set; }
     }
 
-
     [Cmd(CmdID.G_POPMTX)]
     public struct GPopMtx
     {
@@ -313,7 +317,6 @@ namespace F3DZEX.Command
         public uint mtxaddr { get; set; }
     }
 
-
     public class CmdInfo
     {
         public CmdID ID { get; private set; }
@@ -324,6 +327,7 @@ namespace F3DZEX.Command
             ID = id;
             Args = args;
         }
+
         public int GetSize()
         {
             switch (ID)
@@ -386,30 +390,37 @@ namespace F3DZEX.Command
         }
 
         public T GetArg<T>(string param) => (T)Args[param];
+
         public T Convert<T>() => (T)ConvertCommand(typeof(T), this);
 
         private static object ConvertCommand(Type t, CmdInfo cmd)
         {
             // TODO: check parent class
 
-            var attr = ((CmdAttribute[])t.GetCustomAttributes(typeof(CmdAttribute), false)).ToList();
+            var attr = (
+                (CmdAttribute[])t.GetCustomAttributes(typeof(CmdAttribute), false)
+            ).ToList();
 
             var match = attr.Find(a => a.ID == cmd.ID);
             if (match == null)
                 throw new InvalidF3DZEXOpCodeException("Invalid ID");
 
-
             object obj = Activator.CreateInstance(t);
 
             foreach (var prop in t.GetProperties())
             {
-                if (!cmd.Args.ContainsKey(prop.Name) || cmd.Args[prop.Name].GetType() != prop.PropertyType)
+                if (
+                    !cmd.Args.ContainsKey(prop.Name)
+                    || cmd.Args[prop.Name].GetType() != prop.PropertyType
+                )
                     throw new Exception("???");
 
                 t.GetProperty(prop.Name).SetValue(obj, cmd.Args[prop.Name]);
             }
             return obj;
         }
-        public static T DecodeCommand<T>(byte[] ucode, int off) => (T)ConvertCommand(typeof(T), CmdEncoding.DecodeCmds(ucode, off).First());
+
+        public static T DecodeCommand<T>(byte[] ucode, int off) =>
+            (T)ConvertCommand(typeof(T), CmdEncoding.DecodeCmds(ucode, off).First());
     }
 }

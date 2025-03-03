@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using F3DZEX.Command;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using System.IO;
 
 namespace F3DZEX.Render
 {
     public class RdpVertexDrawer
     {
-
         public enum ModelRenderMode
         {
             Wireframe,
             Textured,
             Surface,
-            Normal
+            Normal,
         }
 
         private ModelRenderMode _mode;
@@ -30,9 +29,20 @@ namespace F3DZEX.Render
 
         public RdpVertexDrawer()
         {
-            _shader = new ShaderHandler(File.ReadAllText("Shaders/rdpVtx.vert"), File.ReadAllText("Shaders/rdpVtx.frag"));
-            _wireframeShader = new ShaderHandler(File.ReadAllText("Shaders/rdpVtx.vert"), File.ReadAllText("Shaders/wireframe.frag"), File.ReadAllText("Shaders/wireframe.geom"));
-            _nrmShader = new ShaderHandler(File.ReadAllText("Shaders/rdpvtx.vert"), File.ReadAllText("Shaders/coloredVtx.frag"), File.ReadAllText("Shaders/rdpVtxNrm.geom"));
+            _shader = new ShaderHandler(
+                File.ReadAllText("Shaders/rdpVtx.vert"),
+                File.ReadAllText("Shaders/rdpVtx.frag")
+            );
+            _wireframeShader = new ShaderHandler(
+                File.ReadAllText("Shaders/rdpVtx.vert"),
+                File.ReadAllText("Shaders/wireframe.frag"),
+                File.ReadAllText("Shaders/wireframe.geom")
+            );
+            _nrmShader = new ShaderHandler(
+                File.ReadAllText("Shaders/rdpvtx.vert"),
+                File.ReadAllText("Shaders/coloredVtx.frag"),
+                File.ReadAllText("Shaders/rdpVtxNrm.geom")
+            );
             _attrs = new VertexAttribs();
             // position
             //_attrs.LayoutAddFloat(3, VertexAttribPointerType.Short, false);
@@ -56,6 +66,7 @@ namespace F3DZEX.Render
         }
 
         public void SetData(byte[] data, BufferUsageHint hint) => _attrs.SetData(data, true, hint);
+
         public void SetSubData(byte[] data, int off) => _attrs.SetSubData(data, off, true);
 
         #region uniform
@@ -69,13 +80,14 @@ namespace F3DZEX.Render
             _wireframeShader.Send("u_Projection", proj);
             _wireframeShader.Send("u_View", view);
         }
+
         public void SendModelMatrix(Matrix4 model)
         {
             _shader.Send("u_Model", model);
             _nrmShader.Send("u_Model", model);
             _wireframeShader.Send("u_Model", model);
         }
-        
+
         public void SendTile(int idx, Render.Renderer.Tile tile)
         {
             _shader.Send($"u_Tiles[{idx}].tex", idx);
@@ -91,6 +103,7 @@ namespace F3DZEX.Render
             _shader.Send("u_HighlightEnabled", enabled);
             _wireframeShader.Send("u_HighlightEnabled", enabled);
         }
+
         public void SendHighlightColor(Color color)
         {
             _shader.Send("u_HighlightColor", color);
@@ -102,6 +115,7 @@ namespace F3DZEX.Render
             _shader.Send("u_RdpState.color.prim", Color.FromArgb(cmd.A, cmd.R, cmd.G, cmd.B));
             _shader.Send("u_RdpState.color.primLod", cmd.lodfrac / 255.0f);
         }
+
         public void SendColor(CmdID id, GSetColor setColor)
         {
             string name = id switch
@@ -113,6 +127,7 @@ namespace F3DZEX.Render
             };
             _shader.Send(name, Color.FromArgb(setColor.A, setColor.R, setColor.G, setColor.B));
         }
+
         public void SendInitialColors(Renderer.Config cfg)
         {
             _shader.Send("u_RdpState.color.prim", cfg.InitialPrimColor);
@@ -123,16 +138,50 @@ namespace F3DZEX.Render
 
         public void SendChromaKey(Renderer.ChromaKey key)
         {
-            _shader.Send("u_ChromaKeyCenter", key.r.center / 255.0f, key.g.center / 255.0f, key.b.center / 255.0f);
-            _shader.Send("u_ChromaKeyScale", key.r.scale / 255.0f, key.g.scale / 255.0f, key.b.scale / 255.0f);
+            _shader.Send(
+                "u_ChromaKeyCenter",
+                key.r.center / 255.0f,
+                key.g.center / 255.0f,
+                key.b.center / 255.0f
+            );
+            _shader.Send(
+                "u_ChromaKeyScale",
+                key.r.scale / 255.0f,
+                key.g.scale / 255.0f,
+                key.b.scale / 255.0f
+            );
         }
 
         public void SendCombiner(Renderer.ColorCombiner combiner)
         {
-            _shader.Send("u_RdpState.combiner.c1", (int)combiner.a.c1, (int)combiner.b.c1, (int)combiner.c.c1, (int)combiner.d.c1);
-            _shader.Send("u_RdpState.combiner.c2", (int)combiner.a.c2, (int)combiner.b.c2, (int)combiner.c.c2, (int)combiner.d.c2);
-            _shader.Send("u_RdpState.combiner.a1", (int)combiner.a.a1, (int)combiner.b.a1, (int)combiner.c.a1, (int)combiner.d.a1);
-            _shader.Send("u_RdpState.combiner.a2", (int)combiner.a.a2, (int)combiner.b.a2, (int)combiner.c.a2, (int)combiner.d.a2);
+            _shader.Send(
+                "u_RdpState.combiner.c1",
+                (int)combiner.a.c1,
+                (int)combiner.b.c1,
+                (int)combiner.c.c1,
+                (int)combiner.d.c1
+            );
+            _shader.Send(
+                "u_RdpState.combiner.c2",
+                (int)combiner.a.c2,
+                (int)combiner.b.c2,
+                (int)combiner.c.c2,
+                (int)combiner.d.c2
+            );
+            _shader.Send(
+                "u_RdpState.combiner.a1",
+                (int)combiner.a.a1,
+                (int)combiner.b.a1,
+                (int)combiner.c.a1,
+                (int)combiner.d.a1
+            );
+            _shader.Send(
+                "u_RdpState.combiner.a2",
+                (int)combiner.a.a2,
+                (int)combiner.b.a2,
+                (int)combiner.c.a2,
+                (int)combiner.d.a2
+            );
         }
 
         public void SendGeometryMode(uint mode)
@@ -146,7 +195,9 @@ namespace F3DZEX.Render
             {
                 CmdID.G_SETOTHERMODE_H => "u_RdpState.otherMode.hi",
                 CmdID.G_SETOTHERMODE_L => "u_RdpState.otherMode.lo",
-                _ => throw new ArgumentException($"Invalid Command for {nameof(SendOtherMode)} : {id}"),
+                _ => throw new ArgumentException(
+                    $"Invalid Command for {nameof(SendOtherMode)} : {id}"
+                ),
             };
             _shader.Send(name, word);
         }
@@ -155,7 +206,7 @@ namespace F3DZEX.Render
         {
             _wireframeShader.Send("u_WireFrameColor", color);
         }
-        
+
         public void SetModelRenderMode(ModelRenderMode mode)
         {
             _mode = mode;
@@ -167,6 +218,7 @@ namespace F3DZEX.Render
         {
             _nrmShader.Send("u_NrmColor", color);
         }
+
         public void SendLightingEnabled(bool enabled)
         {
             _shader.Send("u_LigthingEnabled", enabled);
@@ -175,7 +227,9 @@ namespace F3DZEX.Render
 
 
         public void UseNormalShader() => _nrmShader.Use();
+
         public void UseVertexShader() => _shader.Use();
+
         public void UseWireFrameShader() => _wireframeShader.Use();
 
         public void Draw(PrimitiveType type, byte[] indices, bool drawNormals)
@@ -184,7 +238,7 @@ namespace F3DZEX.Render
                 UseWireFrameShader();
             else
                 UseVertexShader();
-            
+
             _attrs.Draw(type, indices);
 
             if (drawNormals)
