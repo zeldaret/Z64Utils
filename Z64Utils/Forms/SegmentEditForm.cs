@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RDP;
 using Common;
-using System.IO;
-using System.Globalization;
 using F3DZEX;
+using RDP;
 
 namespace Z64.Forms
 {
@@ -53,12 +53,10 @@ namespace Z64.Forms
             comboBox1.SelectedItem = SRC_EMPTY;
             DialogResult = DialogResult.Cancel;
 
-
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.Appearance = TabAppearance.FlatButtons;
         }
-
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -66,7 +64,12 @@ namespace Z64.Forms
             {
                 case SRC_ADDR: // Address
                     tabControl1.SelectedTab = tabPage_address;
-                    okBtn.Enabled = uint.TryParse(addressValue.Text, NumberStyles.HexNumber, new CultureInfo("en-US"), out uint result);
+                    okBtn.Enabled = uint.TryParse(
+                        addressValue.Text,
+                        NumberStyles.HexNumber,
+                        new CultureInfo("en-US"),
+                        out uint result
+                    );
                     break;
                 case SRC_ROM_FS: // ROM FS
                     tabControl1.SelectedTab = tabPage_file;
@@ -109,19 +112,36 @@ namespace Z64.Forms
                     okBtn.Enabled = _dmaFileName != null;
                 }
             }
-            else if (comboBox1.SelectedItem == (object)SRC_FILE)// File
+            else if (comboBox1.SelectedItem == (object)SRC_FILE) // File
             {
                 openFileDialog1.FileName = "";
                 openFileDialog1.Filter = Filters.ALL;
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     _fileName = openFileDialog1.FileName;
-                    ResultSegment = Memory.Segment.FromBytes(Path.GetFileName(_fileName), File.ReadAllBytes(_fileName));
+                    ResultSegment = Memory.Segment.FromBytes(
+                        Path.GetFileName(_fileName),
+                        File.ReadAllBytes(_fileName)
+                    );
                     button1.ForeColor = Color.Green;
                     okBtn.Enabled = _fileName != null;
                 }
             }
         }
+
+        // csharpier-ignore
+        private static readonly byte[] IdentityMtxData = new byte[]
+        {
+            0,1,   0,0,   0,0,   0,0,
+            0,0,   0,1,   0,0,   0,0,
+            0,0,   0,0,   0,1,   0,0,
+            0,0,   0,0,   0,0,   0,1,
+
+            0,0,   0,0,   0,0,   0,0,
+            0,0,   0,0,   0,0,   0,0,
+            0,0,   0,0,   0,0,   0,0,
+            0,0,   0,0,   0,0,   0,0,
+        };
 
         private void okBtn_Click(object sender, EventArgs e)
         {
@@ -133,17 +153,7 @@ namespace Z64.Forms
                     break;
 
                 case SRC_IDENT_MTX:
-                    ResultSegment = Memory.Segment.FromFill("Ident Matrices", new byte[] {
-                        0,1,   0,0,   0,0,   0,0,
-                        0,0,   0,1,   0,0,   0,0,
-                        0,0,   0,0,   0,1,   0,0,
-                        0,0,   0,0,   0,0,   0,1,
-
-                        0,0,   0,0,   0,0,   0,0,
-                        0,0,   0,0,   0,0,   0,0,
-                        0,0,   0,0,   0,0,   0,0,
-                        0,0,   0,0,   0,0,   0,0,
-                    });
+                    ResultSegment = Memory.Segment.FromFill("Ident Matrices", IdentityMtxData);
                     break;
 
                 case SRC_NULL:
@@ -155,7 +165,10 @@ namespace Z64.Forms
                     break;
 
                 case SRC_EMPTY_DLIST:
-                    ResultSegment = Memory.Segment.FromFill("Empty Dlist", new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                    ResultSegment = Memory.Segment.FromFill(
+                        "Empty Dlist",
+                        new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+                    );
                     break;
 
                 case SRC_PRIM_COLOR:
@@ -169,7 +182,28 @@ namespace Z64.Forms
                         byte g = byte.Parse(primColorG.Text, NumberStyles.Number);
                         byte b = byte.Parse(primColorB.Text, NumberStyles.Number);
                         byte a = byte.Parse(primColorA.Text, NumberStyles.Number);
-                        ResultSegment = Memory.Segment.FromFill("Prim Color", new byte[] { 0xFA, 0x00, 0x00, locFrac, r, g, b, a, 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                        ResultSegment = Memory.Segment.FromFill(
+                            "Prim Color",
+                            new byte[]
+                            {
+                                0xFA,
+                                0x00,
+                                0x00,
+                                locFrac,
+                                r,
+                                g,
+                                b,
+                                a,
+                                0xDF,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                            }
+                        );
                     }
                     break;
 
@@ -179,14 +213,35 @@ namespace Z64.Forms
                         byte g = byte.Parse(envColorG.Text, NumberStyles.Number);
                         byte b = byte.Parse(envColorB.Text, NumberStyles.Number);
                         byte a = byte.Parse(envColorA.Text, NumberStyles.Number);
-                        ResultSegment = Memory.Segment.FromFill("Env Color", new byte[] { 0xFB, 0x00, 0x00, 0x00, r, g, b, a, 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+                        ResultSegment = Memory.Segment.FromFill(
+                            "Env Color",
+                            new byte[]
+                            {
+                                0xFB,
+                                0x00,
+                                0x00,
+                                0x00,
+                                r,
+                                g,
+                                b,
+                                a,
+                                0xDF,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                                0x00,
+                            }
+                        );
                     }
                     break;
 
                 default:
                     break;
             }
-            
+
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -197,20 +252,65 @@ namespace Z64.Forms
             if (lodFracText.StartsWith("0x"))
                 lodFracText = lodFracText.Substring(2);
 
-            bool lodFracOK = byte.TryParse(lodFracText, NumberStyles.HexNumber, new CultureInfo("en-US"), out byte lodFrac);
-            bool rOK = byte.TryParse(primColorR.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte r);
-            bool gOK = byte.TryParse(primColorG.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte g);
-            bool bOK = byte.TryParse(primColorB.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte b);
-            bool aOK = byte.TryParse(primColorA.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte a);
+            bool lodFracOK = byte.TryParse(
+                lodFracText,
+                NumberStyles.HexNumber,
+                new CultureInfo("en-US"),
+                out byte lodFrac
+            );
+            bool rOK = byte.TryParse(
+                primColorR.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte r
+            );
+            bool gOK = byte.TryParse(
+                primColorG.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte g
+            );
+            bool bOK = byte.TryParse(
+                primColorB.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte b
+            );
+            bool aOK = byte.TryParse(
+                primColorA.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte a
+            );
             return lodFracOK && rOK && gOK && bOK && aOK;
         }
 
         private bool IsEnvColorOK()
         {
-            bool rOK = byte.TryParse(envColorR.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte r);
-            bool gOK = byte.TryParse(envColorG.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte g);
-            bool bOK = byte.TryParse(envColorB.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte b);
-            bool aOK = byte.TryParse(envColorA.Text, NumberStyles.Number, new CultureInfo("en-US"), out byte a);
+            bool rOK = byte.TryParse(
+                envColorR.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte r
+            );
+            bool gOK = byte.TryParse(
+                envColorG.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte g
+            );
+            bool bOK = byte.TryParse(
+                envColorB.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte b
+            );
+            bool aOK = byte.TryParse(
+                envColorA.Text,
+                NumberStyles.Number,
+                new CultureInfo("en-US"),
+                out byte a
+            );
             return rOK && gOK && bOK && aOK;
         }
 

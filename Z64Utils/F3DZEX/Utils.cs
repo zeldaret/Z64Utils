@@ -1,6 +1,4 @@
-﻿using Z64;
-using Syroot.BinaryData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -8,6 +6,8 @@ using System.Globalization;
 using System.IO;
 using Common;
 using OpenTK;
+using Syroot.BinaryData;
+using Z64;
 
 namespace RDP
 {
@@ -26,14 +26,13 @@ namespace RDP
         public byte B;
         public byte A;
 
-        public Vertex()
-        {
+        public Vertex() { }
 
-        }
         public Vertex(BinaryStream br)
         {
             Parse(br);
         }
+
         public Vertex(byte[] rawVtx)
         {
             using (MemoryStream ms = new MemoryStream(rawVtx))
@@ -43,19 +42,21 @@ namespace RDP
                 Parse(br);
             }
         }
+
         private void Parse(BinaryStream br)
         {
-                X = br.ReadInt16();
-                Y = br.ReadInt16();
-                Z = br.ReadInt16();
-                Flag = br.ReadUInt16();
-                TexX = br.ReadInt16();
-                TexY = br.ReadInt16();
-                R = br.Read1Byte();
-                G = br.Read1Byte();
-                B = br.Read1Byte();
-                A = br.Read1Byte();
+            X = br.ReadInt16();
+            Y = br.ReadInt16();
+            Z = br.ReadInt16();
+            Flag = br.ReadUInt16();
+            TexX = br.ReadInt16();
+            TexY = br.ReadInt16();
+            R = br.Read1Byte();
+            G = br.Read1Byte();
+            B = br.Read1Byte();
+            A = br.Read1Byte();
         }
+
         public void Write(BinaryStream bw)
         {
             bw.Write(X);
@@ -76,12 +77,14 @@ namespace RDP
         public bool Segmented { get; set; }
         public int SegmentId { get; set; }
         public uint SegmentOff { get; set; }
-        public uint VAddr { get => Segmented ? ((uint)(SegmentId << 24) | SegmentOff) : SegmentOff; }
-
-        public SegmentedAddress(int segId, int segOff) : this((uint)(segId << 24) | (uint)segOff)
+        public uint VAddr
         {
-
+            get => Segmented ? ((uint)(SegmentId << 24) | SegmentOff) : SegmentOff;
         }
+
+        public SegmentedAddress(int segId, int segOff)
+            : this((uint)(segId << 24) | (uint)segOff) { }
+
         public SegmentedAddress(uint vaddr)
         {
             int segId = (int)(vaddr >> 24);
@@ -99,6 +102,7 @@ namespace RDP
         }
 
         public static implicit operator uint(SegmentedAddress seg) => seg.VAddr;
+
         public static explicit operator SegmentedAddress(uint addr) => new SegmentedAddress(addr);
 
         public static SegmentedAddress Parse(string text, bool acceptPrefix = true)
@@ -106,7 +110,14 @@ namespace RDP
             if (acceptPrefix && text.StartsWith("0x"))
                 text = text.Substring(2);
 
-            if (uint.TryParse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint addr))
+            if (
+                uint.TryParse(
+                    text,
+                    NumberStyles.HexNumber,
+                    CultureInfo.InvariantCulture,
+                    out uint addr
+                )
+            )
                 return new SegmentedAddress(addr);
 
             return null;
@@ -127,10 +138,8 @@ namespace RDP
         public short[,] intPart = new short[4, 4];
         public ushort[,] fracPart = new ushort[4, 4];
 
-        public Mtx()
-        {
+        public Mtx() { }
 
-        }
         public Mtx(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
@@ -139,6 +148,7 @@ namespace RDP
                 Parse(br);
             }
         }
+
         public Mtx(BinaryStream br)
         {
             Parse(br);
@@ -154,15 +164,16 @@ namespace RDP
             for (int j = 0; j < fracPart.GetLength(1); j++)
                 fracPart[i, j] = br.ReadUInt16();
         }
+
         public void Write(BinaryStream bw)
         {
             for (int i = 0; i < intPart.GetLength(0); i++)
-                for (int j = 0; j < intPart.GetLength(1); j++)
-                    bw.Write(intPart[i, j]);
+            for (int j = 0; j < intPart.GetLength(1); j++)
+                bw.Write(intPart[i, j]);
 
             for (int i = 0; i < fracPart.GetLength(0); i++)
-                for (int j = 0; j < fracPart.GetLength(1); j++)
-                    bw.Write(fracPart[i, j]);
+            for (int j = 0; j < fracPart.GetLength(1); j++)
+                bw.Write(fracPart[i, j]);
         }
 
         public byte[] GetBuffer()
@@ -181,8 +192,8 @@ namespace RDP
             Matrix4 ret = new Matrix4();
 
             for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    ret[i, j] = ((intPart[i, j] << 16) | fracPart[i, j]) / (float)0x10000;
+            for (int j = 0; j < 4; j++)
+                ret[i, j] = ((intPart[i, j] << 16) | fracPart[i, j]) / (float)0x10000;
 
             return ret;
         }
@@ -192,12 +203,12 @@ namespace RDP
             Mtx ret = new Mtx();
 
             for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                {
-                    int v = (int)(m4[i, j] * 0x10000);
-                    ret.intPart[i, j] = (short)(v >> 16);
-                    ret.fracPart[i, j] = (ushort)(v & 0xFFFF);
-                }
+            for (int j = 0; j < 4; j++)
+            {
+                int v = (int)(m4[i, j] * 0x10000);
+                ret.intPart[i, j] = (short)(v >> 16);
+                ret.fracPart[i, j] = (ushort)(v & 0xFFFF);
+            }
 
             return ret;
         }
@@ -211,8 +222,11 @@ namespace RDP
         public readonly bool Signed;
 
         public bool SignBit() => Signed ? (((Raw >> (FracBits + IntBits)) & 1) == 1) : false;
+
         public uint IntPart() => (uint)((Raw >> FracBits) & ((1 << IntBits) - 1));
+
         public uint FracPart() => (uint)(Raw & ((1 << FracBits) - 1));
+
         public float Float()
         {
             float ret = IntPart() + ((float)FracPart() / (1 << FracBits));
@@ -221,6 +235,7 @@ namespace RDP
 
             return ret;
         }
+
         public override string ToString()
         {
             List<string> parts = new List<string>();

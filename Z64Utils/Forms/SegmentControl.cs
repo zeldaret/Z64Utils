@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using F3DZEX;
-using System.IO;
 using Common;
-using System.Globalization;
+using F3DZEX;
 
 namespace Z64.Forms
 {
     public partial class SegmentControl : UserControl
     {
         public event EventHandler<Memory.Segment> SegmentChanged;
-        public int SegmentID {
-            get {
-                return _segmentId;
-            }
-            set {
+        public int SegmentID
+        {
+            get { return _segmentId; }
+            set
+            {
                 if (value < 0)
                     _segmentId = 0;
                 else if (value >= 15)
@@ -30,7 +30,8 @@ namespace Z64.Forms
                     _segmentId = value;
 
                 indexLabel.Text = $"{SegmentID:D2} :";
-            } }
+            }
+        }
 
         private int _segmentId;
         Z64Game _game;
@@ -45,6 +46,7 @@ namespace Z64.Forms
         {
             _game = game;
         }
+
         public void SetSegment(Memory.Segment seg)
         {
             label1.Text = seg.Label;

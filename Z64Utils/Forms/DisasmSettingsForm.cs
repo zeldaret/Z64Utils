@@ -42,10 +42,16 @@ namespace Z64.Forms
             DisassemblyOptionForm_OnOptionUpdate(null, null);
         }
 
-        private void DisassemblyOptionForm_OnOptionUpdate(object sender, PropertyValueChangedEventArgs e)
+        private void DisassemblyOptionForm_OnOptionUpdate(
+            object sender,
+            PropertyValueChangedEventArgs e
+        )
         {
             Application.OpenForms.OfType<DisasmForm>().ToList().ForEach(f => f.UpdateDisassembly());
-            Application.OpenForms.OfType<ObjectAnalyzerForm>().ToList().ForEach(f => f.UpdateDisassembly());
+            Application
+                .OpenForms.OfType<ObjectAnalyzerForm>()
+                .ToList()
+                .ForEach(f => f.UpdateDisassembly());
 
             var lines = _disas.Disassemble();
 

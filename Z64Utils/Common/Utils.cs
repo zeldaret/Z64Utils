@@ -26,7 +26,9 @@ namespace Common
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                    Process.Start(
+                        new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true }
+                    );
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
@@ -49,18 +51,27 @@ namespace Common
             return JsonSerializer.Deserialize<T>(json);
         }
 
-        public static int BomSwap(int a) => (a << 24) | ((a & 0xFF00) << 8) | ((a & 0xFF0000) >> 8) | (a >> 24);
-        public static uint BomSwap(uint a) => (a << 24) | ((a & 0xFF00) << 8) | ((a & 0xFF0000) >> 8) | (a >> 24);
+        public static int BomSwap(int a) =>
+            (a << 24) | ((a & 0xFF00) << 8) | ((a & 0xFF0000) >> 8) | (a >> 24);
+
+        public static uint BomSwap(uint a) =>
+            (a << 24) | ((a & 0xFF00) << 8) | ((a & 0xFF0000) >> 8) | (a >> 24);
 
         public static string BytesToHex(byte[] data, string separator = " ")
         {
             return BitConverter.ToString(data).Replace("-", separator);
         }
+
         public static byte[] HexToBytes(string hex)
         {
             hex = hex.Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
-            return Enumerable.Range(0, hex.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(hex.Substring(x, 2), 16)).ToArray();
+            return Enumerable
+                .Range(0, hex.Length)
+                .Where(x => x % 2 == 0)
+                .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                .ToArray();
         }
+
         public static bool IsValidHex(string hex)
         {
             hex = hex.Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
@@ -75,12 +86,12 @@ namespace Common
                 align = 1;
 
             List<int> indices = new List<int>();
-            for (int i = 0; i < data.Length; i+= align)
+            for (int i = 0; i < data.Length; i += align)
             {
                 bool match = true;
                 for (int j = 0; j < pattern.Length; j++)
                 {
-                    if (pattern[j] != data[i+j])
+                    if (pattern[j] != data[i + j])
                     {
                         match = false;
                         break;
@@ -108,12 +119,16 @@ namespace Common
         {
             using (MemoryStream inStream = new MemoryStream(input))
             using (MemoryStream outStream = new MemoryStream(decSize))
-            using (var decompStream = new System.IO.Compression.DeflateStream(inStream, System.IO.Compression.CompressionMode.Decompress))
+            using (
+                var decompStream = new System.IO.Compression.DeflateStream(
+                    inStream,
+                    System.IO.Compression.CompressionMode.Decompress
+                )
+            )
             {
                 decompStream.CopyTo(outStream);
                 return outStream.GetBuffer();
             }
         }
-
     }
 }
