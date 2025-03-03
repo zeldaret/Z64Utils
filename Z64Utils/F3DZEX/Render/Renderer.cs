@@ -334,8 +334,10 @@ namespace F3DZEX.Render
 
         private void Init()
         {
+            CheckGLErros();
             /* Init Texture */
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+            CheckGLErros();
 
             _tex0 = new TextureHandler();
             _tex1 = new TextureHandler();
