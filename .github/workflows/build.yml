@@ -1,0 +1,61 @@
+name: Compile
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        target-runtime: [win-x64]
+        configuration: [Debug, Release]
+
+    name: Z64Utils-${{ matrix.target-runtime }}-${{ matrix.configuration }}
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      restore_args: --runtime ${{ matrix.target-runtime }}
+      build_args: --no-self-contained --configuration ${{ matrix.configuration }} --version-suffix ${{ github.sha }}
+      archive_name: Z64Utils-${{ matrix.target-runtime }}-${{ matrix.configuration }}-${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: dotnet info
+        shell: bash
+        run: |
+          dotnet --info
+
+      - name: dotnet restore
+        shell: bash
+        run: |
+          dotnet restore ${{ env.restore_args }}
+
+      - name: dotnet build
+        shell: bash
+        run: |
+          dotnet build ${{ env.restore_args }} ${{ env.build_args }}
+
+      - name: dotnet publish
+        shell: bash
+        run: |
+          dotnet publish --output publish_out/ ${{ env.restore_args }} ${{ env.build_args }}
+
+      - name: Copy versions data
+        shell: bash
+        run: |
+          cp -r -t publish_out/ Z64Utils-Config-master/versions
+
+      # Archive
+      - name: Create archive
+        shell: bash
+        run: |
+          cd publish_out
+          tar -czvf ../${{ env.archive_name }}.tar.gz *
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.archive_name }}
+          path: |
+            ${{ env.archive_name }}.tar.gz
