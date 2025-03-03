@@ -7,14 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Common
-{
+{    
     public class BitReader : BinaryReader
     {
         private byte _curByte;
         private int _curBitIdx = 8;
 
-        public BitReader(Stream s)
-            : base(s) { }
+        public BitReader(Stream s) : base(s) { }
 
         private byte ReadBit()
         {
@@ -28,14 +27,12 @@ namespace Common
 
             return b;
         }
-
         public byte[] ReadBits(int bits)
         {
             byte[] buff = new byte[bits / 8 + ((bits % 8) > 0 ? 1 : 0)];
 
             int firstRest = 8 - bits % 8;
-            if (firstRest >= 8)
-                firstRest = 0;
+            if (firstRest >= 8) firstRest = 0;
             int bitRead = 0;
             for (int i = 0; i < buff.Length; i++)
             {
@@ -44,8 +41,8 @@ namespace Common
             }
             return buff;
         }
-
         public void SkipBits(int bits) => ReadBits(bits);
+
 
         public byte ReadByte(int bits)
         {
@@ -53,21 +50,18 @@ namespace Common
                 throw new ArgumentOutOfRangeException(nameof(bits));
             return ReadBits(bits)[0];
         }
-
         public ushort ReadUInt16(int bits)
         {
             if (bits < 0 || bits > 32)
                 throw new ArgumentOutOfRangeException(nameof(bits));
             return (ushort)ReadUInt64(bits);
         }
-
         public uint ReadUInt32(int bits)
         {
             if (bits < 0 || bits > 32)
                 throw new ArgumentOutOfRangeException(nameof(bits));
             return (uint)ReadUInt64(bits);
         }
-
         public ulong ReadUInt64(int bits)
         {
             if (bits < 0 || bits > 64)
@@ -92,29 +86,18 @@ namespace Common
         }
 
         public sbyte ReadSByte(int bits) => unchecked((sbyte)ReadByte(bits));
-
         public short ReadInt16(int bits) => unchecked((short)ReadUInt16(bits));
-
         public int ReadInt32(int bits) => unchecked((int)ReadUInt32(bits));
-
         public long ReadInt64(int bits) => unchecked((long)ReadUInt64(bits));
 
         public override sbyte ReadSByte() => ReadSByte(8);
-
         public override byte ReadByte() => ReadByte(8);
-
         public override short ReadInt16() => ReadInt16(16);
-
         public override ushort ReadUInt16() => ReadUInt16(16);
-
         public override int ReadInt32() => ReadInt32(32);
-
         public override uint ReadUInt32() => ReadUInt32(32);
-
         public override long ReadInt64() => ReadInt64(64);
-
         public override ulong ReadUInt64() => ReadUInt64(64);
-
         public override bool ReadBoolean() => Convert.ToBoolean(ReadBit());
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using RDP;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using RDP;
 
 namespace F3DZEX.Command
 {
@@ -13,8 +13,8 @@ namespace F3DZEX.Command
             public int depth;
             public CmdInfo cmd;
 
-            public CommandHolder(uint addr, int depth, CmdInfo cmd) =>
-                (this.addr, this.depth, this.cmd) = (addr, depth, cmd);
+            public CommandHolder(uint addr, int depth, CmdInfo cmd)
+                => (this.addr, this.depth, this.cmd) = (addr, depth, cmd);
         }
 
         List<CommandHolder> _cmds;
@@ -25,23 +25,16 @@ namespace F3DZEX.Command
             _cmds = new List<CommandHolder>();
             _maxDepth = maxDepth;
         }
-
-        public Dlist(Memory mem, uint addr, int maxDepth = 16)
-            : this(maxDepth)
+        public Dlist(Memory mem, uint addr, int maxDepth = 16) : this(maxDepth)
         {
             DecodeDlist(mem, addr, 0);
         }
 
-        public Dlist(byte[] data, uint addr = 0)
-            : this(1)
+        public Dlist(byte[] data, uint addr = 0) : this(1)
         {
             var cmds = Command.CmdEncoding.DecodeCmds(data, 0);
 
-            cmds.ForEach(cmd =>
-            {
-                _cmds.Add(new CommandHolder(addr, 0, cmd));
-                addr += (uint)cmd.GetSize();
-            });
+            cmds.ForEach(cmd => { _cmds.Add(new CommandHolder(addr, 0, cmd)); addr += (uint)cmd.GetSize(); });
         }
 
         private void DecodeDlist(Memory mem, uint addr, int depth)
@@ -58,11 +51,7 @@ namespace F3DZEX.Command
                     var cmds = Command.CmdEncoding.DecodeCmds(mem.ReadBytes(addr, size + 8), 0);
 
                     // append previous command to the list and increment address
-                    cmds.ForEach(cmd =>
-                    {
-                        _cmds.Add(new CommandHolder(addr, depth, cmd));
-                        addr += (uint)cmd.GetSize();
-                    });
+                    cmds.ForEach(cmd => { _cmds.Add(new CommandHolder(addr, depth, cmd)); addr += (uint)cmd.GetSize(); });
 
                     if (id == CmdID.G_DL)
                     {
@@ -70,13 +59,8 @@ namespace F3DZEX.Command
 
                         // checks if the segment is set
                         SegmentedAddress dlAddr = new SegmentedAddress(gdl.dl);
-                        if (
-                            dlAddr.Segmented
-                            && mem.Segments[dlAddr.SegmentId].Type == Memory.SegmentType.Empty
-                        )
-                            throw new Exception(
-                                $"G_DL : Trying to jump to an empty segment (0x{gdl.dl:X8}). Set Segment {dlAddr.SegmentId} to fix the issue."
-                            );
+                        if (dlAddr.Segmented && mem.Segments[dlAddr.SegmentId].Type == Memory.SegmentType.Empty)
+                            throw new Exception($"G_DL : Trying to jump to an empty segment (0x{gdl.dl:X8}). Set Segment {dlAddr.SegmentId} to fix the issue.");
 
                         if (gdl.branch)
                         {
@@ -90,6 +74,7 @@ namespace F3DZEX.Command
                         }
 
                         size = -8;
+
                     }
                     else
                     {
@@ -109,9 +94,7 @@ namespace F3DZEX.Command
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public int CommandCount() => _cmds.Count;
-
         public CommandHolder AtIndex(int i) => _cmds[i];
-
         public CommandHolder? AtAddress(uint addr)
         {
             foreach (var cmd in _cmds)
@@ -126,7 +109,7 @@ namespace F3DZEX.Command
         {
             for (int i = 0; i < _cmds.Count; i++)
             {
-                for (int j = i + 1; j < _cmds.Count; j++)
+                for (int j = i+1; j < _cmds.Count; j++)
                 {
                     if (_cmds[j].addr == _cmds[i].addr)
                         return true;
@@ -135,5 +118,6 @@ namespace F3DZEX.Command
 
             return false;
         }
+
     }
 }

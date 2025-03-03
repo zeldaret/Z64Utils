@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Common;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
+using OpenTK;
 using RDP;
+using System.IO;
+using System.Globalization;
 using Syroot.BinaryData;
 using Z64;
+using Common;
 
 namespace Z64.Forms
 {
@@ -120,22 +120,19 @@ namespace Z64.Forms
 
                 for (int i = 0; i < _colHeader.NbPolygons; i++)
                 {
-                    Z64Object.CollisionPolygonsHolder.CollisionPoly colPoly = _colHeader
-                        .PolygonsHolder
-                        .CollisionPolys[i];
+                    Z64Object.CollisionPolygonsHolder.CollisionPoly colPoly = _colHeader.PolygonsHolder.CollisionPolys[i];
                     Vec3s v0 = _colHeader.VerticesHolder.Points[colPoly.Data[0] & 0x1FFF];
                     Vec3s v1 = _colHeader.VerticesHolder.Points[colPoly.Data[1] & 0x1FFF];
                     Vec3s v2 = _colHeader.VerticesHolder.Points[colPoly.Data[2] & 0x1FFF];
 
                     _polygons[i] = new RenderColPoly()
                     {
-                        Points = new double[3][]
-                        {
+                        Points = new double[3][] {
                             new double[3] { v0.X, v0.Y, v0.Z },
                             new double[3] { v1.X, v1.Y, v1.Z },
-                            new double[3] { v2.X, v2.Y, v2.Z },
+                            new double[3] { v2.X, v2.Y, v2.Z }
                         },
-                        Normal = colPoly.Normal,
+                        Normal = colPoly.Normal
                     };
                 }
             }
@@ -163,10 +160,7 @@ namespace Z64.Forms
             {
                 _settingsForm = new SettingsForm(_rendererCfg);
                 _settingsForm.FormClosed += (sender, e) => _settingsForm = null;
-                _settingsForm.SettingsChanged += (sender, e) =>
-                {
-                    modelViewer.Render();
-                };
+                _settingsForm.SettingsChanged += (sender, e) => { modelViewer.Render(); };
                 _settingsForm.Show();
             }
         }

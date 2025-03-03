@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using OpenTK.Graphics.OpenGL;
+using OpenTK;
 using System.Drawing;
 using System.IO;
-using System.Text;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace F3DZEX.Render
 {
@@ -12,10 +12,7 @@ namespace F3DZEX.Render
     {
         public SimpleVertexDrawer()
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/simpleVtx.vert"),
-                File.ReadAllText("Shaders/coloredVtx.frag")
-            );
+            _shader = new ShaderHandler(File.ReadAllText("Shaders/simpleVtx.vert"), File.ReadAllText("Shaders/coloredVtx.frag"));
             _attrs = new VertexAttribs();
 
             _attrs.LayoutAddFloat(3, VertexAttribPointerType.Float, false);
@@ -41,7 +38,6 @@ namespace F3DZEX.Render
         {
             _attrs.SetData(data, data.Length * sizeof(float), hint);
         }
-
         public void SetSubData(float[] data, int off = 0)
         {
             _attrs.SetSubData(data, off, data.Length * sizeof(float));

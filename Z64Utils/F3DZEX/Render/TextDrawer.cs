@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using OpenTK;
+using System.Drawing;
+using System.Linq;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 
 namespace F3DZEX.Render
@@ -16,7 +16,6 @@ namespace F3DZEX.Render
         TextureHandler _tex;
         Font _font;
         Color _color;
-
         //float _scale;
         byte[] _texData;
         int _texWidth;
@@ -26,28 +25,20 @@ namespace F3DZEX.Render
         float[] _lastVertices;
 
         public Vector2 Position { get; set; }
-        public Font TextFont
-        {
+        public Font TextFont {
             get => _font;
-            set
-            {
-                _font = value;
-                GenerateAlphabetTexture();
-            }
+            set { _font = value; GenerateAlphabetTexture();  }
         }
         public Color Color
         {
             get => _color;
-            set
-            {
-                _color = value;
-                SendColor(_color);
-            }
+            set { _color = value; SendColor(_color); }
         }
 
         public float Scale { get; set; }
         public int TextHSpace { get; set; }
         public int TextVSpace { get; set; }
+
 
         public TextDrawer()
         {
@@ -109,21 +100,11 @@ namespace F3DZEX.Render
             Bitmap bmp = new Bitmap(_texWidth, _texHeight);
             using (var g = Graphics.FromImage(bmp))
                 for (int i = 0; i < alphabet.Length; i++)
-                    g.DrawString(
-                        alphabet[i].ToString(),
-                        _font,
-                        new SolidBrush(Color.White),
-                        _charSpaces[i].X,
-                        0
-                    );
+                    g.DrawString(alphabet[i].ToString(), _font, new SolidBrush(Color.White), _charSpaces[i].X, 0);
 
             _texData = new byte[bmp.Width * bmp.Height * 4];
-            var bmpData = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height),
-                ImageLockMode.ReadOnly,
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb
-            );
-
+            var bmpData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            
             Marshal.Copy(bmpData.Scan0, _texData, 0, _texData.Length);
 
             bmp.UnlockBits(bmpData);
@@ -186,6 +167,7 @@ namespace F3DZEX.Render
                 vertices[vtxIdx++] = rec.X / _texWidth;
                 vertices[vtxIdx++] = -((rec.Y + rec.Height) / _texHeight);
 
+
                 x += rec.Width;
                 if (text[i] != ' ')
                     x += TextHSpace;
@@ -216,8 +198,7 @@ namespace F3DZEX.Render
             pos.X -= 1;
             pos.Y += 1 - (_texHeight / (view.W * 2));
 
-            return Matrix4.CreateScale(Scale / view.Z, Scale / view.W, 1)
-                * Matrix4.CreateTranslation(pos);
+            return Matrix4.CreateScale(Scale / view.Z, Scale / view.W, 1) * Matrix4.CreateTranslation(pos);
         }
 
         public void SendColor(Color color)

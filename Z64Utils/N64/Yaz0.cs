@@ -12,18 +12,11 @@ namespace N64
     public class Yaz0Exception : Exception
     {
         public Yaz0Exception() { }
-
-        public Yaz0Exception(string message)
-            : base(message) { }
-
-        public Yaz0Exception(string message, Exception inner)
-            : base(message, inner) { }
-
+        public Yaz0Exception(string message) : base(message) { }
+        public Yaz0Exception(string message, Exception inner) : base(message, inner) { }
         protected Yaz0Exception(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context
-        )
-            : base(info, context) { }
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 
     public class Yaz0
@@ -59,14 +52,14 @@ namespace N64
                         //compressed data
                         else
                         {
+
                             ushort raw = br.ReadUInt16();
                             byte nibble = (byte)(raw >> 12);
 
                             ushort backOff = (ushort)((ushort)(raw << 4) >> 4);
-                            ushort size =
-                                (nibble != 0)
-                                    ? (ushort)(nibble + 2) // 2 bytes NR RR
-                                    : (ushort)(br.Read1Byte() + 0x12); // 3 bytes 0R RR NN
+                            ushort size = (nibble != 0)
+                                ? (ushort)(nibble + 2)              // 2 bytes NR RR
+                                : (ushort)(br.Read1Byte() + 0x12);  // 3 bytes 0R RR NN
 
                             long tmpPos = bw.BaseStream.Position;
                             long newPos = tmpPos - backOff - 1;
@@ -103,7 +96,6 @@ namespace N64
 
         // quick and dirty port from https://gist.github.com/notwa/b2ddcd4999be54d39b9b6913c648dfe8#file-yaz0-c
         private const int MAX_RUNLEN = (0xFF + 0x12);
-
         public static byte[] Compress(byte[] src)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -139,11 +131,9 @@ namespace N64
                     {
                         //RLE part
                         int dist = srcPos - matchPos - 1;
-                        byte byte1,
-                            byte2,
-                            byte3;
+                        byte byte1, byte2, byte3;
 
-                        if (numBytes >= 0x12) // 3 byte encoding
+                        if (numBytes >= 0x12)  // 3 byte encoding
                         {
                             byte1 = (byte)(0 | (dist >> 8));
                             byte2 = (byte)(dist & 0xFF);
@@ -155,7 +145,7 @@ namespace N64
                             byte3 = (byte)(numBytes - 0x12);
                             buf[bufPos++] = byte3;
                         }
-                        else // 2 byte encoding
+                        else  // 2 byte encoding
                         {
                             byte1 = (byte)(((numBytes - 2) << 4) | (dist >> 8));
                             byte2 = (byte)(dist & 0xFF);
@@ -201,7 +191,6 @@ namespace N64
         private static int nintendoEnc_numBytes1 = 0;
         private static int nintendoEnc_matchPos;
         private static int nintendoEnc_prevFlag = 0;
-
         // a lookahead encoding scheme for ngc Yaz0
         private static int nintendoEnc(byte[] src, int pos, out int pMatchPos)
         {
@@ -239,7 +228,6 @@ namespace N64
             }
             return numBytes;
         }
-
         private static int simpleEnc(byte[] src, int pos, out int pMatchPos)
         {
             int numBytes = 1;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
+
     public class BitFlag<T>
         where T : Enum
     {
@@ -21,10 +22,8 @@ namespace Common
                 if (Value.HasFlag(v))
                 {
                     var name = Enum.GetName(typeof(T), v);
-                    if (count == 0)
-                        ret = name;
-                    else
-                        ret += $" | {name}";
+                    if (count == 0) ret = name;
+                    else ret += $" | {name}";
                     count++;
                 }
             }
@@ -40,6 +39,7 @@ namespace Common
         }
     }
 
+
     public class BitFlag
     {
         public abstract class Field
@@ -54,11 +54,13 @@ namespace Common
             private int _shift;
 
             public override uint GetMask() => BitUtils.GetMask(_shift, 1);
+            public override List<string> GetValues(uint x)
+                => (x & GetMask()) == 0u
+                ? new List<string>()
+                : new List<string>() { _name };
 
-            public override List<string> GetValues(uint x) =>
-                (x & GetMask()) == 0u ? new List<string>() : new List<string>() { _name };
-
-            public BoolField(string name, int shift) => (_name, _shift) = (name, shift);
+            public BoolField(string name, int shift)
+                => (_name, _shift) = (name, shift);
         }
 
         public class EnumField : Field
@@ -69,22 +71,17 @@ namespace Common
             private bool _preShifted;
 
             public override uint GetMask() => BitUtils.GetMask(_shift, _len);
-
             public override List<string> GetValues(uint x)
             {
                 uint masked = (x & GetMask()) >> (_preShifted ? 0 : _len);
-                return new()
-                {
-                    _values.ContainsKey(masked) ? _values[masked] : $"0x{masked:X}<<{_shift}",
+                return new() { _values.ContainsKey(masked)
+                    ? _values[masked]
+                    : $"0x{masked:X}<<{_shift}"
                 };
             }
 
-            public EnumField(
-                int shift,
-                int len,
-                Dictionary<uint, string> values,
-                bool preShifted = false
-            ) => (_shift, _len, _values, _preShifted) = (shift, len, values, preShifted);
+            public EnumField(int shift, int len, Dictionary<uint, string> values, bool preShifted = false)
+                => (_shift, _len, _values, _preShifted) = (shift, len, values, preShifted);
 
             public static EnumField FromEnum<T>(int shift, int len, bool preShifted = false)
                 where T : struct, Enum
@@ -110,6 +107,7 @@ namespace Common
             }
         }
 
+
         private Field[] _fields;
 
         public List<string> GetFlags(uint x)
@@ -121,46 +119,33 @@ namespace Common
             return flags;
         }
 
-        public BitFlag(params Field[] fields) => _fields = fields;
+
+        public BitFlag(params Field[] fields)
+            => _fields = fields;
 
         public string ToString(uint x) => string.Join("|", GetFlags(x));
     }
 
+
     public static class BitUtils
     {
-        [System.Runtime.CompilerServices.MethodImpl(
-            System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining
-        )]
-        public static uint GetBits(uint x, int shift, int len) =>
-            (x & GetMask(shift, len)) >> shift;
-
-        [System.Runtime.CompilerServices.MethodImpl(
-            System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining
-        )]
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static uint GetBits(uint x, int shift, int len) => (x & GetMask(shift, len)) >> shift;
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static uint GetMask(int shift, int len) => ((1u << len) - 1u) << shift;
 
-        private static List<string> GetFlags<T>(uint x, out uint outX, uint mask = uint.MaxValue)
-            where T : struct, Enum => GetFlags(new List<T>(Enum.GetValues<T>()), x, out outX, mask);
 
-        private static List<string> GetFlags<T>(
-            List<T> values,
-            uint x,
-            out uint outX,
-            uint mask = uint.MaxValue
-        )
+        private static List<string> GetFlags<T>(uint x, out uint outX, uint mask = uint.MaxValue)
+                where T : struct, Enum
+            => GetFlags(new List<T>(Enum.GetValues<T>()), x, out outX, mask);
+        private static List<string> GetFlags<T>(List<T> values, uint x, out uint outX, uint mask = uint.MaxValue)
             where T : struct, Enum
         {
-            Dictionary<string, uint> dict = new();
+            Dictionary<string, uint> dict = new ();
             values.ForEach(v => dict.Add(v.ToString(), Convert.ToUInt32(v)));
             return GetFlags(dict, x, out outX, mask);
         }
-
-        private static List<string> GetFlags(
-            Dictionary<string, uint> flags,
-            uint x,
-            out uint outX,
-            uint mask = uint.MaxValue
-        )
+        private static List<string> GetFlags(Dictionary<string, uint> flags, uint x, out uint outX, uint mask = uint.MaxValue)
         {
             outX = x;
             List<string> ret = new List<string>();
@@ -178,12 +163,9 @@ namespace Common
 
             return ret;
         }
+        
 
-        public static List<string> GetFlagsSet(
-            Dictionary<string, uint> flags,
-            uint x,
-            uint mask = uint.MaxValue
-        )
+        public static List<string> GetFlagsSet(Dictionary<string, uint> flags, uint x, uint mask = uint.MaxValue)
         {
             var values = GetFlags(flags, x, out uint res, mask);
             if (res != 0)
@@ -191,7 +173,6 @@ namespace Common
 
             return values;
         }
-
         public static List<string> GetFlagsSet<T>(uint x, uint mask = uint.MaxValue)
             where T : struct, Enum
         {
@@ -208,5 +189,6 @@ namespace Common
             var flags = GetFlagsSet<T>(x, mask);
             return string.Join("|", flags);
         }
+
     }
 }

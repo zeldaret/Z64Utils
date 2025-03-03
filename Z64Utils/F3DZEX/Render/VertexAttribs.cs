@@ -26,16 +26,13 @@ namespace F3DZEX.Render
             {
                 switch (entryType)
                 {
-                    case AttribEntryType.Float:
-                        return count * GetSize(ptrType);
-                    case AttribEntryType.Int:
-                        return count * GetSize(intType);
-                    case AttribEntryType.Double:
-                        return count * 8;
-                    default:
-                        throw new Exception();
+                    case AttribEntryType.Float: return count * GetSize(ptrType);
+                    case AttribEntryType.Int: return count * GetSize(intType);
+                    case AttribEntryType.Double: return count * 8;
+                    default: throw new Exception();
                 }
             }
+
 
             private static int GetSize(VertexAttribPointerType type)
             {
@@ -62,7 +59,6 @@ namespace F3DZEX.Render
                         throw new ArgumentException();
                 }
             }
-
             private static int GetSize(VertexAttribIntegerType type)
             {
                 switch (type)
@@ -80,6 +76,7 @@ namespace F3DZEX.Render
                         throw new ArgumentException();
                 }
             }
+
         }
 
         int _vao;
@@ -97,31 +94,13 @@ namespace F3DZEX.Render
             GL.GenBuffers(1, out _vbo);
         }
 
-        public void LayoutAddFloat(int count, VertexAttribPointerType type, bool normalize) =>
-            _attribs.Add(
-                new AttribEntry()
-                {
-                    entryType = AttribEntry.AttribEntryType.Float,
-                    count = count,
-                    ptrType = type,
-                    normalize = normalize,
-                }
-            );
+        public void LayoutAddFloat(int count, VertexAttribPointerType type, bool normalize)
+            => _attribs.Add(new AttribEntry() { entryType = AttribEntry.AttribEntryType.Float, count = count, ptrType = type, normalize = normalize });
+        public void LayoutAddInt(int count, VertexAttribIntegerType type)
+            => _attribs.Add(new AttribEntry() { entryType = AttribEntry.AttribEntryType.Int, count = count, intType = type });
 
-        public void LayoutAddInt(int count, VertexAttribIntegerType type) =>
-            _attribs.Add(
-                new AttribEntry()
-                {
-                    entryType = AttribEntry.AttribEntryType.Int,
-                    count = count,
-                    intType = type,
-                }
-            );
-
-        public void LayoutAddDouble(int count) =>
-            _attribs.Add(
-                new AttribEntry() { entryType = AttribEntry.AttribEntryType.Double, count = count }
-            );
+        public void LayoutAddDouble(int count)
+            => _attribs.Add(new AttribEntry() { entryType = AttribEntry.AttribEntryType.Double, count = count });
 
         private int GetStride()
         {
@@ -147,32 +126,13 @@ namespace F3DZEX.Render
                 switch (entry.entryType)
                 {
                     case AttribEntry.AttribEntryType.Float:
-                        GL.VertexAttribPointer(
-                            idx,
-                            entry.count,
-                            entry.ptrType,
-                            entry.normalize,
-                            stride,
-                            off
-                        );
+                        GL.VertexAttribPointer(idx, entry.count, entry.ptrType, entry.normalize, stride, off);
                         break;
                     case AttribEntry.AttribEntryType.Int:
-                        GL.VertexAttribIPointer(
-                            idx,
-                            entry.count,
-                            entry.intType,
-                            stride,
-                            new IntPtr(off)
-                        );
+                        GL.VertexAttribIPointer(idx, entry.count, entry.intType, stride, new IntPtr(off));
                         break;
                     case AttribEntry.AttribEntryType.Double:
-                        GL.VertexAttribLPointer(
-                            idx,
-                            entry.count,
-                            VertexAttribDoubleType.Double,
-                            stride,
-                            new IntPtr(off)
-                        );
+                        GL.VertexAttribLPointer(idx, entry.count, VertexAttribDoubleType.Double, stride, new IntPtr(off));
                         break;
                     default:
                         throw new Exception();
@@ -183,6 +143,7 @@ namespace F3DZEX.Render
 
             _built = true;
         }
+
 
         private void BomSwap(byte[] buffer)
         {
@@ -204,7 +165,7 @@ namespace F3DZEX.Render
             }
             */
         }
-
+        
         public void SetSubData(byte[] data, int off, bool bigEndian)
         {
             if (!_built)
@@ -219,11 +180,7 @@ namespace F3DZEX.Render
             GL.BufferSubData(BufferTarget.ArrayBuffer, new IntPtr(off), data.Length, data);
         }
 
-        public void SetData(
-            byte[] data,
-            bool bigEndian = false,
-            BufferUsageHint hint = BufferUsageHint.StaticDraw
-        )
+        public void SetData(byte[] data, bool bigEndian = false, BufferUsageHint hint = BufferUsageHint.StaticDraw)
         {
             if (!_built)
                 BuildLayout();
@@ -248,11 +205,7 @@ namespace F3DZEX.Render
             GL.BufferSubData(BufferTarget.ArrayBuffer, new IntPtr(off), size, data);
         }
 
-        public void SetData<T>(
-            T[] data,
-            int size,
-            BufferUsageHint hint = BufferUsageHint.StaticDraw
-        )
+        public void SetData<T>(T[] data, int size, BufferUsageHint hint = BufferUsageHint.StaticDraw)
             where T : struct, IComparable
         {
             if (!_built)
@@ -290,5 +243,7 @@ namespace F3DZEX.Render
             GL.BindVertexArray(_vao);
             GL.DrawArrays(type, 0, _vtxCount);
         }
+
+
     }
 }

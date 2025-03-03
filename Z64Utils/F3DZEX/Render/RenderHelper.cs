@@ -18,7 +18,6 @@ namespace F3DZEX.Render
 
             GL.LineWidth(oldLineWidth);
         }
-
         public static float[] GenerateGridVertices(float gridScale, int lineCount, bool cube)
         {
             int stride = 3;
@@ -70,10 +69,10 @@ namespace F3DZEX.Render
                 }
             }
 
-            return vertices;
-            ;
-        }
+            return vertices; ;
 
+        }
+        
         public static void DrawAxis(ColoredVertexDrawer drawer)
         {
             float oldLineWidth = GL.GetFloat(GetPName.LineWidth);
@@ -83,53 +82,17 @@ namespace F3DZEX.Render
 
             GL.LineWidth(oldLineWidth);
         }
-
         public static float[] GenerateAxisvertices(float gridScale)
         {
-            return new float[]
-            {
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                1,
-                gridScale / 10,
-                0,
-                0,
-                1,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                1,
-                0,
-                gridScale / 10,
-                0,
-                0,
-                1,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                0,
-                1,
-                1,
-                0,
-                0,
-                gridScale / 10,
-                0,
-                0,
-                1,
-                1,
+            return new float[] { 
+                0, 0, 0,                1, 0, 0, 1,
+                gridScale/10, 0, 0,     1, 0, 0, 1,
+
+                0, 0, 0,                0, 1, 0, 1,
+                0, gridScale/10, 0,     0, 1, 0, 1,
+
+                0, 0, 0,                0, 0, 1, 1,
+                0, 0, gridScale/10,     0, 0, 1, 1,
             };
         }
     }

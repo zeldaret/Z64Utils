@@ -1,34 +1,28 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Common;
-using N64;
+using System.IO;
 using Syroot.BinaryData;
+using N64;
+using System.Windows.Forms;
+using System.Collections;
+using System.Diagnostics;
+using Common;
 
 namespace Z64
 {
+
     [Serializable]
     public class Z64GameException : Exception
     {
         public Z64GameException() { }
-
-        public Z64GameException(string message)
-            : base(message) { }
-
-        public Z64GameException(string message, Exception inner)
-            : base(message, inner) { }
-
+        public Z64GameException(string message) : base(message) { }
+        public Z64GameException(string message, Exception inner) : base(message, inner) { }
         protected Z64GameException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context
-        )
-            : base(info, context) { }
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 
     public class Z64File
@@ -41,8 +35,10 @@ namespace Z64
         public byte[] Data { get; set; }
         public bool Deleted { get; set; }
 
-        public Z64File() { }
+        public Z64File()
+        {
 
+        }
         public Z64File(byte[] data, int vrom, int romStart, int romEnd, bool comp)
         {
             Data = data;
@@ -52,8 +48,8 @@ namespace Z64
             RomEnd = romEnd;
             Compressed = comp;
             Deleted = false;
-        }
 
+        }
         public static Z64File DeletedFile(int vrom, int rom, int size)
         {
             return new Z64File()
@@ -87,7 +83,6 @@ namespace Z64
             {
                 return (VRomStart != 0 || VRomEnd != 0 || RomStart != 0 || RomEnd != 0);
             }
-
             public bool Exist()
             {
                 return RomStart != -1 && RomEnd != -1;
@@ -108,8 +103,7 @@ namespace Z64
 
             public int GetSize()
             {
-                if (!Valid() || !Exist())
-                    return 0;
+                if (!Valid() || !Exist()) return 0;
                 return Compressed() ? RomEnd - RomStart : VRomEnd - VRomStart;
             }
 
@@ -133,6 +127,7 @@ namespace Z64
 
                 return new Z64File(data, VRomStart, RomStart, romEnd, Compressed());
             }
+
         }
 
         public Z64Memory Memory { get; private set; }
@@ -147,9 +142,7 @@ namespace Z64
 
             Version = Z64Version.IdentifyRom(rom, out int fileTableOff);
             if (Version == null)
-                throw new Z64GameException(
-                    "Could not identify build. Please check your config files."
-                );
+                throw new Z64GameException("Could not identify build. Please check your config files.");
 
             if (!N64CheckSum.Validate(Rom, Version.Cic))
                 throw new Exception("Invalid CRC");
@@ -165,24 +158,27 @@ namespace Z64
             Z64Version.ProcessGame(this);
 
             Memory = new Z64Memory(this);
+
+        }
+        public Z64Game(string path, Action<float, string> progressCalback = null) : this(new N64Rom(path), progressCalback)
+        {
+
         }
 
-        public Z64Game(string path, Action<float, string> progressCalback = null)
-            : this(new N64Rom(path), progressCalback) { }
-
+        
         public byte[] Compress(byte[] data)
         {
             return Version.Compression == Z64FileCompression.Yaz0
                 ? Yaz0.Compress(data)
                 : throw new NotImplementedException();
         }
-
         public byte[] Decompress(byte[] data, int decSize)
         {
             return Version.Compression == Z64FileCompression.Yaz0
                 ? Yaz0.Decompress(data)
                 : Utils.ZlibDecompress(data, decSize);
         }
+
 
         public string GetFileName(int vrom) => Version.GetFileName(vrom) ?? "";
 
@@ -199,7 +195,6 @@ namespace Z64
             vrom = fileVrom ?? 0;
             return fileVrom.HasValue;
         }
-
         public int GetVrom(string name) => Version.GetVrom(name) ?? throw new Exception();
 
         public Z64File GetFile(int vrom) => _files.Find((f) => f.VRomStart == vrom);
@@ -214,7 +209,9 @@ namespace Z64
 
             int oldSize = file.Compressed ? file.RomEnd - file.RomStart : file.Data.Length;
 
-            var restStart = file.RomEnd != 0 ? file.RomEnd : file.RomStart + file.Data.Length;
+            var restStart = file.RomEnd != 0
+                ? file.RomEnd
+                : file.RomStart + file.Data.Length;
 
             //find rom end
             Z64File last = null;
@@ -222,11 +219,7 @@ namespace Z64
             {
                 var iter = GetFileFromIndex(i);
 
-                if (
-                    iter.Valid()
-                    && !iter.Deleted
-                    && (last == null || iter.RomStart > last.RomStart)
-                )
+                if (iter.Valid() && !iter.Deleted && (last == null || iter.RomStart > last.RomStart))
                     last = iter;
             }
             if (last == null)
@@ -265,6 +258,7 @@ namespace Z64
             file.Deleted = false;
         }
 
+
         private void FixDmaDataTable()
         {
             var dmatable = GetFile(GetVrom("dmadata"));
@@ -294,15 +288,13 @@ namespace Z64
             return _files.Count;
         }
 
+
         public void ExtractFiles(string dir, Action<float, string> progressCalback = null)
         {
             for (int i = 0; i < _files.Count; i++)
             {
                 string filename = GetFileName(_files[i].VRomStart);
-                progressCalback?.Invoke(
-                    (float)i / _files.Count,
-                    $"Extracting files... [{i}/{_files.Count}] \"{filename}\""
-                );
+                progressCalback?.Invoke((float)i / _files.Count, $"Extracting files... [{i}/{_files.Count}] \"{filename}\"");
                 if (_files[i].Valid())
                     File.WriteAllBytes($"{dir}/{filename}.bin", _files[i].Data);
             }
@@ -329,21 +321,13 @@ namespace Z64
                 DateTime now = DateTime.Now;
                 // only update progress if 10% of the files were processed,
                 // or 100 milliseconds elapsed, since the last progress update
-                if (
-                    ((float)(i - lastprogressI) / filecount) > 0.1
-                    || (now - lastProgressUpdate).TotalMilliseconds > 100
-                )
+                if (((float)(i - lastprogressI) / filecount) > 0.1
+                    || (now - lastProgressUpdate).TotalMilliseconds > 100)
                 {
                     if (i <= 2)
-                        progressCalback?.Invoke(
-                            0,
-                            $"Processing files... [{i}/?] \"{GetFileName(entry.VRomStart)}\""
-                        );
+                        progressCalback?.Invoke(0, $"Processing files... [{i}/?] \"{GetFileName(entry.VRomStart)}\"");
                     else
-                        progressCalback?.Invoke(
-                            (float)i / filecount,
-                            $"Processing files... [{i}/{filecount}] \"{GetFileName(entry.VRomStart)}\""
-                        );
+                        progressCalback?.Invoke((float)i / filecount, $"Processing files... [{i}/{filecount}] \"{GetFileName(entry.VRomStart)}\"");
                     lastProgressUpdate = now;
                     lastprogressI = i;
                 }
@@ -363,5 +347,6 @@ namespace Z64
 
             progressCalback?.Invoke(1, $"Done processing {filecount} files.");
         }
+
     }
 }

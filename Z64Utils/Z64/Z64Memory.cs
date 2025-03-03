@@ -7,22 +7,16 @@ using Common;
 
 namespace Z64
 {
+
     [Serializable]
     public class Z64MemoryException : Exception
     {
         public Z64MemoryException() { }
-
-        public Z64MemoryException(string message)
-            : base(message) { }
-
-        public Z64MemoryException(string message, Exception inner)
-            : base(message, inner) { }
-
+        public Z64MemoryException(string message) : base(message) { }
+        public Z64MemoryException(string message, Exception inner) : base(message, inner) { }
         protected Z64MemoryException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context
-        )
-            : base(info, context) { }
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 
     public class Z64Memory
@@ -31,7 +25,6 @@ namespace Z64
         {
             public uint Vram;
             public int Vrom;
-
             public MemBlock(uint vram, int vrom)
             {
                 Vram = vram;
@@ -59,9 +52,7 @@ namespace Z64
             }
             catch (Exception)
             {
-                throw new Z64MemoryException(
-                    "Error while creating the memory map. Please check your config files (versions/*.json)"
-                );
+                throw new Z64MemoryException("Error while creating the memory map. Please check your config files (versions/*.json)");
             }
         }
 
@@ -112,17 +103,11 @@ namespace Z64
                 LoadOvlTable(_game.Version.Memory.FBDemoTable.Value, 7, 0x1C, 0xC, 4);
         }
 
-        private void LoadOvlTable(
-            uint tableAddr,
-            int count,
-            int entrySize,
-            int vromOff,
-            int vramOff
-        )
+        private void LoadOvlTable(uint tableAddr, int count, int entrySize, int vromOff, int vramOff)
         {
-            byte[] data = ReadBytes(tableAddr, count * entrySize);
+            byte[] data = ReadBytes(tableAddr, count*entrySize);
 
-            for (int off = 0; off < count * entrySize; off += entrySize)
+            for (int off = 0; off < count*entrySize; off += entrySize)
             {
                 uint entryVram = Utils.BomSwap(BitConverter.ToUInt32(data, off + vramOff));
                 int entryVrom = (int)Utils.BomSwap(BitConverter.ToUInt32(data, off + vromOff));
@@ -140,20 +125,15 @@ namespace Z64
                 var file = _game.GetFile(block.Vrom);
                 if (addr >= block.Vram && addr < block.Vram + file.Data.Length)
                 {
-                    if (addr + count > block.Vram + file.Data.Length)
-                        throw new Z64MemoryException(
-                            $"Could not read 0x{count:X} bytes at address 0x{addr:X8}"
-                        );
+                    if (addr+count > block.Vram + file.Data.Length)
+                        throw new Z64MemoryException($"Could not read 0x{count:X} bytes at address 0x{addr:X8}");
 
                     Buffer.BlockCopy(file.Data, (int)(addr - block.Vram), ret, 0, count);
                     return ret;
                 }
             }
-            throw new Z64MemoryException(
-                $"Could not read 0x{count:X} bytes at address 0x{addr:X8}"
-            );
+            throw new Z64MemoryException($"Could not read 0x{count:X} bytes at address 0x{addr:X8}");
         }
-
         public bool VromToVram(uint vrom, out uint vram)
         {
             foreach (var block in _blocks)
@@ -169,7 +149,6 @@ namespace Z64
             vram = 0;
             return false;
         }
-
         public bool VramToVrom(uint vram, out uint vrom)
         {
             foreach (var block in _blocks)
@@ -185,5 +164,6 @@ namespace Z64
             vrom = 0;
             return false;
         }
+
     }
 }

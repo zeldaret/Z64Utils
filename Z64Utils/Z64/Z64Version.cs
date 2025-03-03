@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Buffers;
-using System.Buffers.Text;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Common;
+using System.Buffers;
+using System.Buffers.Text;
 using N64;
+using Common;
+using System.Diagnostics;
 
 namespace Z64
 {
@@ -39,28 +39,19 @@ namespace Z64
         Zlib,
     }
 
+
     public class Z64Version
     {
         #region JSON Data Type
 
         private class AddrToStringConverter : JsonConverter<uint?>
         {
-            public override uint? Read(
-                ref Utf8JsonReader reader,
-                Type type,
-                JsonSerializerOptions options
-            )
+            
+            public override uint? Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
             {
                 if (reader.TokenType == JsonTokenType.String)
                 {
-                    if (
-                        uint.TryParse(
-                            reader.GetString(),
-                            NumberStyles.HexNumber,
-                            CultureInfo.InvariantCulture,
-                            out uint number
-                        )
-                    )
+                    if (uint.TryParse(reader.GetString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint number))
                         return number;
                 }
                 if (reader.TokenType == JsonTokenType.Null)
@@ -68,14 +59,9 @@ namespace Z64
 
                 return reader.GetUInt32();
             }
-
-            public override void Write(
-                Utf8JsonWriter writer,
-                uint? v,
-                JsonSerializerOptions options
-            )
+            public override void Write(Utf8JsonWriter writer, uint? v, JsonSerializerOptions options)
             {
-                writer.WriteStringValue(v.HasValue ? v.Value.ToString("X8") : "null");
+                writer.WriteStringValue(v.HasValue? v.Value.ToString("X8") : "null");
             }
         }
 
@@ -95,48 +81,39 @@ namespace Z64
 
             [JsonPropertyName("rom_version")]
             public byte? RomVersion { get; set; }
-        }
 
+        }
         public class MemoryInfo
         {
             [JsonPropertyName("code")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? CodeVram { get; set; }
-
             [JsonPropertyName("actor_table")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? ActorTable { get; set; }
-
             [JsonPropertyName("gamestate_table")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? GameStateTable { get; set; }
-
             [JsonPropertyName("effect_table")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? EffectTable { get; set; }
-
             [JsonPropertyName("kaleido_mgr_table")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? KaleidoMgrTable { get; set; }
-
             [JsonPropertyName("map_mark_data_table")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? MapMarkDataOvl { get; set; } // specific to oot
-
             [JsonPropertyName("fbdemo_table")]
             [JsonConverter(typeof(AddrToStringConverter))]
             public uint? FBDemoTable { get; set; } // specific to mm
         }
-
         public class FileEntry
         {
             [JsonConverter(typeof(AddrToStringConverter))]
             [JsonPropertyName("vrom")]
             public uint? Vrom { get; set; }
-
             [JsonPropertyName("name")]
             public string Filename { get; set; }
-
             [JsonConverter(typeof(JsonStringEnumConverter))]
             [JsonPropertyName("type")]
             public Z64FileType FileType { get; set; }
@@ -148,22 +125,17 @@ namespace Z64
 
         [JsonPropertyName("version_name")]
         public string VersionName { get; set; }
-
         [JsonPropertyName("version_game")]
         public Z64GameType Game { get; set; }
-
         [JsonPropertyName("compression_method")]
         public Z64FileCompression Compression { get; set; }
-
         [JsonPropertyName("cic")]
         public int Cic { get; set; }
 
         [JsonPropertyName("identifier")]
         public VersionIdentifier Identifier { get; set; }
-
         [JsonPropertyName("memory")]
         public MemoryInfo Memory { get; set; }
-
         [JsonPropertyName("files")]
         public List<FileEntry> Files { get; set; }
 
@@ -178,30 +150,19 @@ namespace Z64
 
         #endregion JSON Properties
 
-        public int? GetVrom(string filename) =>
-            (int?)Files.Find(f => f.Filename == filename)?.Vrom ?? null;
-
+        public int? GetVrom(string filename) => (int?)Files.Find(f => f.Filename == filename)?.Vrom ?? null;
         public string GetFileName(int vrom) => Files.Find(f => f.Vrom == vrom)?.Filename ?? "";
-
-        public Z64FileType GetFileType(int vrom) =>
-            Files.Find(f => f.Vrom == vrom)?.FileType ?? Z64FileType.Unknow;
-
+        public Z64FileType GetFileType(int vrom) => Files.Find(f => f.Vrom == vrom)?.FileType ?? Z64FileType.Unknow;
         public void RenameFile(int vrom, string name)
         {
             var file = Files.Find(f => f.Vrom == vrom);
             if (file == null)
-                Files.Add(
-                    new FileEntry()
-                    {
-                        Filename = name,
-                        Vrom = (uint)vrom,
-                        FileType = GuessFileType(name),
-                    }
-                );
+                Files.Add(new FileEntry() { Filename = name, Vrom = (uint)vrom, FileType = GuessFileType(name) });
             else
                 file.Filename = name;
             Save();
         }
+
 
         private int FindBuildTeam(N64Rom rom)
         {
@@ -212,9 +173,7 @@ namespace Z64
             for (int i = start; i < end; i += 4)
             {
                 int count = 0;
-                while (
-                    count < team.Length && i + count < end && rom.RawRom[i + count] == team[count]
-                )
+                while (count < team.Length && i + count < end && rom.RawRom[i + count] == team[count])
                     count++;
 
                 if (count >= team.Length)
@@ -222,7 +181,6 @@ namespace Z64
             }
             return -1;
         }
-
         public bool Match(N64Rom rom, out int fileTableOff)
         {
             fileTableOff = 0;
@@ -233,24 +191,20 @@ namespace Z64
                 return false;
 
             // build team string
-            off += Identifier.BuildTeam.Length + 1;
+            off += Identifier.BuildTeam.Length+1;
             off = off + 3 & ~3; // string padding
 
             // check date
             string date = Identifier.BuildDate;
             int count = 0;
-            while (
-                off + count < rom.RawRom.Length
-                && count < date.Length
-                && date[count] == rom.RawRom[off + count]
-            )
+            while (off + count < rom.RawRom.Length && count < date.Length && date[count] == rom.RawRom[off + count])
                 count++;
 
             if (count < date.Length)
                 return false;
 
             // build date string
-            off += Identifier.BuildDate.Length + 1;
+            off += Identifier.BuildDate.Length+1;
             off = off + 3 & ~3; // string padding
 
             // build option string
@@ -281,12 +235,14 @@ namespace Z64
 
             // remove duplicates
             for (int i = 0; i < Files.Count; i++)
-            for (int j = i + 1; j < Files.Count && Files[j].Vrom == Files[i].Vrom; j++)
-                Files.RemoveAt(j);
+                for (int j = i + 1; j < Files.Count && Files[j].Vrom == Files[i].Vrom; j++)
+                    Files.RemoveAt(j);
 
             string json = JsonSerializer.Serialize(this, options);
             File.WriteAllText(path, json);
         }
+
+
 
         public static Z64Version IdentifyRom(N64Rom rom, out int fileTableOff)
         {
@@ -303,8 +259,9 @@ namespace Z64
             return null;
         }
 
-        private static Dictionary<string, Z64Version> _versions;
 
+
+        private static Dictionary<string, Z64Version> _versions;
         private static void LoadVersions()
         {
             string path = "versions";
@@ -328,26 +285,19 @@ namespace Z64
                 string json = File.ReadAllText(file);
                 var ver = JsonSerializer.Deserialize<Z64Version>(json, options);
 
-                var existing = _versions
-                    .ToList()
-                    .FindAll(v => v.Value.Identifier.BuildDate == ver.Identifier.BuildDate);
+                var existing = _versions.ToList().FindAll(v => v.Value.Identifier.BuildDate == ver.Identifier.BuildDate);
                 if (existing.Count > 0)
                     throw new Exception($"build date conflict with \"{existing[0].Key}\"");
 
-                if (
-                    ver.Identifier == null
-                    || ver.Identifier.BuildDate == null
-                    || ver.Identifier.BuildTeam == null
-                )
-                    throw new InvalidDataException(
-                        $"Error loading \"{file}\": identifier.build_date or identifier.build_team missing"
-                    );
+                if (ver.Identifier == null || ver.Identifier.BuildDate == null || ver.Identifier.BuildTeam == null)
+                    throw new InvalidDataException($"Error loading \"{file}\": identifier.build_date or identifier.build_team missing");
 
                 ver.Files.RemoveAll(f => string.IsNullOrEmpty(f.Filename));
 
                 _versions.Add(file, ver);
             }
         }
+
 
         private class FileHashEntry
         {
@@ -362,14 +312,10 @@ namespace Z64
                 type = Enum.Parse<Z64FileType>(parts[1]);
                 fileName = parts[2];
             }
-
             public FileHashEntry(Z64Game game, Z64File file)
             {
                 fileName = game.GetFileName(file.VRomStart);
-                sha256 = Utils.BytesToHex(
-                    System.Security.Cryptography.SHA256.Create().ComputeHash(file.Data),
-                    ""
-                );
+                sha256 = Utils.BytesToHex(System.Security.Cryptography.SHA256.Create().ComputeHash(file.Data), "");
                 type = game.GetFileType(file.VRomStart);
             }
 
@@ -395,6 +341,7 @@ namespace Z64
 
             public override string ToString() => $"{sha256}|{type}|{fileName}";
         }
+
 
         public static void ProcessGame(Z64Game game)
         {
@@ -433,21 +380,18 @@ namespace Z64
 
                 if (!string.IsNullOrEmpty(lines[i]))
                 {
-                    game.Version.Files.Add(
-                        new FileEntry()
-                        {
-                            Filename = lines[i],
-                            FileType = GuessFileType(lines[i]),
-                            Vrom = (uint)file.VRomStart,
-                        }
-                    );
+                    game.Version.Files.Add(new FileEntry()
+                    {
+                        Filename = lines[i],
+                        FileType = GuessFileType(lines[i]),
+                        Vrom = (uint)file.VRomStart,
+                    });
                 }
             }
 
             game.Version.Save();
             ExportHashes(game);
         }
-
         public static void ExportFileList(Z64Game game, string path)
         {
             StringWriter sw = new StringWriter();
@@ -493,14 +437,9 @@ namespace Z64
                     {
                         if (existing.fileName != entry.fileName)
                         {
-                            Debug.WriteLine(
-                                $"name missmatch : {existing.fileName} ({existing.sha256}) -> {entry.fileName}"
-                            );
+                            Debug.WriteLine($"name missmatch : {existing.fileName} ({existing.sha256}) -> {entry.fileName}");
                         }
-                        else if (
-                            entry.type != Z64FileType.Unknow
-                            && existing.type == Z64FileType.Unknow
-                        )
+                        else if (entry.type != Z64FileType.Unknow && existing.type == Z64FileType.Unknow)
                         {
                             Debug.WriteLine($"new type found : {existing.type} -> {entry.type}");
                             entries.Remove(existing);
@@ -521,7 +460,6 @@ namespace Z64
             Debug.WriteLine($"{addCount} hash exported and {modifCount} hashes modifed!");
 #endif
         }
-
         private static void ImportHashes(Z64Game game)
         {
 #if DEBUG
@@ -537,10 +475,7 @@ namespace Z64
 
                 string name = game.GetFileName(file.VRomStart);
                 var type = game.GetFileType(file.VRomStart);
-                string sha = Utils.BytesToHex(
-                    System.Security.Cryptography.SHA256.Create().ComputeHash(file.Data),
-                    ""
-                );
+                string sha = Utils.BytesToHex(System.Security.Cryptography.SHA256.Create().ComputeHash(file.Data), "");
 
                 if (string.IsNullOrEmpty(name))
                 {
@@ -561,16 +496,15 @@ namespace Z64
                     _ => name,
                 };
 
+
+
                 if (!string.IsNullOrEmpty(name))
                 {
-                    game.Version.Files.Add(
-                        new FileEntry()
-                        {
-                            Filename = name,
-                            FileType = type,
-                            Vrom = (uint)file.VRomStart,
-                        }
-                    );
+                    game.Version.Files.Add(new FileEntry() { 
+                        Filename = name,
+                        FileType = type,
+                        Vrom = (uint)file.VRomStart,
+                    });
                 }
             }
 

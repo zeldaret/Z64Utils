@@ -14,13 +14,7 @@ namespace Z64.Forms
     {
         Func<string, string> _callback = s => null;
         public string Result { get; private set; }
-
-        public EditValueForm(
-            string title,
-            string desc,
-            Func<string, string> valid,
-            string defaultValue = null
-        )
+        public EditValueForm(string title, string desc, Func<string, string> valid, string defaultValue = null)
         {
             InitializeComponent();
             if (valid != null)

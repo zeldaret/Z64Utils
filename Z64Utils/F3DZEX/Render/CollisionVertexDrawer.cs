@@ -1,7 +1,7 @@
-﻿using System.Drawing;
-using System.IO;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
+using System.IO;
 
 namespace F3DZEX.Render
 {
@@ -9,10 +9,7 @@ namespace F3DZEX.Render
     {
         public CollisionVertexDrawer()
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/collisionVtx.vert"),
-                File.ReadAllText("Shaders/collisionVtx.frag")
-            );
+            _shader = new ShaderHandler(File.ReadAllText("Shaders/collisionVtx.vert"), File.ReadAllText("Shaders/collisionVtx.frag"));
             _attrs = new VertexAttribs();
 
             _attrs.LayoutAddFloat(3, VertexAttribPointerType.Float, false);

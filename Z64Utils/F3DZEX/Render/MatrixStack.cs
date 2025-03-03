@@ -10,7 +10,8 @@ namespace F3DZEX.Render
         {
             public Matrix4 newTop;
 
-            public TopMatrixChangedEventArgs(Matrix4 top) => newTop = top;
+            public TopMatrixChangedEventArgs(Matrix4 top)
+                => newTop = top;
         }
 
         public event EventHandler<TopMatrixChangedEventArgs> OnTopMatrixChanged;
@@ -21,26 +22,22 @@ namespace F3DZEX.Render
         {
             return _stack.Peek();
         }
-
         public void Push()
         {
             _stack.Push(_stack.Peek());
         }
-
         public void Push(Matrix4 mtx)
         {
             _stack.Push(mtx);
 
             OnTopMatrixChanged?.Invoke(this, new TopMatrixChangedEventArgs(Top()));
         }
-
         public Matrix4 Pop()
         {
             var ret = _stack.Pop();
             OnTopMatrixChanged?.Invoke(this, new TopMatrixChangedEventArgs(Top()));
             return ret;
         }
-
         public void Load(Matrix4 mtx)
         {
             _stack.Pop();

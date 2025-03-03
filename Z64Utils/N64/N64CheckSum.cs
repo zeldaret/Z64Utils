@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace N64
 {
@@ -15,25 +15,17 @@ namespace N64
         CIC_6105 = 6105,
         CIC_6106 = 6106,
     }
-
     public static class N64CheckSum
     {
         [Serializable]
         public class N64CheckSumException : Exception
         {
             public N64CheckSumException() { }
-
-            public N64CheckSumException(string message)
-                : base(message) { }
-
-            public N64CheckSumException(string message, Exception inner)
-                : base(message, inner) { }
-
+            public N64CheckSumException(string message) : base(message) { }
+            public N64CheckSumException(string message, Exception inner) : base(message, inner) { }
             protected N64CheckSumException(
-                System.Runtime.Serialization.SerializationInfo info,
-                System.Runtime.Serialization.StreamingContext context
-            )
-                : base(info, context) { }
+              System.Runtime.Serialization.SerializationInfo info,
+              System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
         }
 
         private static N64Cic GetCic(int cic)
@@ -45,12 +37,11 @@ namespace N64
                 6103 => N64Cic.CIC_6103,
                 6105 => N64Cic.CIC_6105,
                 6106 => N64Cic.CIC_6106,
-                _ => throw new N64CheckSumException($"Invalid CIC version : {cic}"),
+                _ => throw new N64CheckSumException($"Invalid CIC version : {cic}")
             };
         }
 
         public static bool Validate(N64Rom rom, int cic) => Validate(rom, GetCic(cic));
-
         public static bool Validate(N64Rom rom, N64Cic cic)
         {
             var sums = Compute(rom, cic);
@@ -60,28 +51,20 @@ namespace N64
         private const uint CHECKSUM_START = 0x1000;
         private const uint CHECKSUM_LENGTH = 0x100000;
         private const uint CHECKSUM_END = CHECKSUM_START + CHECKSUM_LENGTH;
-
         private static uint ROL(uint i, int b) => ((i << b) | (i >> (32 - b)));
+        private static uint BomSwap(uint a) => (a << 24) | ((a & 0xFF00) << 8) | ((a & 0xFF0000) >> 8) | (a >> 24);
 
-        private static uint BomSwap(uint a) =>
-            (a << 24) | ((a & 0xFF00) << 8) | ((a & 0xFF0000) >> 8) | (a >> 24);
-
-        public static unsafe Tuple<uint, uint> Compute(N64Rom rom, N64Cic cic)
+        public unsafe static Tuple<uint, uint> Compute(N64Rom rom, N64Cic cic)
         {
             if (rom.RawRom.Length < CHECKSUM_START)
                 throw new N64CheckSumException("Invalid File Lenght");
 
-            fixed (byte* data8 = rom.RawRom)
+            fixed(byte* data8 = rom.RawRom)
             {
                 uint* data32 = (uint*)data8;
 
                 uint seed;
-                uint t1,
-                    t2,
-                    t3,
-                    t4,
-                    t5,
-                    t6;
+                uint t1, t2, t3, t4, t5, t6;
                 uint pos;
 
                 // initial seed
@@ -132,21 +115,26 @@ namespace N64
 
                 if (cic == N64Cic.CIC_6103)
                 {
-                    return new Tuple<uint, uint>((t6 ^ t4) + t3, (t5 ^ t2) + t1);
+                    return new Tuple<uint, uint>(
+                        (t6 ^ t4) + t3,
+                        (t5 ^ t2) + t1);
                 }
                 else if (cic == N64Cic.CIC_6106)
                 {
-                    return new Tuple<uint, uint>((t6 * t4) + t3, (t5 * t2) + t1);
+                    return new Tuple<uint, uint>(
+                        (t6 * t4) + t3,
+                        (t5 * t2) + t1);
                 }
                 else
                 {
-                    return new Tuple<uint, uint>(t6 ^ t4 ^ t3, t5 ^ t2 ^ t1);
+                    return new Tuple<uint, uint>(
+                        t6 ^ t4 ^ t3,
+                        t5 ^ t2 ^ t1);
                 }
             }
         }
 
         public static void Update(N64Rom rom, int cic) => Update(rom, GetCic(cic));
-
         public static void Update(N64Rom rom, N64Cic cic)
         {
             var sums = Compute(rom, cic);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace F3DZEX.Command
 {
+    
     public enum G_MTX_PARAM
     {
         G_MTX_NOPUSH = 0x00,
@@ -15,13 +16,11 @@ namespace F3DZEX.Command
         G_MTX_MODELVIEW = 0x00,
         G_MTX_PROJECTION = 0x04,
     }
-
     public enum G_TEX_ENABLE
     {
         G_OFF,
         G_ON,
     }
-
     public enum G_CCMUX
     {
         G_CCMUX_COMBINED = 0,
@@ -46,7 +45,6 @@ namespace F3DZEX.Command
         G_CCMUX_1 = 6,
         G_CCMUX_0 = 31,
     }
-
     public enum G_ACMUX
     {
         G_ACMUX_COMBINED = 0,
@@ -66,9 +64,8 @@ namespace F3DZEX.Command
         G_MDSFT_ALPHACOMPARE = 0,
         G_MDSFT_ZSRCSEL = 2,
         G_MDSFT_RENDERMODE = 3,
-        G_MDSFT_BLENDER = 16,
+        G_MDSFT_BLENDER = 16
     }
-
     public enum G_MDSFT_H
     {
         G_MDSFT_BLENDMASK = 0,
@@ -84,7 +81,7 @@ namespace F3DZEX.Command
         G_MDSFT_TEXTPERSP = 19,
         G_MDSFT_CYCLETYPE = 20,
         G_MDSFT_COLORDITHER = 22,
-        G_MDSFT_PIPELINE = 23,
+        G_MDSFT_PIPELINE = 23
     }
 
     public enum G_IM_FMT
@@ -95,7 +92,6 @@ namespace F3DZEX.Command
         G_IM_FMT_IA = 3,
         G_IM_FMT_I = 4,
     }
-
     public enum G_IM_SIZ
     {
         G_IM_SIZ_4b = 0,
@@ -131,8 +127,11 @@ namespace F3DZEX.Command
         G_LIGHTING = 0x00020000,
         G_TEXTURE_GEN = 0x00040000,
         G_TEXTURE_GEN_LINEAR = 0x00080000,
-        G_LOD = 0x00100000,
+        G_LOD = 0x00100000
     }
 
-    public enum G_BLR_SET { }
+    public enum G_BLR_SET
+    {
+
+    }
 }

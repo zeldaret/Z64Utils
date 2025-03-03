@@ -1,21 +1,20 @@
-﻿using System;
+﻿using N64;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using N64;
+using System.Globalization;
 
 namespace Z64.Forms
 {
     public partial class TextureViewer : MicrosoftFontForm
     {
         Z64Game _game;
-
         public TextureViewer(Z64Game game)
         {
             _game = game;
@@ -44,15 +43,8 @@ namespace Z64.Forms
                     if (addr >= file.VRomStart && addr < file.VRomEnd)
                     {
                         byte[] buffer = new byte[size];
-                        Buffer.BlockCopy(
-                            file.Data,
-                            (int)(addr - (uint)file.VRomStart),
-                            buffer,
-                            0,
-                            size
-                        );
-                        return buffer;
-                        ;
+                        Buffer.BlockCopy(file.Data, (int)(addr - (uint)file.VRomStart), buffer, 0, size);
+                        return buffer; ;
                     }
                 }
             }
@@ -66,28 +58,14 @@ namespace Z64.Forms
             int h = (int)valueH.Value;
             int texSize = N64Texture.GetTexSize(w * h, fmt);
 
-            if (
-                !uint.TryParse(
-                    textBoxTexAddr.Text,
-                    NumberStyles.HexNumber,
-                    CultureInfo.InvariantCulture,
-                    out uint texAddr
-                )
-            )
+            if (!uint.TryParse(textBoxTexAddr.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint texAddr))
             {
                 return;
             }
 
+
             byte[] tlut = null;
-            if (
-                (fmt == N64TexFormat.CI4 || fmt == N64TexFormat.CI8)
-                && uint.TryParse(
-                    textBoxTlutAddr.Text,
-                    NumberStyles.HexNumber,
-                    CultureInfo.InvariantCulture,
-                    out uint tlutAddr
-                )
-            )
+            if ((fmt == N64TexFormat.CI4 || fmt == N64TexFormat.CI8) && uint.TryParse(textBoxTlutAddr.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint tlutAddr))
             {
                 try
                 {
@@ -111,6 +89,7 @@ namespace Z64.Forms
             {
                 return;
             }
+
         }
 
         private void textBox_KeyDown(object sender, KeyEventArgs e)

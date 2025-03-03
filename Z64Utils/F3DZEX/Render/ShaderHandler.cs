@@ -1,29 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Text;
-using OpenTK;
+using System.IO;
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
+using System.Drawing;
 
 namespace F3DZEX.Render
 {
+
     [Serializable]
     public class ShaderException : Exception
     {
         public ShaderException() { }
-
-        public ShaderException(string message)
-            : base(message) { }
-
-        public ShaderException(string message, Exception inner)
-            : base(message, inner) { }
-
+        public ShaderException(string message) : base(message) { }
+        public ShaderException(string message, Exception inner) : base(message, inner) { }
         protected ShaderException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context
-        )
-            : base(info, context) { }
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 
     public class ShaderHandler
@@ -38,10 +32,7 @@ namespace F3DZEX.Render
 
             Action<TempResUsage<T>> _dispose;
 
-            public TempResUsage(
-                Action<TempResUsage<T>> create = null,
-                Action<TempResUsage<T>> dispose = null
-            )
+            public TempResUsage(Action<TempResUsage<T>> create = null, Action<TempResUsage<T>> dispose = null)
             {
                 create?.Invoke(this);
                 _dispose = dispose;
@@ -68,7 +59,7 @@ namespace F3DZEX.Render
                 GL.DeleteProgram(_program);
 
             List<int> shaders = new List<int>();
-
+        
             shaders.Add(CompileShader(vertSrc, ShaderType.VertexShader));
 
             if (!string.IsNullOrEmpty(geomSrc))
@@ -80,7 +71,6 @@ namespace F3DZEX.Render
 
             _compiled = true;
         }
-
         private int CompileShader(string src, ShaderType type)
         {
             int shader = GL.CreateShader(type);
@@ -153,61 +143,52 @@ namespace F3DZEX.Render
             using (TempUse())
                 GL.Uniform1(GetUniformLocation(name), data);
         }
-
         public void Send(string name, int data)
         {
             using (TempUse())
                 GL.Uniform1(GetUniformLocation(name), data);
         }
-
         public void Send(string name, uint data)
         {
             using (TempUse())
                 GL.Uniform1(GetUniformLocation(name), data);
         }
-
+        
         public void Send(string name, int x, int y)
         {
             using (TempUse())
                 GL.Uniform2(GetUniformLocation(name), x, y);
         }
-
         public void Send(string name, float x, float y)
         {
             using (TempUse())
                 GL.Uniform2(GetUniformLocation(name), x, y);
         }
-
         public void Send(string name, float x, float y, float z)
         {
             using (TempUse())
                 GL.Uniform3(GetUniformLocation(name), x, y, z);
         }
-
         public void Send(string name, float x, float y, float z, float w)
         {
             using (TempUse())
                 GL.Uniform4(GetUniformLocation(name), x, y, z, w);
         }
-
         public void Send(string name, int x, int y, int z, int w)
         {
             using (TempUse())
                 GL.Uniform4(GetUniformLocation(name), x, y, z, w);
         }
-
         public void Send(string name, Matrix4 mtx)
         {
             using (TempUse())
                 GL.UniformMatrix4(GetUniformLocation(name), false, ref mtx);
         }
-
         public void Send(string name, Color color)
         {
             using (TempUse())
                 GL.Uniform4(GetUniformLocation(name), color);
         }
-
         public void Send(string name, bool x)
         {
             using (TempUse())

@@ -6,7 +6,7 @@ using Common;
 /// <summary>
 /// Inherits from PictureBox; adds Interpolation Mode Setting
 /// </summary>
-///
+/// 
 namespace Z64.Forms
 {
     public class TextureBox : PictureBox
@@ -20,8 +20,7 @@ namespace Z64.Forms
         public InterpolationMode InterpolationMode { get; set; }
         public int AlphaTileSize { get; set; } = 20;
 
-        public TextureBox()
-            : base()
+        public TextureBox() : base()
         {
             InitializeComponent();
 
@@ -34,7 +33,6 @@ namespace Z64.Forms
         {
             Clipboard.SetImage(Image);
         }
-
         private void ToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
             saveFileDialog1.FileName = "";
@@ -44,7 +42,6 @@ namespace Z64.Forms
                 Image.Save(saveFileDialog1.FileName);
             }
         }
-
         private void TextureBox_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -63,34 +60,32 @@ namespace Z64.Forms
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // contextMenuStrip1
-            //
-            this.contextMenuStrip1.Items.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
-                {
-                    this.toolStripMenuItem1,
-                    this.toolStripMenuItem2,
-                }
-            );
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem2});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(173, 48);
-            //
+            // 
             // toolStripMenuItem1
-            //
+            // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(172, 22);
             this.toolStripMenuItem1.Text = "Save Texture";
-            //
+            // 
             // toolStripMenuItem2
-            //
+            // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(172, 22);
             this.toolStripMenuItem2.Text = "Copy To Clipboard";
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
+
         }
+
 
         protected override void OnPaint(PaintEventArgs paintEventArgs)
         {
@@ -101,25 +96,18 @@ namespace Z64.Forms
                 int offset = (y / AlphaTileSize) % 2 == 1 ? AlphaTileSize : 0;
                 for (int x = offset; x < Width; x += AlphaTileSize * 2)
                 {
-                    g.FillRectangle(
-                        new SolidBrush(Color.White),
-                        x + AlphaTileSize,
-                        y,
-                        AlphaTileSize,
-                        AlphaTileSize
-                    );
-                    g.FillRectangle(
-                        new SolidBrush(Color.FromArgb(200, 200, 200)),
-                        x,
-                        y,
-                        AlphaTileSize,
-                        AlphaTileSize
-                    );
+                    g.FillRectangle(new SolidBrush(Color.White), x + AlphaTileSize, y, AlphaTileSize, AlphaTileSize);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(200, 200, 200)), x, y, AlphaTileSize, AlphaTileSize);
                 }
             }
 
             g.InterpolationMode = InterpolationMode;
             base.OnPaint(paintEventArgs);
         }
+
+
+
     }
 }
+
+

@@ -24,6 +24,8 @@ namespace Z64.Forms
             buttonNormal_Click(null, null);
         }
 
+
+
         private void buttonNoRestriction_Click(object sender, EventArgs e)
         {
             Result = new Z64ObjectAnalyzer.Config();
@@ -63,24 +65,12 @@ namespace Z64.Forms
                 Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_LOADTLUT: *, G_RDPPIPESYNC"),
                 Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_LOADBLOCK: *, G_RDPPIPESYNC"),
                 Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPHALF_1: *, G_LOAD_UCODE"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_1: G_TEXRECT, *, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_1: G_TEXRECTFLIP, *, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_2: G_TEXRECT, G_RDPHALF_1, *"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_2: G_TEXRECTFLIP, G_RDPHALF_1, *"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_TEXRECT: *, G_RDPHALF_1, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_TEXRECTFLIP: *, G_RDPHALF_1, G_RDPHALF_2"
-                ),
+                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPHALF_1: G_TEXRECT, *, G_RDPHALF_2"),
+                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPHALF_1: G_TEXRECTFLIP, *, G_RDPHALF_2"),
+                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPHALF_2: G_TEXRECT, G_RDPHALF_1, *"),
+                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPHALF_2: G_TEXRECTFLIP, G_RDPHALF_1, *"),
+                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_TEXRECT: *, G_RDPHALF_1, G_RDPHALF_2"),
+                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_TEXRECTFLIP: *, G_RDPHALF_1, G_RDPHALF_2"),
                 Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPLOADSYNC: *, G_LOADBLOCK"),
                 Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPLOADSYNC: *, G_LOADTLUT"),
             };
@@ -90,7 +80,7 @@ namespace Z64.Forms
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string text =
-                @"Format : <id>: <token1>, <token2>, ...
+@"Format : <id>: <token1>, <token2>, ...
 
 id : the opcode that should follow the pattern
 token : can be ""*"", ""?"" or an opcode id to check
@@ -118,7 +108,6 @@ means: When encountering a G_NOOP opcode, check if the last instruction is G_LOA
         {
             buttonOK.Enabled = labelOpCodeListError.Text == "" && labelPatternError.Text == "";
         }
-
         private void UpdateTextBoxes()
         {
             StringWriter sw = new StringWriter();
@@ -136,9 +125,7 @@ means: When encountering a G_NOOP opcode, check if the last instruction is G_LOA
         {
             labelOpCodeListError.Text = "";
             List<CmdID> ids = new List<CmdID>();
-            var lines = textBoxOpCodeList
-                .Text.Replace(" ", "")
-                .Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            var lines = textBoxOpCodeList.Text.Replace(" ", "").Split(new string[] { "\r\n" }, StringSplitOptions.None);
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i] == "")
@@ -159,9 +146,7 @@ means: When encountering a G_NOOP opcode, check if the last instruction is G_LOA
         {
             labelPatternError.Text = "";
             var patterns = new List<Z64ObjectAnalyzer.Config.OpCodePattern>();
-            var lines = textBoxPatterns
-                .Text.Replace(" ", "")
-                .Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            var lines = textBoxPatterns.Text.Replace(" ", "").Split(new string[] { "\r\n" }, StringSplitOptions.None);
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i] == "")
@@ -170,7 +155,7 @@ means: When encountering a G_NOOP opcode, check if the last instruction is G_LOA
                 var p = Z64ObjectAnalyzer.Config.OpCodePattern.Parse(lines[i]);
                 if (p == null)
                 {
-                    labelPatternError.Text = $"Error at line {i}";
+                   labelPatternError.Text = $"Error at line {i}";
                     return;
                 }
                 patterns.Add(p);
