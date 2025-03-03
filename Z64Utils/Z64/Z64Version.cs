@@ -222,7 +222,7 @@ namespace Z64
         {
             var options = new JsonSerializerOptions()
             {
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
                 WriteIndented = true,
             };
@@ -275,7 +275,7 @@ namespace Z64
             _versions = new();
             var options = new JsonSerializerOptions()
             {
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
             };
             options.Converters.Add(new JsonStringEnumConverter());

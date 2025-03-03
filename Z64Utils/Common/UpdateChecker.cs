@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
+using System.Net.Http;
 
 namespace Common
 {
@@ -129,12 +130,12 @@ namespace Common
         
         public static GithubRelease GetLatestRelease()
         {
+            HttpClient client = new();
+            var request = new HttpRequestMessage(HttpMethod.Get, ReleaseURL);
+            request.Headers.UserAgent.ParseAdd("Z64Utils Updater");
+            var resp = client.Send(request);
 
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(ReleaseURL);
-            req.UserAgent = "Z64Utils Updater";
-            var resp = req.GetResponse();
-
-            using (var stream = resp.GetResponseStream())
+            using (var stream = resp.Content.ReadAsStream())
             {
                 StreamReader sr = new StreamReader(stream);
                 string json = sr.ReadToEnd();
