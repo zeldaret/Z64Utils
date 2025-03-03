@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using RDP;
 
+#nullable enable
+
 namespace F3DZEX.Command
 {
     public class Dlist : IEnumerable<Dlist.CommandHolder>

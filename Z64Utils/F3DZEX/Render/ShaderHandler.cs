@@ -6,6 +6,8 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     [Serializable]
@@ -34,13 +36,13 @@ namespace F3DZEX.Render
 
         private class TempResUsage<T> : IDisposable
         {
-            public T value;
+            public T? value;
 
-            Action<TempResUsage<T>> _dispose;
+            Action<TempResUsage<T>>? _dispose;
 
             public TempResUsage(
-                Action<TempResUsage<T>> create = null,
-                Action<TempResUsage<T>> dispose = null
+                Action<TempResUsage<T>>? create = null,
+                Action<TempResUsage<T>>? dispose = null
             )
             {
                 create?.Invoke(this);
@@ -53,7 +55,7 @@ namespace F3DZEX.Render
             }
         }
 
-        public ShaderHandler(string vertSrc, string fragSrc, string geomSrc = null)
+        public ShaderHandler(string vertSrc, string fragSrc, string? geomSrc = null)
         {
             _compiled = false;
             _uniformLocations = new Dictionary<string, int>();
@@ -61,7 +63,7 @@ namespace F3DZEX.Render
             RecompileShaders(vertSrc, fragSrc, geomSrc);
         }
 
-        public void RecompileShaders(string vertSrc, string fragSrc, string geomSrc = null)
+        public void RecompileShaders(string vertSrc, string fragSrc, string? geomSrc = null)
         {
             Unbind();
             if (_compiled)

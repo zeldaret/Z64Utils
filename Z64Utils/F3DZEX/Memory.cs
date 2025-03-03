@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using RDP;
 using Z64;
+
+#nullable enable
 
 namespace F3DZEX
 {
@@ -22,9 +25,9 @@ namespace F3DZEX
 
             public SegmentType Type;
 
-            public byte[] Data { get; set; }
+            public byte[]? Data { get; set; }
             public uint Address { get; set; }
-            public string Label { get; set; }
+            public string Label { get; set; } = "";
 
             public static Segment Empty() =>
                 new Segment()
@@ -53,7 +56,7 @@ namespace F3DZEX
                     Label = label,
                 };
 
-            public static Segment FromFill(string label, byte[] pattern = null) =>
+            public static Segment FromFill(string label, byte[]? pattern = null) =>
                 new Segment()
                 {
                     Type = SegmentType.Fill,
@@ -117,6 +120,7 @@ namespace F3DZEX
                     {
                         case SegmentType.Fill:
                         {
+                            Debug.Assert(seg.Data != null);
                             byte[] buff = new byte[count];
                             int rest = count;
                             int dstOff = 0;
@@ -137,6 +141,7 @@ namespace F3DZEX
                             return buff;
                         }
                         case SegmentType.Buffer:
+                            Debug.Assert(seg.Data != null);
                             if (addr.SegmentOff + count <= seg.Data.Length)
                             {
                                 byte[] buff = new byte[count];

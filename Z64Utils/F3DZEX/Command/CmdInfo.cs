@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using RDP;
 
+#nullable enable
+
 namespace F3DZEX.Command
 {
     public enum CmdID

@@ -5,6 +5,8 @@ using System.Linq;
 using Common;
 using RDP;
 
+#nullable enable
+
 namespace F3DZEX.Command
 {
     [Serializable]
