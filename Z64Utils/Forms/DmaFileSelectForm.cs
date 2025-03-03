@@ -30,7 +30,9 @@ namespace Z64.Forms
                 if (!file.Valid())
                     continue;
 
-                _fileItemsText[i] = ($"{_game.GetFileName(file.VRomStart).ToLower()} {file.VRomStart:x8} {file.VRomEnd:x8}");
+                _fileItemsText[i] = (
+                    $"{_game.GetFileName(file.VRomStart).ToLower()} {file.VRomStart:x8} {file.VRomEnd:x8}"
+                );
             }
             UpdateFileList();
         }

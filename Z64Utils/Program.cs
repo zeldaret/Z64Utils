@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Z64.Forms;
 using Z64;
-using System.Globalization;
-using System.Threading;
-using System.IO;
+using Z64.Forms;
 
 namespace Z64
 {
     static class Program
     {
-
         [System.Runtime.InteropServices.DllImport("nvapi64.dll", EntryPoint = "fake")]
         static extern int LoadNvApi64();
 
@@ -40,8 +39,6 @@ namespace Z64
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-
-
         }
     }
 }
