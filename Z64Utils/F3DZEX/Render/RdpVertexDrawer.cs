@@ -39,7 +39,7 @@ namespace F3DZEX.Render
                 File.ReadAllText("Shaders/wireframe.geom")
             );
             _nrmShader = new ShaderHandler(
-                File.ReadAllText("Shaders/rdpvtx.vert"),
+                File.ReadAllText("Shaders/rdpVtx.vert"),
                 File.ReadAllText("Shaders/coloredVtx.frag"),
                 File.ReadAllText("Shaders/rdpVtxNrm.geom")
             );
