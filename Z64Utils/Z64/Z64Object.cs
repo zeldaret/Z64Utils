@@ -2893,24 +2893,32 @@ namespace Z64
                     case EntryType.DList:
                     {
                         var holder = iter.ToObject<JsonUCodeHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddDList(holder.Size, holder.Name);
                         break;
                     }
                     case EntryType.Vertex:
                     {
                         var holder = iter.ToObject<JsonVertexHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddVertices(holder.VertexCount, holder.Name);
                         break;
                     }
                     case EntryType.Texture:
                     {
                         var holder = iter.ToObject<JsonTextureHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddTexture(holder.Width, holder.Height, holder.Format, holder.Name);
                         break;
                     }
                     case EntryType.Unknown:
                     {
                         var holder = iter.ToObject<JsonUnknowHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddUnknow(holder.Size, holder.Name);
                         break;
                     }
@@ -2944,18 +2952,24 @@ namespace Z64
                     case EntryType.SkeletonLimbs:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddSkeletonLimbs(holder.Count);
                         break;
                     }
                     case EntryType.JointIndices:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddJointIndices(holder.Count);
                         break;
                     }
                     case EntryType.FrameData:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddFrameData(holder.Count);
                         break;
                     }
@@ -2972,30 +2986,40 @@ namespace Z64
                     case EntryType.CollisionVertices:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddCollisionVertices(holder.Count);
                         break;
                     }
                     case EntryType.CollisionPolygons:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddCollisionPolygons(holder.Count);
                         break;
                     }
                     case EntryType.CollisionSurfaceTypes:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddCollisionSurfaceTypes(holder.Count);
                         break;
                     }
                     case EntryType.CollisionCamData:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddCollisionCamData(holder.Count);
                         break;
                     }
                     case EntryType.WaterBox:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddWaterBoxes(holder.Count);
                         break;
                     }
@@ -3017,12 +3041,16 @@ namespace Z64
                     case EntryType.MatAnimTextureIndexList:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddMatAnimTextureIndexList(holder.Count);
                         break;
                     }
                     case EntryType.MatAnimTextureList:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddMatAnimTextureList(holder.Count);
                         break;
                     }
@@ -3034,18 +3062,24 @@ namespace Z64
                     case EntryType.MatAnimPrimColors:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddMatAnimPrimColors(holder.Count);
                         break;
                     }
                     case EntryType.MatAnimEnvColors:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddMatAnimEnvColors(holder.Count);
                         break;
                     }
                     case EntryType.MatAnimKeyFrames:
                     {
                         var holder = iter.ToObject<JsonArrayHolder>();
+                        if (holder == null)
+                            throw new Exception("Could not deserialize json");
                         obj.AddMatAnimKeyFrames(holder.Count);
                         break;
                     }
@@ -3056,6 +3090,8 @@ namespace Z64
             for (int i = 0; i < list.Count; i++)
             {
                 var holder = ((JsonElement)list[i]).ToObject<JsonTextureHolder>();
+                if (holder == null)
+                    throw new Exception("Could not deserialize json");
                 if (holder.EntryType == EntryType.Texture)
                 {
                     var tlut = (TextureHolder?)

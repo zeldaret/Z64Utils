@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -407,7 +408,8 @@ namespace F3DZEX.Command
             if (match == null)
                 throw new InvalidF3DZEXOpCodeException("Invalid ID");
 
-            object obj = Activator.CreateInstance(t);
+            object? obj = Activator.CreateInstance(t);
+            Debug.Assert(obj != null);
 
             foreach (var prop in t.GetProperties())
             {
@@ -417,7 +419,7 @@ namespace F3DZEX.Command
                 )
                     throw new Exception("???");
 
-                t.GetProperty(prop.Name).SetValue(obj, cmd.Args[prop.Name]);
+                prop.SetValue(obj, cmd.Args[prop.Name]);
             }
             return obj;
         }

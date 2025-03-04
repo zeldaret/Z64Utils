@@ -149,11 +149,12 @@ namespace Z64
         {
             Rom = rom;
 
-            Version = Z64Version.IdentifyRom(rom, out int fileTableOff);
-            if (Version == null)
+            var version = Z64Version.IdentifyRom(rom, out int fileTableOff);
+            if (version == null)
                 throw new Z64GameException(
                     "Could not identify build. Please check your config files."
                 );
+            Version = version;
 
             if (!N64CheckSum.Validate(Rom, Version.Cic))
                 throw new Exception("Invalid CRC");

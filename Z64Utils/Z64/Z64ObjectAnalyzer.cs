@@ -102,7 +102,7 @@ namespace Z64
                         if (entries[i] == "*")
                         {
                             pattern.Add(
-                                new Tuple<int, List<CmdID>>(0, new List<CmdID>() { ret.ID })
+                                new Tuple<int, List<CmdID>>(0, new List<CmdID>() { id })
                             );
                             continue;
                         }
