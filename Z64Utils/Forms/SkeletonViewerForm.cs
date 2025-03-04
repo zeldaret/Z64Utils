@@ -450,10 +450,7 @@ namespace Z64.Forms
             Debug.Assert(link_animetionFile != null);
             Debug.Assert(link_animetionFile.Valid());
             _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] =
-                F3DZEX.Memory.Segment.FromBytes(
-                    "link_animetion",
-                    link_animetionFile.Data
-                );
+                F3DZEX.Memory.Segment.FromBytes("link_animetion", link_animetionFile.Data);
 
             byte[] buff = _renderer.Memory.ReadBytes(
                 _curPlayerAnim.PlayerAnimationSegment,
