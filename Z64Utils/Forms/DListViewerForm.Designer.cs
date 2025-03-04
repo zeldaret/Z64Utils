@@ -146,7 +146,6 @@
             this.modelViewer.RenderCallback = null;
             this.modelViewer.Size = new System.Drawing.Size(757, 585);
             this.modelViewer.TabIndex = 4;
-            this.modelViewer.VSync = true;
             this.modelViewer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.modelViewer_MouseClick);
             // 
             // listBox_routines

@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using F3DZEX.Render;
 using OpenTK;
+using OpenTK.GLControl;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Platform;
 
 namespace Z64.Forms
@@ -113,7 +115,7 @@ namespace Z64.Forms
                 return;
             try
             {
-                if (!Context.IsCurrent)
+                if (Context == null || !Context.IsCurrent)
                     MakeCurrent();
             }
             catch (Exception ex)

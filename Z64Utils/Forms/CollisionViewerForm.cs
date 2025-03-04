@@ -16,6 +16,7 @@ using F3DZEX.Command;
 using F3DZEX.Render;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Platform;
 using RDP;
 using Syroot.BinaryData;
@@ -52,7 +53,6 @@ namespace Z64.Forms
             _wireframe = false;
 
             InitializeComponent();
-            Toolkit.Init();
 
             modelViewer.RenderCallback = RenderCallback;
 
@@ -92,7 +92,7 @@ namespace Z64.Forms
             if (_cullBack)
             {
                 GL.Enable(EnableCap.CullFace);
-                GL.CullFace(CullFaceMode.Back);
+                GL.CullFace(TriangleFace.Back);
             }
             else
             {
