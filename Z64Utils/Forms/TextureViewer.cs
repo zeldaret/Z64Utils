@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using N64;
+
+#nullable enable
 
 namespace Z64.Forms
 {
@@ -44,6 +47,7 @@ namespace Z64.Forms
                     if (addr >= file.VRomStart && addr < file.VRomEnd)
                     {
                         byte[] buffer = new byte[size];
+                        Debug.Assert(file.Valid());
                         Buffer.BlockCopy(
                             file.Data,
                             (int)(addr - (uint)file.VRomStart),
@@ -52,14 +56,13 @@ namespace Z64.Forms
                             size
                         );
                         return buffer;
-                        ;
                     }
                 }
             }
             throw new Exception();
         }
 
-        private void UpdateTexture(object sender = null, EventArgs e = null)
+        private void UpdateTexture(object? sender = null, EventArgs? e = null)
         {
             N64TexFormat fmt = (N64TexFormat)comboBoxTexFmt.SelectedIndex;
             int w = (int)valueW.Value;
@@ -78,7 +81,7 @@ namespace Z64.Forms
                 return;
             }
 
-            byte[] tlut = null;
+            byte[]? tlut = null;
             if (
                 (fmt == N64TexFormat.CI4 || fmt == N64TexFormat.CI8)
                 && uint.TryParse(

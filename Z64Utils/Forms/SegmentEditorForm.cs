@@ -19,6 +19,7 @@ namespace Z64.Forms
         {
             public int SegmentID;
             public F3DZEX.Memory.Segment Segment;
+
             public SegmentChangedEvent(int segmentID, F3DZEX.Memory.Segment segment)
             {
                 SegmentID = segmentID;
