@@ -9,6 +9,8 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Common
 {
     public static class Utils
@@ -45,7 +47,7 @@ namespace Common
             }
         }
 
-        public static T ToObject<T>(this JsonElement element)
+        public static T? ToObject<T>(this JsonElement element)
         {
             var json = element.GetRawText();
             return JsonSerializer.Deserialize<T>(json);
