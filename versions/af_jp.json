@@ -1,0 +1,117 @@
+{
+  "version_name": "Animal Forest Japan",
+  "version_game": "Af",
+  "compression_method": "Yaz0",
+  "cic": 6102,
+  "identifier": {
+    "build_team": "forest@srd038J.srd.nintendo.co.jp",
+    "build_date": "01-02-14 16:37:16"
+  },
+  "memory": {
+    "code": "80051A80",
+    "actor_table": "80100C90",
+    "gamestate_table": "80106E20"
+  },
+  "files": [
+    {
+      "vrom": "00000000",
+      "name": "makerom",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00001060",
+      "name": "boot",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00019D40",
+      "name": "dmadata",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00675720",
+      "name": "code",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0082D7F0",
+      "name": "ovl_Ac_My_Room",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00845C40",
+      "name": "ovl_Ac_Arrange_Room",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "008E7F30",
+      "name": "ovl_Ac_T_Pistol",
+      "type": "Code"
+    },
+    {
+      "vrom": "009D4000",
+      "name": "Clu Clu Land",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009DF000",
+      "name": "Balloon Fight",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009EA000",
+      "name": "Donkey Kong",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "009F5000",
+      "name": "Donkey Kong Jr. Math",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A00000",
+      "name": "Pinball",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A0B000",
+      "name": "Tennis",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A16000",
+      "name": "Golf",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A21000",
+      "name": "locerrmsg",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "00A22000",
+      "name": "gameplay_keep",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "0112C000",
+      "name": "object_t_pistol",
+      "type": "Object"
+    },
+    {
+      "vrom": "01134000",
+      "name": "object_snowman",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "018C4000",
+      "name": "z_select_static",
+      "type": "Unknow"
+    },
+    {
+      "vrom": "01913000",
+      "name": "softsprite_matrix_static",
+      "type": "Unknow"
+    }
+  ]
+}
