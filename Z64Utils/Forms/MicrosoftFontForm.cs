@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public class MicrosoftFontForm : Form

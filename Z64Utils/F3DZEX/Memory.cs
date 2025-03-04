@@ -5,8 +5,6 @@ using System.Text;
 using RDP;
 using Z64;
 
-#nullable enable
-
 namespace F3DZEX
 {
     public class Memory

@@ -33,23 +33,27 @@ Note that currently only standart limbs are supported (no SkinLimb/LodLimb)
 # Configuration
 Z64Utils requires some configuration files in order to work properly. The purpose of these files is to give some basic information on the different ROM versions.
 
-You can find these configuration files as well as some additional information about them [here](https://github.com/Random06457/Z64Utils-Config).
+You can find these configuration files as well as some additional information about them [here](https://github.com/zeldaret/Z64Utils/tree/config).
 
 # Dependencies
 
-Currently, the only requirement is `.NET 5.0.5` (Not to be confused with `.NET Core` or `.NET Framework`).
+Currently, the only requirement is `.NET 6` (Not to be confused with `.NET Core` or `.NET Framework`).
 
-The general purpose download link for `.NET` is [this](https://dotnet.microsoft.com/download), and the direct download is [here](https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.202-windows-x64-installer).
+The general purpose download link for `.NET` is [this](https://dotnet.microsoft.com/download), and the direct download is [here](https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/6.0.36/windowsdesktop-runtime-6.0.36-win-x64.exe).
 
 ## Wine / Linux
 
 Z64Utils v2.0.1 is wine-compatible (this may change in the future).
 
-To run it, first you need to install `.NET 5.0.5` using the installer (see [Dependencies](#dependencies) for the download link).
+To run it, first you need to install `.NET 6` using the installer (see [Dependencies](#dependencies) for the download link).
 
 Please keep in mind you need to use `wine64` instead of `wine` because this is a 64bits-only app.
 
 ```bash
-wine64 dotnet-sdk-5.0.202-win-x64.exe
+wine64 windowsdesktop-runtime-6.0.36-win-x64.exe
 wine64 Z64Utils.exe
 ```
+
+# Contributing
+
+This repository uses the [CSharpier](https://csharpier.com/) code formatter. Install it with `dotnet tool install csharpier --version 0.30.6` and run it with `dotnet csharpier .`.

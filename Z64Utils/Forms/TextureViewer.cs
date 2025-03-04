@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using N64;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class TextureViewer : MicrosoftFontForm

@@ -4,8 +4,6 @@ using System.IO;
 using Common;
 using F3DZEX.Command;
 
-#nullable enable
-
 namespace F3DZEX
 {
     public partial class Disassembler

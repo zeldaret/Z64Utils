@@ -6,8 +6,6 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class ColoredVertexDrawer : VertexDrawer

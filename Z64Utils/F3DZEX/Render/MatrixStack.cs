@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Mathematics;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class MatrixStack

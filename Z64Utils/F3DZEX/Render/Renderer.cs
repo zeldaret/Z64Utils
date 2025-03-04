@@ -17,8 +17,6 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class Renderer
@@ -285,7 +283,6 @@ namespace F3DZEX.Render
         RdpVertexDrawer? _rdpVtxDrawer;
         SimpleVertexDrawer? _gridDrawer;
         ColoredVertexDrawer? _axisDrawer;
-        CollisionVertexDrawer? _collisionDrawer;
         TextDrawer? _textDrawer;
         TextureHandler? _tex0;
         TextureHandler? _tex1;
@@ -319,7 +316,6 @@ namespace F3DZEX.Render
             nameof(_rdpVtxDrawer),
             nameof(_gridDrawer),
             nameof(_axisDrawer),
-            nameof(_collisionDrawer),
             nameof(_textDrawer),
             nameof(_tex0),
             nameof(_tex1)
@@ -331,7 +327,6 @@ namespace F3DZEX.Render
             Debug.Assert(_rdpVtxDrawer != null);
             Debug.Assert(_gridDrawer != null);
             Debug.Assert(_axisDrawer != null);
-            Debug.Assert(_collisionDrawer != null);
             Debug.Assert(_textDrawer != null);
             Debug.Assert(_tex0 != null);
             Debug.Assert(_tex1 != null);
@@ -381,7 +376,6 @@ namespace F3DZEX.Render
             _rdpVtxDrawer = new RdpVertexDrawer();
             _gridDrawer = new SimpleVertexDrawer();
             _axisDrawer = new ColoredVertexDrawer();
-            _collisionDrawer = new CollisionVertexDrawer();
             _textDrawer = new TextDrawer();
 
             float[] vertices = RenderHelper.GenerateGridVertices(CurrentConfig.GridScale, 6, false);
@@ -416,8 +410,8 @@ namespace F3DZEX.Render
             AssertInitialized();
 
             CheckGLErros();
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(CurrentConfig.BackColor);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             CheckGLErros();
 
             if (RenderFailed())
@@ -438,7 +432,6 @@ namespace F3DZEX.Render
 
             _gridDrawer.SendProjViewMatrices(ref proj, ref view);
             _axisDrawer.SendProjViewMatrices(ref proj, ref view);
-            _collisionDrawer.SendProjViewMatrices(ref proj, ref view);
             _rdpVtxDrawer.SendProjViewMatrices(ref proj, ref view);
             _rdpVtxDrawer.SendInitialColors(CurrentConfig);
             CheckGLErros();
@@ -448,7 +441,6 @@ namespace F3DZEX.Render
             _rdpVtxDrawer.SendModelMatrix(ModelMtxStack.Top());
             _gridDrawer.SendModelMatrix(Matrix4.Identity);
             _axisDrawer.SendModelMatrix(Matrix4.Identity);
-            _collisionDrawer.SendModelMatrix(Matrix4.Identity);
             CheckGLErros();
 
             _rdpVtxDrawer.SendHighlightColor(CurrentConfig.HighlightColor);
@@ -499,25 +491,6 @@ namespace F3DZEX.Render
             }
 
             CheckGLErros();
-        }
-
-        // This whole thing is a pretty silly hack to prevent the collision viewer from reusing
-        // _axisDrawer's shader while drawing collision polygons.
-        public void PrepareForCollisionRender()
-        {
-            AssertInitialized();
-            if (CurrentConfig.RenderMode == RdpVertexDrawer.ModelRenderMode.Wireframe)
-            {
-                GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-                _collisionDrawer.SendColor(CurrentConfig.WireframeColor);
-            }
-            else
-            {
-                GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
-                _collisionDrawer.SendColor(CurrentConfig.HighlightColor);
-            }
-
-            _collisionDrawer.Draw(PrimitiveType.Lines);
         }
 
         public Dlist GetDlist(uint vaddr)

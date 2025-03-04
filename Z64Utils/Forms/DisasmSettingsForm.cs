@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RDP;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class DisasmSettingsForm : MicrosoftFontForm

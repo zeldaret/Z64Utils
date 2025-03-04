@@ -9,8 +9,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Common
 {
     public static class Utils

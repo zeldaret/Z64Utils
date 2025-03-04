@@ -14,8 +14,6 @@ using Common;
 using F3DZEX;
 using RDP;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class SegmentEditForm : MicrosoftFontForm

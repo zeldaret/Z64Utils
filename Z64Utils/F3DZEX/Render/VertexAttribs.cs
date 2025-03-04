@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class VertexAttribs

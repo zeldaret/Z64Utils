@@ -21,8 +21,6 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class DListViewerForm : MicrosoftFontForm

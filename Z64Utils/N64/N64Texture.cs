@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using F3DZEX.Command;
 using Syroot.BinaryData;
 
-#nullable enable
-
 namespace N64
 {
     [Serializable]

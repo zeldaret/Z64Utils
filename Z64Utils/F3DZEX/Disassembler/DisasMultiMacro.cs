@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using F3DZEX.Command;
 
-#nullable enable
-
 namespace F3DZEX
 {
     public partial class Disassembler
