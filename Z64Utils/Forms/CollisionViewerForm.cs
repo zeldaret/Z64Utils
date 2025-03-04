@@ -33,7 +33,7 @@ namespace Z64.Forms
             public Vec3s Normal;
         }
 
-        Z64Game _game;
+        Z64Game? _game;
         F3DZEX.Render.Renderer _renderer;
         F3DZEX.Render.Renderer.Config _rendererCfg;
         SettingsForm? _settingsForm;
@@ -43,7 +43,7 @@ namespace Z64.Forms
 
         bool _cullBack;
 
-        private CollisionViewerForm(Z64Game game)
+        private CollisionViewerForm(Z64Game? game)
         {
             _game = game;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
@@ -65,7 +65,7 @@ namespace Z64.Forms
         }
 
         [MemberNotNull(nameof(Instance))]
-        public static void OpenInstance(Z64Game game)
+        public static void OpenInstance(Z64Game? game)
         {
             if (Instance == null)
             {
