@@ -117,7 +117,7 @@ namespace Z64.Forms
                 return;
             try
             {
-                if (!Context.IsCurrent)
+                if (Context == null || !Context.IsCurrent)
                     MakeCurrent();
             }
             catch (Exception ex)
