@@ -4443,7 +4443,7 @@
     },
     {
       "vrom": "0178B000",
-      "name": "object_dnq",
+      "name": "object_dno",
       "type": "Unknow"
     },
     {
@@ -4798,7 +4798,7 @@
     },
     {
       "vrom": "01A6E000",
-      "name": "object_dnp",
+      "name": "object_dnq",
       "type": "Unknow"
     },
     {
@@ -4903,7 +4903,7 @@
     },
     {
       "vrom": "01B06000",
-      "name": "object_dno",
+      "name": "object_dnj",
       "type": "Unknow"
     },
     {
