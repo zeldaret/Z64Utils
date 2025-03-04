@@ -11,8 +11,6 @@ using RDP;
 using Syroot.BinaryData;
 using static Z64.Z64Object;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class SkeletonViewerForm : MicrosoftFontForm

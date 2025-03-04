@@ -15,8 +15,6 @@ using System.Threading.Tasks;
 using Common;
 using N64;
 
-#nullable enable
-
 namespace Z64
 {
     public enum Z64FileType

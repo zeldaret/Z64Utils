@@ -11,8 +11,6 @@ using System.Windows.Forms;
 using Common;
 using F3DZEX.Command;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class DisasmForm : MicrosoftFontForm

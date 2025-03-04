@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using F3DZEX.Command;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class AnalyzerSettingsForm : MicrosoftFontForm

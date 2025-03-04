@@ -12,8 +12,6 @@ using F3DZEX.Command;
 using N64;
 using RDP;
 
-#nullable enable
-
 namespace Z64
 {
     [Serializable]

@@ -10,8 +10,6 @@ using System.Windows.Forms;
 using F3DZEX;
 using F3DZEX.Render;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class SettingsForm : MicrosoftFontForm

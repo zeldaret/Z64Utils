@@ -16,8 +16,6 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class Renderer

@@ -9,8 +9,6 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class TextDrawer

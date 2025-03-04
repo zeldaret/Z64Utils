@@ -12,8 +12,6 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class ModelViewerControl : GLControl
