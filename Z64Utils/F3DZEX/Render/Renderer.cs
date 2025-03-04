@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,13 +16,15 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public class Renderer
     {
         public class Config
         {
-            public event EventHandler OnGridScaleChanged;
+            public event EventHandler? OnGridScaleChanged;
 
             private float _gridScale = 5000;
 
@@ -256,7 +259,7 @@ namespace F3DZEX.Render
         }
 
         public uint RenderErrorAddr { get; private set; } = 0xFFFFFFFF;
-        public string ErrorMsg { get; private set; } = null;
+        public string? ErrorMsg { get; private set; } = null;
         public Config CurrentConfig { get; set; }
         public Memory Memory { get; private set; }
 
@@ -278,13 +281,13 @@ namespace F3DZEX.Render
         ChromaKey _chromaKey;
 
         bool _initialized;
-        RdpVertexDrawer _rdpVtxDrawer;
-        SimpleVertexDrawer _gridDrawer;
-        ColoredVertexDrawer _axisDrawer;
-        CollisionVertexDrawer _collisionDrawer;
-        TextDrawer _textDrawer;
-        TextureHandler _tex0;
-        TextureHandler _tex1;
+        RdpVertexDrawer? _rdpVtxDrawer;
+        SimpleVertexDrawer? _gridDrawer;
+        ColoredVertexDrawer? _axisDrawer;
+        CollisionVertexDrawer? _collisionDrawer;
+        TextDrawer? _textDrawer;
+        TextureHandler? _tex0;
+        TextureHandler? _tex1;
 
         public bool RenderFailed() => ErrorMsg != null;
 
@@ -300,7 +303,7 @@ namespace F3DZEX.Render
             ModelMtxStack = new MatrixStack();
 
             ModelMtxStack.OnTopMatrixChanged += (sender, e) =>
-                _rdpVtxDrawer.SendModelMatrix(e.newTop);
+                _rdpVtxDrawer?.SendModelMatrix(e.newTop);
 
             _tiles = new Tile[8];
             for (int i = 0; i < _tiles.Length; i++)
@@ -309,6 +312,28 @@ namespace F3DZEX.Render
             }
             _combiner = new ColorCombiner();
             _chromaKey = new ChromaKey();
+        }
+
+        [MemberNotNull(
+            nameof(_rdpVtxDrawer),
+            nameof(_gridDrawer),
+            nameof(_axisDrawer),
+            nameof(_collisionDrawer),
+            nameof(_textDrawer),
+            nameof(_tex0),
+            nameof(_tex1)
+        )]
+        void AssertInitialized()
+        {
+            if (!_initialized)
+                throw new Exception("Not initialized (yet)!");
+            Debug.Assert(_rdpVtxDrawer != null);
+            Debug.Assert(_gridDrawer != null);
+            Debug.Assert(_axisDrawer != null);
+            Debug.Assert(_collisionDrawer != null);
+            Debug.Assert(_textDrawer != null);
+            Debug.Assert(_tex0 != null);
+            Debug.Assert(_tex1 != null);
         }
 
         public void ClearErrors() => ErrorMsg = null;
@@ -328,6 +353,7 @@ namespace F3DZEX.Render
 
         public void SetHightlightEnabled(bool enabled)
         {
+            AssertInitialized();
             _rdpVtxDrawer.SendHighlightEnabled(enabled);
         }
 
@@ -375,6 +401,7 @@ namespace F3DZEX.Render
         {
             if (!_initialized)
                 Init();
+            AssertInitialized();
 
             CheckGLErros();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -454,6 +481,7 @@ namespace F3DZEX.Render
         // _axisDrawer's shader while drawing collision polygons.
         public void PrepareForCollisionRender()
         {
+            AssertInitialized();
             if (CurrentConfig.RenderMode == RdpVertexDrawer.ModelRenderMode.Wireframe)
             {
                 GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
@@ -497,7 +525,7 @@ namespace F3DZEX.Render
             }
         }
 
-        private void DecodeTex(TextureHandler tex, Tile tile, byte[] tlut)
+        private void DecodeTex(TextureHandler tex, Tile tile, byte[]? tlut)
         {
             int w = tile.WrapWidth;
             int h = tile.WrapHeight;
@@ -520,10 +548,12 @@ namespace F3DZEX.Render
         {
             if (_reqDecodeTex)
             {
+                AssertInitialized();
+
                 var tile0 = _combiner.UsesTex0() ? _tiles[_selectedTile + 0] : null;
                 var tile1 = _combiner.UsesTex1() ? _tiles[_selectedTile + 1] : null;
 
-                byte[] tlut = null;
+                byte[]? tlut = null;
                 if (
                     (tile0 != null && tile0.fmt == G_IM_FMT.G_IM_FMT_CI)
                     || (tile1 != null && tile1.fmt == G_IM_FMT.G_IM_FMT_CI)
@@ -549,6 +579,8 @@ namespace F3DZEX.Render
 
         private unsafe void ProcessInstruction(CmdInfo info)
         {
+            AssertInitialized();
+
             switch (info.ID)
             {
                 case CmdID.G_SETOTHERMODE_L:
