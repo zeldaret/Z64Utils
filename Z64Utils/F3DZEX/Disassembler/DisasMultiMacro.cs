@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using F3DZEX.Command;
+
+#nullable enable
 
 namespace F3DZEX
 {
@@ -13,12 +16,13 @@ namespace F3DZEX
             new LoadTextureBlockMacro(),
         };
 
-        private string FindMultiCmdMacro(int index, out int cmdCount)
+        private string? FindMultiCmdMacro(int index, out int cmdCount)
         {
             foreach (var entry in MultiMacros)
             {
                 if (
-                    entry.IsCandidate(this, index) && entry.Disassemble(this, index, out string res)
+                    entry.IsCandidate(this, index)
+                    && entry.Disassemble(this, index, out string? res)
                 )
                 {
                     cmdCount = entry.GetCommandCount();
@@ -53,7 +57,11 @@ namespace F3DZEX
 
             public int GetCommandCount() => _ids.Length;
 
-            public abstract bool Disassemble(Disassembler dis, int idx, out string output);
+            public abstract bool Disassemble(
+                Disassembler dis,
+                int idx,
+                [NotNullWhen(true)] out string? output
+            );
         }
 
         class LoadTLutMacro : MultiMacro
@@ -68,7 +76,11 @@ namespace F3DZEX
                     CmdID.G_RDPPIPESYNC
                 ) { }
 
-            public override bool Disassemble(Disassembler dis, int idx, out string output)
+            public override bool Disassemble(
+                Disassembler dis,
+                int idx,
+                [NotNullWhen(true)] out string? output
+            )
             {
                 output = null;
 
@@ -217,7 +229,11 @@ namespace F3DZEX
                 return (((1 << G_TX_DXT_FRAC) + Txl2Words_4b(width) - 1) / Txl2Words_4b(width));
             }
 
-            public override bool Disassemble(Disassembler dis, int idx, out string output)
+            public override bool Disassemble(
+                Disassembler dis,
+                int idx,
+                [NotNullWhen(true)] out string? output
+            )
             {
                 output = null;
 

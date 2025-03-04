@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public static class RenderHelper

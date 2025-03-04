@@ -6,18 +6,21 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public class SimpleVertexDrawer : VertexDrawer
     {
         public SimpleVertexDrawer()
+            : base(
+                new ShaderHandler(
+                    File.ReadAllText("Shaders/simpleVtx.vert"),
+                    File.ReadAllText("Shaders/coloredVtx.frag")
+                ),
+                new VertexAttribs()
+            )
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/simpleVtx.vert"),
-                File.ReadAllText("Shaders/coloredVtx.frag")
-            );
-            _attrs = new VertexAttribs();
-
             _attrs.LayoutAddFloat(3, VertexAttribPointerType.Float, false);
         }
 

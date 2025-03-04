@@ -4,12 +4,20 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public abstract class VertexDrawer
     {
         protected ShaderHandler _shader;
         protected VertexAttribs _attrs;
+
+        public VertexDrawer(ShaderHandler shader, VertexAttribs attrs)
+        {
+            _shader = shader;
+            _attrs = attrs;
+        }
 
         protected void SetVertexData(
             byte[] buffer,

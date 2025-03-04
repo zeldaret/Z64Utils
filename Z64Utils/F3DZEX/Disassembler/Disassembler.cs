@@ -9,6 +9,8 @@ using Common;
 using F3DZEX.Command;
 using RDP;
 
+#nullable enable
+
 namespace F3DZEX
 {
     public partial class Disassembler
@@ -38,7 +40,7 @@ namespace F3DZEX
         Config _cfg;
         Dlist _dlist = new Dlist();
 
-        public Disassembler(Dlist dlist, Config cfg = null)
+        public Disassembler(Dlist dlist, Config? cfg = null)
         {
             _cfg = cfg ?? StaticConfig;
             _dlist = dlist ?? new Dlist();
@@ -69,10 +71,11 @@ namespace F3DZEX
                     var (dis, comments) = DisassembleInstruction(cmd.cmd);
                     if (_cfg.DisasMultiCmdMacro)
                     {
-                        string macroDis = FindMultiCmdMacro(i, out int cmdCount);
-                        if (cmdCount > 0)
+                        string? macroDis = FindMultiCmdMacro(i, out int cmdCount);
+                        if (macroDis != null)
                         {
                             dis = macroDis;
+                            Debug.Assert(cmdCount > 0);
                             toSkip = cmdCount - 1;
                             comments = new List<string>()
                             {
@@ -105,7 +108,7 @@ namespace F3DZEX
         private string DisAddress(object addr) =>
             _cfg.AddressLiteral ? $"0x{addr:X8}" : $"D_{addr:X8}";
 
-        private (string, List<string>) DisassembleInstruction(CmdInfo info)
+        private (string, List<string>?) DisassembleInstruction(CmdInfo info)
         {
             switch (info.ID)
             {

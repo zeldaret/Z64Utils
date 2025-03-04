@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+
+#nullable enable
 
 namespace F3DZEX.Render
 {
@@ -22,8 +25,8 @@ namespace F3DZEX.Render
         int _texWidth;
         int _texHeight;
         RectangleF[] _charSpaces;
-        string _lastStr;
-        float[] _lastVertices;
+        string? _lastStr;
+        float[]? _lastVertices;
 
         public Vector2 Position { get; set; }
         public Font TextFont
@@ -53,7 +56,12 @@ namespace F3DZEX.Render
         {
             _vtxDrawer = new TexturedVertexDrawer();
             _tex = new TextureHandler();
+
             TextFont = new Font("Arial", 50);
+            Debug.Assert(_font != null);
+            Debug.Assert(_charSpaces != null);
+            Debug.Assert(_texData != null);
+
             _lastStr = null;
             Scale = 0.35f;
             Color = Color.White;
