@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using Z64;
 using Z64.Forms;
 
+#nullable enable
+
 namespace Z64
 {
     static class Program
