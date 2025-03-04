@@ -3,18 +3,21 @@ using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public class CollisionVertexDrawer : VertexDrawer
     {
         public CollisionVertexDrawer()
+            : base(
+                new ShaderHandler(
+                    File.ReadAllText("Shaders/collisionVtx.vert"),
+                    File.ReadAllText("Shaders/collisionVtx.frag")
+                ),
+                new VertexAttribs()
+            )
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/collisionVtx.vert"),
-                File.ReadAllText("Shaders/collisionVtx.frag")
-            );
-            _attrs = new VertexAttribs();
-
             _attrs.LayoutAddFloat(3, VertexAttribPointerType.Float, false);
             byte[] fakeData = new byte[] { 0, 0, 0 };
             SetVertexData(fakeData, fakeData.Length, BufferUsageHint.StaticDraw);

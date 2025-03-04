@@ -6,18 +6,21 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public class TexturedVertexDrawer : VertexDrawer
     {
         public TexturedVertexDrawer()
+            : base(
+                new ShaderHandler(
+                    File.ReadAllText("Shaders/texturedVtx.vert"),
+                    File.ReadAllText("Shaders/texturedVtx.frag")
+                ),
+                new VertexAttribs()
+            )
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/texturedVtx.vert"),
-                File.ReadAllText("Shaders/texturedVtx.frag")
-            );
-            _attrs = new VertexAttribs();
-
             // pos
             _attrs.LayoutAddFloat(3, VertexAttribPointerType.Float, false);
             // texture coordinates

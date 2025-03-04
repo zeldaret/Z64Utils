@@ -101,9 +101,7 @@ namespace Z64
                     {
                         if (entries[i] == "*")
                         {
-                            pattern.Add(
-                                new Tuple<int, List<CmdID>>(0, new List<CmdID>() { id })
-                            );
+                            pattern.Add(new Tuple<int, List<CmdID>>(0, new List<CmdID>() { id }));
                             continue;
                         }
 
