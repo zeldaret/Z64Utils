@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -19,6 +21,8 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class DListViewerForm : MicrosoftFontForm
@@ -29,7 +33,7 @@ namespace Z64.Forms
             public int X;
             public int Y;
             public int Z;
-            public Dlist Dlist;
+            public Dlist? Dlist;
 
             public RenderRoutine(uint addr, int x = 0, int y = 0, int z = 0)
             {
@@ -43,19 +47,19 @@ namespace Z64.Forms
             public override string ToString() => $"{Address:X8} [{X};{Y};{Z}]";
         }
 
-        public static DListViewerForm Instance { get; set; }
+        public static DListViewerForm? Instance { get; set; }
 
-        string _dlistError;
-        Z64Game _game;
+        string? _dlistError;
+        Z64Game? _game;
         F3DZEX.Render.Renderer _renderer;
-        SegmentEditorForm _segForm;
-        DisasmForm _disasForm;
-        SettingsForm _settingsForm;
+        SegmentEditorForm? _segForm;
+        DisasmForm? _disasForm;
+        SettingsForm? _settingsForm;
         F3DZEX.Render.Renderer.Config _rendererCfg;
 
         List<RenderRoutine> _routines;
 
-        private DListViewerForm(Z64Game game)
+        private DListViewerForm(Z64Game? game)
         {
             _game = game;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
@@ -73,10 +77,20 @@ namespace Z64.Forms
 
             if ((Control.ModifierKeys & Keys.Control) == 0)
             {
-                _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
-                    "gameplay_keep",
-                    game.GetFileByName("gameplay_keep").Data
-                );
+                if (game != null)
+                {
+                    var gameplay_keepFile = game.GetFileByName("gameplay_keep");
+                    if (gameplay_keepFile == null || !gameplay_keepFile.Valid())
+                        MessageBox.Show(
+                            "Could not find valid gameplay_keep file for setting segment 4"
+                        );
+                    else
+                        _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
+                            "gameplay_keep",
+                            gameplay_keepFile.Data
+                        );
+                }
+
                 for (int i = 8; i < 16; i++)
                 {
                     _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill(
@@ -124,6 +138,7 @@ namespace Z64.Forms
                 _renderer.ModelMtxStack.Push(
                     Matrix4.CreateTranslation(routine.X, routine.Y, routine.Z)
                 );
+                Debug.Assert(routine.Dlist != null);
                 _renderer.RenderDList(routine.Dlist);
                 _renderer.ModelMtxStack.Pop();
             }
@@ -133,7 +148,7 @@ namespace Z64.Forms
                 : "";
         }
 
-        private void NewRender(object sender = null, EventArgs e = null)
+        private void NewRender(object? sender = null, EventArgs? e = null)
         {
             _renderer.ClearErrors();
 
@@ -142,7 +157,8 @@ namespace Z64.Forms
             modelViewer.Render();
         }
 
-        public static void OpenInstance(Z64Game game)
+        [MemberNotNull(nameof(Instance))]
+        public static void OpenInstance(Z64Game? game)
         {
             if (Instance == null)
             {
@@ -212,9 +228,12 @@ namespace Z64.Forms
             }
         }
 
-        private void SegForm_SegmentsChanged(object sender, F3DZEX.Memory.Segment e)
+        private void SegForm_SegmentsChanged(
+            object? sender,
+            SegmentEditorForm.SegmentChangedEvent e
+        )
         {
-            _renderer.Memory.Segments[(int)sender] = e;
+            _renderer.Memory.Segments[e.SegmentID] = e.Segment;
 
             DecodeDlists();
             NewRender();
@@ -317,7 +336,7 @@ namespace Z64.Forms
             }
         }
 
-        private string IsInputValid(string input)
+        private string? IsInputValid(string input)
         {
             string err = "Invalid format, must be \"<address in hex>(; <x>; <y>; <z>)\"";
 
@@ -329,7 +348,7 @@ namespace Z64.Forms
             if (addrStr.StartsWith("0x"))
                 addrStr = addrStr.Substring(2);
 
-            if (!SegmentedAddress.TryParse(addrStr, true, out SegmentedAddress addr))
+            if (!SegmentedAddress.TryParse(addrStr, true, out SegmentedAddress? addr))
                 return err;
 
             for (int i = 1; i < parts.Length; i++)
@@ -350,11 +369,13 @@ namespace Z64.Forms
             );
             if (form.ShowDialog() == DialogResult.OK)
             {
+                Debug.Assert(form.Result != null);
                 var parts = form.Result.Replace(" ", "").Split(";");
                 int x = 0,
                     y = 0,
                     z = 0;
                 var addr = SegmentedAddress.Parse(parts[0], true);
+                Debug.Assert(addr != null);
                 if (parts.Length > 1)
                 {
                     x = int.Parse(parts[1]);
@@ -382,10 +403,13 @@ namespace Z64.Forms
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    Debug.Assert(form.Result != null);
                     var parts = form.Result.Replace(" ", "").Split(";");
 
                     routine.X = routine.Y = routine.Z = 0;
-                    routine.Address = SegmentedAddress.Parse(parts[0], true);
+                    var addr = SegmentedAddress.Parse(parts[0], true);
+                    Debug.Assert(addr != null);
+                    routine.Address = addr;
 
                     if (parts.Length > 1)
                     {

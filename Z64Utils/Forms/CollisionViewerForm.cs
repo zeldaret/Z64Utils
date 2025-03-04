@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -18,11 +20,13 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class CollisionViewerForm : MicrosoftFontForm
     {
-        public static CollisionViewerForm Instance { get; set; }
+        public static CollisionViewerForm? Instance { get; set; }
 
         public struct RenderColPoly
         {
@@ -30,17 +34,17 @@ namespace Z64.Forms
             public Vec3s Normal;
         }
 
-        Z64Game _game;
+        Z64Game? _game;
         F3DZEX.Render.Renderer _renderer;
         F3DZEX.Render.Renderer.Config _rendererCfg;
-        SettingsForm _settingsForm;
+        SettingsForm? _settingsForm;
 
-        Z64Object.ColHeaderHolder _colHeader;
-        RenderColPoly[] _polygons;
+        Z64Object.ColHeaderHolder? _colHeader;
+        RenderColPoly[]? _polygons;
 
         bool _cullBack;
 
-        private CollisionViewerForm(Z64Game game)
+        private CollisionViewerForm(Z64Game? game)
         {
             _game = game;
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
@@ -60,7 +64,8 @@ namespace Z64.Forms
             NewRender();
         }
 
-        public static void OpenInstance(Z64Game game)
+        [MemberNotNull(nameof(Instance))]
+        public static void OpenInstance(Z64Game? game)
         {
             if (Instance == null)
             {
@@ -118,6 +123,8 @@ namespace Z64.Forms
             {
                 _polygons = new RenderColPoly[_colHeader.NbPolygons];
 
+                Debug.Assert(_colHeader.PolygonsHolder != null);
+                Debug.Assert(_colHeader.VerticesHolder != null);
                 for (int i = 0; i < _colHeader.NbPolygons; i++)
                 {
                     Z64Object.CollisionPolygonsHolder.CollisionPoly colPoly = _colHeader

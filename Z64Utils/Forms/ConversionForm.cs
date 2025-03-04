@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class ConversionForm : MicrosoftFontForm

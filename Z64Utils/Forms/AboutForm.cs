@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class AboutForm : MicrosoftFontForm

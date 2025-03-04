@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Mathematics;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public class MatrixStack
@@ -14,7 +16,7 @@ namespace F3DZEX.Render
             public TopMatrixChangedEventArgs(Matrix4 top) => newTop = top;
         }
 
-        public event EventHandler<TopMatrixChangedEventArgs> OnTopMatrixChanged;
+        public event EventHandler<TopMatrixChangedEventArgs>? OnTopMatrixChanged;
 
         private Stack<Matrix4> _stack;
 

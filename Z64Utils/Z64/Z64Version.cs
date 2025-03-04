@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Common;
 using N64;
+
+#nullable enable
 
 namespace Z64
 {
@@ -82,19 +85,31 @@ namespace Z64
         public class VersionIdentifier
         {
             [JsonPropertyName("build_team")]
-            public string BuildTeam { get; set; }
+            public string? BuildTeam { get; set; }
 
             [JsonPropertyName("build_date")]
-            public string BuildDate { get; set; }
+            public string? BuildDate { get; set; }
 
             [JsonPropertyName("rom_name")]
-            public string RomName { get; set; }
+            public string? RomName { get; set; }
 
             [JsonPropertyName("rom_code")]
-            public string RomCode { get; set; }
+            public string? RomCode { get; set; }
 
             [JsonPropertyName("rom_version")]
             public byte? RomVersion { get; set; }
+
+            [MemberNotNull(nameof(BuildTeam))]
+            [MemberNotNull(nameof(BuildDate))]
+            [MemberNotNull(nameof(RomName))]
+            [MemberNotNull(nameof(RomCode))]
+            public void AssertValid()
+            {
+                Debug.Assert(BuildTeam != null);
+                Debug.Assert(BuildDate != null);
+                Debug.Assert(RomName != null);
+                Debug.Assert(RomCode != null);
+            }
         }
 
         public class MemoryInfo
@@ -135,7 +150,7 @@ namespace Z64
             public uint? Vrom { get; set; }
 
             [JsonPropertyName("name")]
-            public string Filename { get; set; }
+            public string? Filename { get; set; }
 
             [JsonConverter(typeof(JsonStringEnumConverter))]
             [JsonPropertyName("type")]
@@ -147,7 +162,7 @@ namespace Z64
         #region JSON Properties
 
         [JsonPropertyName("version_name")]
-        public string VersionName { get; set; }
+        public string? VersionName { get; set; }
 
         [JsonPropertyName("version_game")]
         public Z64GameType Game { get; set; }
@@ -159,7 +174,7 @@ namespace Z64
         public int Cic { get; set; }
 
         [JsonPropertyName("identifier")]
-        public VersionIdentifier Identifier { get; set; }
+        public VersionIdentifier? Identifier { get; set; }
 
         [JsonPropertyName("memory")]
         public MemoryInfo Memory { get; set; }
@@ -174,6 +189,14 @@ namespace Z64
             Files = new List<FileEntry>();
             Compression = Z64FileCompression.Yaz0;
             Cic = 6105;
+        }
+
+        [MemberNotNull(nameof(VersionName))]
+        [MemberNotNull(nameof(Identifier))]
+        public void AssertValid()
+        {
+            Debug.Assert(VersionName != null);
+            Debug.Assert(Identifier != null);
         }
 
         #endregion JSON Properties
@@ -205,6 +228,9 @@ namespace Z64
 
         private int FindBuildTeam(N64Rom rom)
         {
+            AssertValid();
+            Identifier.AssertValid();
+
             string team = Identifier.BuildTeam;
             int start = 0x1000;
             int end = 0x40000 - team.Length - Identifier.BuildDate.Length;
@@ -225,6 +251,9 @@ namespace Z64
 
         public bool Match(N64Rom rom, out int fileTableOff)
         {
+            AssertValid();
+            Identifier.AssertValid();
+
             fileTableOff = 0;
 
             // search team
@@ -274,6 +303,7 @@ namespace Z64
             };
             options.Converters.Add(new JsonStringEnumConverter());
 
+            Debug.Assert(_versions != null);
             string path = _versions.First(v => v.Value == this).Key;
 
             // sort entries by vrom
@@ -288,7 +318,7 @@ namespace Z64
             File.WriteAllText(path, json);
         }
 
-        public static Z64Version IdentifyRom(N64Rom rom, out int fileTableOff)
+        public static Z64Version? IdentifyRom(N64Rom rom, out int fileTableOff)
         {
             LoadVersions();
             foreach (var ver in _versions)
@@ -303,8 +333,9 @@ namespace Z64
             return null;
         }
 
-        private static Dictionary<string, Z64Version> _versions;
+        private static Dictionary<string, Z64Version>? _versions = null;
 
+        [MemberNotNull(nameof(_versions))]
         private static void LoadVersions()
         {
             string path = "versions";
@@ -327,10 +358,17 @@ namespace Z64
             {
                 string json = File.ReadAllText(file);
                 var ver = JsonSerializer.Deserialize<Z64Version>(json, options);
+                Debug.Assert(ver != null);
+                ver.AssertValid();
+                ver.Identifier.AssertValid();
 
                 var existing = _versions
                     .ToList()
-                    .FindAll(v => v.Value.Identifier.BuildDate == ver.Identifier.BuildDate);
+                    .FindAll(v =>
+                    {
+                        v.Value.AssertValid();
+                        return v.Value.Identifier.BuildDate == ver.Identifier.BuildDate;
+                    });
                 if (existing.Count > 0)
                     throw new Exception($"build date conflict with \"{existing[0].Key}\"");
 
@@ -365,6 +403,8 @@ namespace Z64
 
             public FileHashEntry(Z64Game game, Z64File file)
             {
+                if (!file.Valid())
+                    throw new Exception("file is not valid");
                 fileName = game.GetFileName(file.VRomStart);
                 sha256 = Utils.BytesToHex(
                     System.Security.Cryptography.SHA256.Create().ComputeHash(file.Data),

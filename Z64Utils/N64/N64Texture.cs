@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -8,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using F3DZEX.Command;
 using Syroot.BinaryData;
+
+#nullable enable
 
 namespace N64
 {
@@ -180,7 +183,7 @@ namespace N64
             int h,
             N64TexFormat format,
             byte[] buff,
-            byte[] tlut = null
+            byte[]? tlut = null
         )
         {
             var a = ConvertFormat(format);
@@ -193,7 +196,7 @@ namespace N64
             G_IM_FMT fmt,
             G_IM_SIZ siz,
             byte[] buff,
-            byte[] tlut = null
+            byte[]? tlut = null
         )
         {
             Bitmap bmp = new Bitmap(w, h);
@@ -222,7 +225,7 @@ namespace N64
             G_IM_FMT fmt,
             G_IM_SIZ siz,
             byte[] buff,
-            byte[] tlut
+            byte[]? tlut
         )
         {
             switch (fmt)
@@ -244,8 +247,10 @@ namespace N64
                     switch (siz)
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b:
+                            Debug.Assert(tlut != null);
                             return DecodeCI4(texels, buff, tlut);
                         case G_IM_SIZ.G_IM_SIZ_8b:
+                            Debug.Assert(tlut != null);
                             return DecodeCI8(texels, buff, tlut);
                         default:
                             throw new N64TextureException(

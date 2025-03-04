@@ -8,18 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class EditValueForm : MicrosoftFontForm
     {
-        Func<string, string> _callback = s => null;
-        public string Result { get; private set; }
+        Func<string, string?> _callback = s => null;
+        public string? Result { get; private set; }
 
         public EditValueForm(
             string title,
             string desc,
-            Func<string, string> valid,
-            string defaultValue = null
+            Func<string, string?>? valid,
+            string? defaultValue = null
         )
         {
             InitializeComponent();
@@ -32,14 +34,14 @@ namespace Z64.Forms
             textBox1_TextChanged(null, null);
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void buttonOK_Click(object? sender, EventArgs? e)
         {
             DialogResult = DialogResult.OK;
             Result = textBox1.Text;
             Close();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void textBox1_TextChanged(object? sender, EventArgs? e)
         {
             var error = _callback(textBox1.Text);
             buttonOK.Enabled = string.IsNullOrEmpty(error);

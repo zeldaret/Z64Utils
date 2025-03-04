@@ -6,17 +6,21 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
+#nullable enable
+
 namespace F3DZEX.Render
 {
     public class ColoredVertexDrawer : VertexDrawer
     {
         public ColoredVertexDrawer()
+            : base(
+                new ShaderHandler(
+                    File.ReadAllText("Shaders/coloredVtx.vert"),
+                    File.ReadAllText("Shaders/coloredVtx.frag")
+                ),
+                new VertexAttribs()
+            )
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/coloredVtx.vert"),
-                File.ReadAllText("Shaders/coloredVtx.frag")
-            );
-            _attrs = new VertexAttribs();
             // pos
             _attrs.LayoutAddFloat(3, VertexAttribPointerType.Float, false);
             // color

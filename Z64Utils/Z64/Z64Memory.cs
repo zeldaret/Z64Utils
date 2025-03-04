@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 
+#nullable enable
+
 namespace Z64
 {
     [Serializable]
@@ -138,7 +140,12 @@ namespace Z64
             foreach (var block in _blocks)
             {
                 var file = _game.GetFile(block.Vrom);
-                if (addr >= block.Vram && addr < block.Vram + file.Data.Length)
+                if (
+                    file != null
+                    && file.Valid()
+                    && addr >= block.Vram
+                    && addr < block.Vram + file.Data.Length
+                )
                 {
                     if (addr + count > block.Vram + file.Data.Length)
                         throw new Z64MemoryException(
@@ -159,7 +166,12 @@ namespace Z64
             foreach (var block in _blocks)
             {
                 var file = _game.GetFile(block.Vrom);
-                if (vrom >= block.Vrom && vrom < block.Vrom + file.Data.Length)
+                if (
+                    file != null
+                    && file.Valid()
+                    && vrom >= block.Vrom
+                    && vrom < block.Vrom + file.Data.Length
+                )
                 {
                     vram = block.Vram + (vrom - (uint)block.Vrom);
                     return true;
@@ -175,7 +187,12 @@ namespace Z64
             foreach (var block in _blocks)
             {
                 var file = _game.GetFile(block.Vrom);
-                if (vram >= block.Vram && vram < block.Vram + file.Data.Length)
+                if (
+                    file != null
+                    && file.Valid()
+                    && vram >= block.Vram
+                    && vram < block.Vram + file.Data.Length
+                )
                 {
                     vrom = (uint)block.Vrom + (vram - block.Vram);
                     return true;

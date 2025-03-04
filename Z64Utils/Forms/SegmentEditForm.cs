@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -12,6 +13,8 @@ using System.Windows.Forms;
 using Common;
 using F3DZEX;
 using RDP;
+
+#nullable enable
 
 namespace Z64.Forms
 {
@@ -27,13 +30,13 @@ namespace Z64.Forms
         const string SRC_NULL = "Null Bytes";
         const string SRC_EMPTY_DLIST = "Empty Dlist";
 
-        public Memory.Segment ResultSegment { get; set; }
+        public Memory.Segment? ResultSegment { get; set; }
 
-        private string _dmaFileName = null;
-        private string _fileName = null;
-        private Z64Game _game;
+        private string? _dmaFileName = null;
+        private string? _fileName = null;
+        private Z64Game? _game;
 
-        public SegmentEditForm(Z64Game game)
+        public SegmentEditForm(Z64Game? game)
         {
             InitializeComponent();
             _game = game;
@@ -103,9 +106,12 @@ namespace Z64.Forms
         {
             if (comboBox1.SelectedItem == (object)SRC_ROM_FS) // ROM FS
             {
+                Debug.Assert(_game != null);
                 DmaFileSelectForm form = new DmaFileSelectForm(_game);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    Debug.Assert(form.SelectedFile != null);
+                    Debug.Assert(form.SelectedFile.Valid()); // DmaFileSelectForm only allows selecting valid files
                     _dmaFileName = _game.GetFileName(form.SelectedFile.VRomStart);
                     ResultSegment = Memory.Segment.FromBytes(_dmaFileName, form.SelectedFile.Data);
                     button1.ForeColor = Color.Green;
@@ -148,7 +154,9 @@ namespace Z64.Forms
             switch (comboBox1.SelectedItem)
             {
                 case SRC_ADDR:
-                    uint addr = SegmentedAddress.Parse(addressValue.Text).VAddr;
+                    var sa = SegmentedAddress.Parse(addressValue.Text);
+                    Debug.Assert(sa != null); // OK button is only enabled if the value is valid
+                    uint addr = sa.VAddr;
                     ResultSegment = Memory.Segment.FromVram($"{addr:X8}", addr);
                     break;
 
