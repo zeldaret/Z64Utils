@@ -6,6 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Z64</RootNamespace>
     <AssemblyName>Z64Utils</AssemblyName>
+    <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604;CS8605;CS8618;CS8619;CS8622;CS8625</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
