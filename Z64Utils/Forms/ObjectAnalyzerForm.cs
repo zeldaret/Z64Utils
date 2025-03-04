@@ -23,10 +23,10 @@ namespace Z64.Forms
         byte[] _data;
         public Z64Object _obj;
         int _segment;
-        Z64Game _game;
+        Z64Game? _game;
         Action? _doubleClickAction;
 
-        public ObjectAnalyzerForm(Z64Game game, byte[] data, string fileName, int segmentId)
+        public ObjectAnalyzerForm(Z64Game? game, byte[] data, string fileName, int segmentId)
         {
             InitializeComponent();
 

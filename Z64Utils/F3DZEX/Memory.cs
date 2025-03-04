@@ -68,9 +68,9 @@ namespace F3DZEX
 
         public Segment[] Segments { get; private set; }
 
-        Z64Game _game;
+        Z64Game? _game;
 
-        public Memory(Z64Game game)
+        public Memory(Z64Game? game)
         {
             _game = game;
 

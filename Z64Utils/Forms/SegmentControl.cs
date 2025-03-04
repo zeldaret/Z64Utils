@@ -45,7 +45,7 @@ namespace Z64.Forms
             indexLabel.Text = $"{SegmentID:D2} :";
         }
 
-        public void SetGame(Z64Game game)
+        public void SetGame(Z64Game? game)
         {
             _game = game;
         }

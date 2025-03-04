@@ -29,7 +29,7 @@ namespace Z64.Forms
         PlayState _playState;
         string? _dlistError = null;
 
-        Z64Game _game;
+        Z64Game? _game;
         F3DZEX.Render.Renderer _renderer;
         SegmentEditorForm? _segForm;
         DisasmForm? _disasForm;
@@ -57,7 +57,7 @@ namespace Z64.Forms
         int _extAnimSegment = 6;
 
         public SkeletonViewerForm(
-            Z64Game game,
+            Z64Game? game,
             int curSegment,
             F3DZEX.Memory.Segment curSegmentData,
             SkeletonHolder skel,
@@ -80,16 +80,19 @@ namespace Z64.Forms
 
             if ((Control.ModifierKeys & Keys.Control) == 0)
             {
-                var gameplay_keepFile = game.GetFileByName("gameplay_keep");
-                if (gameplay_keepFile == null || !gameplay_keepFile.Valid())
-                    MessageBox.Show(
-                        "Could not find valid gameplay_keep file for setting segment 4"
-                    );
-                else
-                    _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
-                        "gameplay_keep",
-                        gameplay_keepFile.Data
-                    );
+                if (game != null)
+                {
+                    var gameplay_keepFile = game.GetFileByName("gameplay_keep");
+                    if (gameplay_keepFile == null || !gameplay_keepFile.Valid())
+                        MessageBox.Show(
+                            "Could not find valid gameplay_keep file for setting segment 4"
+                        );
+                    else
+                        _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
+                            "gameplay_keep",
+                            gameplay_keepFile.Data
+                        );
+                }
                 for (int i = 8; i < 16; i++)
                 {
                     _renderer.Memory.Segments[i] = F3DZEX.Memory.Segment.FromFill(
@@ -444,6 +447,9 @@ namespace Z64.Forms
             trackBar_anim.Minimum = 0;
             trackBar_anim.Maximum = _curPlayerAnim.FrameCount - 1;
             trackBar_anim.Value = 0;
+
+            if (_game == null)
+                return;
 
             var Saved = _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId];
             var link_animetionFile = _game.GetFileByName("link_animetion");

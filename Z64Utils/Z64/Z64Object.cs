@@ -1718,7 +1718,7 @@ namespace Z64
             Entries = new List<ObjectHolder>();
         }
 
-        public Z64Object(Z64Game game, byte[] data, string fileName)
+        public Z64Object(Z64Game? game, byte[] data, string fileName)
             : this()
         {
             Game = game;

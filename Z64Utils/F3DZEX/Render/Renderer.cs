@@ -291,7 +291,7 @@ namespace F3DZEX.Render
 
         public bool RenderFailed() => ErrorMsg != null;
 
-        public Renderer(Z64Game game, Config cfg, int depth = 10)
+        public Renderer(Z64Game? game, Config cfg, int depth = 10)
             : this(new Memory(game), cfg, depth) { }
 
         public Renderer(Memory mem, Config cfg, int depth = 10)

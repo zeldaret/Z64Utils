@@ -29,7 +29,7 @@ namespace Z64.Forms
 
         public event EventHandler<SegmentChangedEvent>? SegmentsChanged;
 
-        public SegmentEditorForm(Z64Game game, F3DZEX.Render.Renderer renderer)
+        public SegmentEditorForm(Z64Game? game, F3DZEX.Render.Renderer renderer)
         {
             InitializeComponent();
             for (int i = 0; i < 16; i++)
