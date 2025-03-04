@@ -301,6 +301,11 @@ namespace Z64
             public SkeletonLimbHolder(string name, byte[] data, EntryType type)
                 : base(name)
             {
+                Debug.Assert(
+                    type == EntryType.StandardLimb
+                        || type == EntryType.LODLimb
+                        || type == EntryType.SkinLimb
+                );
                 Type = type;
                 SetData(data);
             }
@@ -1713,7 +1718,7 @@ namespace Z64
             Entries = new List<ObjectHolder>();
         }
 
-        public Z64Object(Z64Game game, byte[] data, string fileName)
+        public Z64Object(Z64Game? game, byte[] data, string fileName)
             : this()
         {
             Game = game;

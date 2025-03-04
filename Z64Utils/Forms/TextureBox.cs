@@ -1,7 +1,10 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Common;
+
+#nullable enable
 
 /// <summary>
 /// Inherits from PictureBox; adds Interpolation Mode Setting
@@ -30,12 +33,12 @@ namespace Z64.Forms
             this.MouseClick += TextureBox_MouseClick;
         }
 
-        private void ToolStripMenuItem2_Click(object sender, System.EventArgs e)
+        private void ToolStripMenuItem2_Click(object? sender, System.EventArgs e)
         {
             Clipboard.SetImage(Image);
         }
 
-        private void ToolStripMenuItem1_Click(object sender, System.EventArgs e)
+        private void ToolStripMenuItem1_Click(object? sender, System.EventArgs e)
         {
             saveFileDialog1.FileName = "";
             saveFileDialog1.Filter = Filters.PNG;
@@ -45,7 +48,7 @@ namespace Z64.Forms
             }
         }
 
-        private void TextureBox_MouseClick(object sender, MouseEventArgs e)
+        private void TextureBox_MouseClick(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -53,6 +56,14 @@ namespace Z64.Forms
             }
         }
 
+        [MemberNotNull(
+            nameof(components),
+            nameof(contextMenuStrip1),
+            nameof(toolStripMenuItem1),
+            nameof(saveFileDialog1),
+            nameof(toolStripMenuItem2),
+            nameof(contextMenuStrip1)
+        )]
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();

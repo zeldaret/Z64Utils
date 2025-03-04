@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -12,11 +13,13 @@ using System.Windows.Forms;
 using Common;
 using F3DZEX;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class SegmentControl : UserControl
     {
-        public event EventHandler<Memory.Segment> SegmentChanged;
+        public event EventHandler<SegmentEditorForm.SegmentChangedEvent>? SegmentChanged;
         public int SegmentID
         {
             get { return _segmentId; }
@@ -34,7 +37,7 @@ namespace Z64.Forms
         }
 
         private int _segmentId;
-        Z64Game _game;
+        Z64Game? _game;
 
         public SegmentControl()
         {
@@ -42,7 +45,7 @@ namespace Z64.Forms
             indexLabel.Text = $"{SegmentID:D2} :";
         }
 
-        public void SetGame(Z64Game game)
+        public void SetGame(Z64Game? game)
         {
             _game = game;
         }
@@ -58,8 +61,9 @@ namespace Z64.Forms
             form.Text += " " + SegmentID;
             if (form.ShowDialog() == DialogResult.OK)
             {
+                Debug.Assert(form.ResultSegment != null);
                 SetSegment(form.ResultSegment);
-                SegmentChanged?.Invoke(this, form.ResultSegment);
+                SegmentChanged?.Invoke(this, new(_segmentId, form.ResultSegment));
             }
         }
     }

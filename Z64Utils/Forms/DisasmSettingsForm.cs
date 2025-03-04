@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RDP;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class DisasmSettingsForm : MicrosoftFontForm
     {
-        public static DisasmSettingsForm Instance { get; set; }
+        public static DisasmSettingsForm? Instance { get; set; }
 
         F3DZEX.Disassembler _disas;
 
@@ -43,8 +45,8 @@ namespace Z64.Forms
         }
 
         private void DisassemblyOptionForm_OnOptionUpdate(
-            object sender,
-            PropertyValueChangedEventArgs e
+            object? sender,
+            PropertyValueChangedEventArgs? e
         )
         {
             Application.OpenForms.OfType<DisasmForm>().ToList().ForEach(f => f.UpdateDisassembly());

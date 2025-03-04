@@ -8,15 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class DmaFileSelectForm : MicrosoftFontForm
     {
-        public Z64File SelectedFile { get; private set; }
+        public Z64File? SelectedFile { get; private set; }
 
         Z64Game _game;
         string[] _fileItemsText;
-        string _lastSearch = null;
+        string? _lastSearch = null;
 
         public DmaFileSelectForm(Z64Game game)
         {

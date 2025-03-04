@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using F3DZEX.Command;
+
+#nullable enable
 
 namespace Z64.Forms
 {
@@ -30,7 +34,8 @@ namespace Z64.Forms
             UpdateTextBoxes();
         }
 
-        private void buttonNormal_Click(object sender, EventArgs e)
+        [MemberNotNull(nameof(Result))]
+        private void buttonNormal_Click(object? sender, EventArgs? e)
         {
             Result = new Z64ObjectAnalyzer.Config();
             Result.ImprobableOpCodes = new List<CmdID>()
@@ -55,35 +60,30 @@ namespace Z64.Forms
                 CmdID.G_SPNOOP,
                 CmdID.G_LOAD_UCODE,
             };
-            Result.Patterns = new List<Z64ObjectAnalyzer.Config.OpCodePattern>()
+            var patternsStr = new List<string>()
             {
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_VTX: *, G_TRI1|G_TRI2"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_TRI1: G_TRI1|G_TRI2|G_VTX, *"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_TRI2: G_TRI1|G_TRI2|G_VTX, *"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_LOADTLUT: *, G_RDPPIPESYNC"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_LOADBLOCK: *, G_RDPPIPESYNC"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPHALF_1: *, G_LOAD_UCODE"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_1: G_TEXRECT, *, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_1: G_TEXRECTFLIP, *, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_2: G_TEXRECT, G_RDPHALF_1, *"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_RDPHALF_2: G_TEXRECTFLIP, G_RDPHALF_1, *"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_TEXRECT: *, G_RDPHALF_1, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse(
-                    "G_TEXRECTFLIP: *, G_RDPHALF_1, G_RDPHALF_2"
-                ),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPLOADSYNC: *, G_LOADBLOCK"),
-                Z64ObjectAnalyzer.Config.OpCodePattern.Parse("G_RDPLOADSYNC: *, G_LOADTLUT"),
+                "G_VTX: *, G_TRI1|G_TRI2",
+                "G_TRI1: G_TRI1|G_TRI2|G_VTX, *",
+                "G_TRI2: G_TRI1|G_TRI2|G_VTX, *",
+                "G_LOADTLUT: *, G_RDPPIPESYNC",
+                "G_LOADBLOCK: *, G_RDPPIPESYNC",
+                "G_RDPHALF_1: *, G_LOAD_UCODE",
+                "G_RDPHALF_1: G_TEXRECT, *, G_RDPHALF_2",
+                "G_RDPHALF_1: G_TEXRECTFLIP, *, G_RDPHALF_2",
+                "G_RDPHALF_2: G_TEXRECT, G_RDPHALF_1, *",
+                "G_RDPHALF_2: G_TEXRECTFLIP, G_RDPHALF_1, *",
+                "G_TEXRECT: *, G_RDPHALF_1, G_RDPHALF_2",
+                "G_TEXRECTFLIP: *, G_RDPHALF_1, G_RDPHALF_2",
+                "G_RDPLOADSYNC: *, G_LOADBLOCK",
+                "G_RDPLOADSYNC: *, G_LOADTLUT",
             };
+            Result.Patterns = new List<Z64ObjectAnalyzer.Config.OpCodePattern>();
+            foreach (var patternStr in patternsStr)
+            {
+                var pattern = Z64ObjectAnalyzer.Config.OpCodePattern.Parse(patternStr);
+                Debug.Assert(pattern != null);
+                Result.Patterns.Add(pattern);
+            }
             UpdateTextBoxes();
         }
 
