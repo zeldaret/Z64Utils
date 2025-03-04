@@ -42,8 +42,8 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: Random06457/Z64Utils-Config
-          ref: 8b2a3652b426e6d1cc9058f421c7ba9023cc2bef
+          repository: zeldaret/Z64Utils
+          ref: config
           path: Z64Utils-Config
           fetch-depth: 0
 
