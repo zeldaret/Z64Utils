@@ -11,13 +11,15 @@ using System.Windows.Forms;
 using Common;
 using F3DZEX.Command;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class DisasmForm : MicrosoftFontForm
     {
         Dlist _dlist;
 
-        public DisasmForm(bool showByteInputBox = false, string defaultText = null)
+        public DisasmForm(bool showByteInputBox = false, string? defaultText = null)
         {
             InitializeComponent();
 

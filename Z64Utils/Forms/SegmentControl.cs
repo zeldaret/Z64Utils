@@ -12,11 +12,13 @@ using System.Windows.Forms;
 using Common;
 using F3DZEX;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class SegmentControl : UserControl
     {
-        public event EventHandler<Memory.Segment> SegmentChanged;
+        public event EventHandler<Memory.Segment>? SegmentChanged;
         public int SegmentID
         {
             get { return _segmentId; }
@@ -34,7 +36,7 @@ namespace Z64.Forms
         }
 
         private int _segmentId;
-        Z64Game _game;
+        Z64Game? _game;
 
         public SegmentControl()
         {

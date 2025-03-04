@@ -12,6 +12,8 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class ModelViewerControl : GLControl
@@ -23,12 +25,12 @@ namespace Z64.Forms
         Vector3 _angle;
         Point _oldPos = Point.Empty;
         Point _oldAnglePos = Point.Empty;
-        Action<Matrix4, Matrix4> _render;
+        Action<Matrix4, Matrix4>? _render;
         bool _init = false;
         Matrix4 _projectionMtx;
         Matrix4 _viewMtx;
 
-        public Action<Matrix4, Matrix4> RenderCallback
+        public Action<Matrix4, Matrix4>? RenderCallback
         {
             get => _render;
             set
