@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -63,6 +64,7 @@ namespace Z64.Forms
             NewRender();
         }
 
+        [MemberNotNull(nameof(Instance))]
         public static void OpenInstance(Z64Game game)
         {
             if (Instance == null)

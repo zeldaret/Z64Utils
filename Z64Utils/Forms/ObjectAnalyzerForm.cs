@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,8 @@ using Be.Windows.Forms;
 using Common;
 using RDP;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class ObjectAnalyzerForm : MicrosoftFontForm
@@ -21,7 +24,7 @@ namespace Z64.Forms
         public Z64Object _obj;
         int _segment;
         Z64Game _game;
-        Action _doubleClickAction;
+        Action? _doubleClickAction;
 
         public ObjectAnalyzerForm(Z64Game game, byte[] data, string fileName, int segmentId)
         {
@@ -159,7 +162,7 @@ namespace Z64.Forms
             listView_map.EndUpdate();
         }
 
-        private T GetCurrentHolder<T>()
+        private T? GetCurrentHolder<T>()
             where T : Z64Object.ObjectHolder
         {
             if (listView_map.SelectedIndices.Count != 1)
@@ -611,11 +614,19 @@ namespace Z64.Forms
                     sw.WriteLine($"Child: 0x{limb.Child:X2}");
                     sw.WriteLine($"Sibling: 0x{limb.Sibling:X2}");
                     if (limb.Type != Z64Object.EntryType.SkinLimb)
+                    {
+                        Debug.Assert(limb.DListSeg != null);
                         sw.WriteLine($"DList : 0x{limb.DListSeg.VAddr:X8}");
+                    }
+
                     if (limb.Type == Z64Object.EntryType.LODLimb)
+                    {
+                        Debug.Assert(limb.DListFarSeg != null);
                         sw.WriteLine($"Far DList : 0x{limb.DListFarSeg.VAddr:X8}");
+                    }
                     else if (limb.Type == Z64Object.EntryType.SkinLimb)
                     {
+                        Debug.Assert(limb.SkinSeg != null);
                         sw.WriteLine($"Data Type : {limb.SegmentType}"); // TODO describe data instead of printing number?
                         sw.WriteLine($"Data Segment : 0x{limb.SkinSeg.VAddr:X8}");
                     }
@@ -680,7 +691,7 @@ namespace Z64.Forms
             listView_map.Focus();
         }
 
-        private void findDlistsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findDlistsToolStripMenuItem_Click(object? sender, EventArgs? e)
         {
             var form = new AnalyzerSettingsForm();
             if ((Control.ModifierKeys & Keys.Control) == 0 || form.ShowDialog() == DialogResult.OK)
@@ -690,7 +701,7 @@ namespace Z64.Forms
             }
         }
 
-        private void analyzeDlistsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void analyzeDlistsToolStripMenuItem_Click(object? sender, EventArgs? e)
         {
             var errors = Z64ObjectAnalyzer.AnalyzeDlists(_obj, _data, _segment);
             if ((Control.ModifierKeys & Keys.Control) != 0 && errors.Count > 0)
@@ -719,11 +730,13 @@ namespace Z64.Forms
         private void openSkeletonViewer()
         {
             var holder = GetCurrentHolder<Z64Object.ObjectHolder>();
+            Debug.Assert(holder != null);
             switch (holder.GetEntryType())
             {
                 case Z64Object.EntryType.FlexSkeletonHeader:
                 {
                     var skel = GetCurrentHolder<Z64Object.FlexSkeletonHolder>();
+                    Debug.Assert(skel != null);
                     List<Z64Object.AnimationHolder> anims = new List<Z64Object.AnimationHolder>();
                     _obj.Entries.ForEach(e =>
                     {
@@ -744,6 +757,7 @@ namespace Z64.Forms
                 case Z64Object.EntryType.SkeletonHeader:
                 {
                     var skel = GetCurrentHolder<Z64Object.SkeletonHolder>();
+                    Debug.Assert(skel != null);
                     List<Z64Object.AnimationHolder> anims = new List<Z64Object.AnimationHolder>();
                     _obj.Entries.ForEach(e =>
                     {
@@ -767,6 +781,7 @@ namespace Z64.Forms
         private void addToDisplayViewerMenuItem_Click(object sender, EventArgs e)
         {
             var holder = GetCurrentHolder<Z64Object.ObjectHolder>();
+            Debug.Assert(holder != null);
             if (holder.GetEntryType() == Z64Object.EntryType.DList)
             {
                 DListViewerForm.OpenInstance(_game);
@@ -776,6 +791,7 @@ namespace Z64.Forms
                 );
 
                 var dlist = GetCurrentHolder<Z64Object.DListHolder>();
+                Debug.Assert(dlist != null);
                 DListViewerForm.Instance.AddDList(
                     new SegmentedAddress(_segment, _obj.OffsetOf(dlist)).VAddr
                 );
@@ -790,6 +806,7 @@ namespace Z64.Forms
         private void openDisplayList()
         {
             var holder = GetCurrentHolder<Z64Object.ObjectHolder>();
+            Debug.Assert(holder != null);
             if (holder.GetEntryType() == Z64Object.EntryType.DList)
             {
                 DListViewerForm.OpenInstance(_game);
@@ -799,6 +816,7 @@ namespace Z64.Forms
                 );
 
                 var dlist = GetCurrentHolder<Z64Object.DListHolder>();
+                Debug.Assert(dlist != null);
                 DListViewerForm.Instance.SetSingleDlist(
                     new SegmentedAddress(_segment, _obj.OffsetOf(dlist)).VAddr
                 );
@@ -813,6 +831,7 @@ namespace Z64.Forms
         private void openCollisionHeader()
         {
             var holder = GetCurrentHolder<Z64Object.ColHeaderHolder>();
+            Debug.Assert(holder != null);
             if (holder.GetEntryType() == Z64Object.EntryType.CollisionHeader)
             {
                 CollisionViewerForm.OpenInstance(_game);
@@ -987,6 +1006,7 @@ namespace Z64.Forms
                         case Z64Object.EntryType.StandardLimb:
                         {
                             var holder = (Z64Object.SkeletonLimbHolder)entry;
+                            Debug.Assert(holder.DListSeg != null);
                             sw.WriteLine(
                                 $"StandardLimb {entry.Name} = {{ {{ {holder.JointX}, {holder.JointY}, {holder.JointZ} }}, {holder.Child}, {holder.Sibling}, 0x{holder.DListSeg.VAddr:X8} }};"
                             );
@@ -995,6 +1015,8 @@ namespace Z64.Forms
                         case Z64Object.EntryType.LODLimb:
                         {
                             var holder = (Z64Object.SkeletonLimbHolder)entry;
+                            Debug.Assert(holder.DListSeg != null);
+                            Debug.Assert(holder.DListFarSeg != null);
                             sw.WriteLine(
                                 $"LodLimb {entry.Name} = {{ {{ {holder.JointX}, {holder.JointY}, {holder.JointZ} }}, {holder.Child}, {holder.Sibling}, 0x{holder.DListSeg.VAddr:X8}, 0x{holder.DListFarSeg.VAddr:X8} }};"
                             );
@@ -1003,6 +1025,7 @@ namespace Z64.Forms
                         case Z64Object.EntryType.SkinLimb:
                         {
                             var holder = (Z64Object.SkeletonLimbHolder)entry;
+                            Debug.Assert(holder.SkinSeg != null);
                             sw.WriteLine(
                                 $"SkinLimb {entry.Name} = {{ {{ {holder.JointX}, {holder.JointY}, {holder.JointZ} }}, {holder.Child}, {holder.Sibling}, 0x{holder.SegmentType}, 0x{holder.SkinSeg.VAddr:X8} }};"
                             );
