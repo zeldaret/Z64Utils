@@ -1,6 +1,6 @@
 # Z64Utils Configuration Files
 
-This repository contains the configuration files to be used with [Z64Utils](https://github.com/Random06457/Z64Utils) since version [v2.1.0](https://github.com/Random06457/Z64Utils/releases/tag/v2.1.0).
+This repository contains the configuration files to be used with [Z64Utils](https://github.com/zeldaret/Z64Utils) since version [v2.1.0](https://github.com/Random06457/Z64Utils/releases/tag/v2.1.0).
 
 # Version Format
 
@@ -13,7 +13,7 @@ The version files are stored in JSON format and contain information to identify 
 
 `version_name`: The version name. e.g. `"Majora's Mask Japan 1.0"`
 
-`version_game`: The game version. This can be either `oot` (Ocarina of Time) or `mm` (Majora's Mask).
+`version_game`: The game version. This can be either `oot` (Ocarina of Time), `mm` (Majora's Mask) or `af` (Animal Forest).
 
 `compression_method`: The compression method. This can be either `yaz0` or `zlib`.
 
