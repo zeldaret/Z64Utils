@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 
-#nullable enable
-
 namespace Z64
 {
     [Serializable]

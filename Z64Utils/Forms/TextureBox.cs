@@ -4,8 +4,6 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Common;
 
-#nullable enable
-
 /// <summary>
 /// Inherits from PictureBox; adds Interpolation Mode Setting
 /// </summary>

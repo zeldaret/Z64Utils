@@ -9,8 +9,6 @@ using Common;
 using F3DZEX.Command;
 using RDP;
 
-#nullable enable
-
 namespace F3DZEX
 {
     public partial class Disassembler

@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace F3DZEX.Command
 {
     public enum G_MTX_PARAM

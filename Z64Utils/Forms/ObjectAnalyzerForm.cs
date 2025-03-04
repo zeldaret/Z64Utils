@@ -14,8 +14,6 @@ using Be.Windows.Forms;
 using Common;
 using RDP;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class ObjectAnalyzerForm : MicrosoftFontForm

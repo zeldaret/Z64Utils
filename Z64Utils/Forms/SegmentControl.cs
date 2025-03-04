@@ -13,8 +13,6 @@ using System.Windows.Forms;
 using Common;
 using F3DZEX;
 
-#nullable enable
-
 namespace Z64.Forms
 {
     public partial class SegmentControl : UserControl

@@ -12,8 +12,6 @@ using Common;
 using N64;
 using Syroot.BinaryData;
 
-#nullable enable
-
 namespace Z64
 {
     [Serializable]

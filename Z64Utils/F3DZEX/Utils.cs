@@ -10,8 +10,6 @@ using OpenTK;
 using Syroot.BinaryData;
 using Z64;
 
-#nullable enable
-
 namespace RDP
 {
     public class Vertex

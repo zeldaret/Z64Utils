@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using OpenTK;
 
-#nullable enable
-
 namespace F3DZEX.Render
 {
     public class MatrixStack
