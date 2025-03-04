@@ -583,9 +583,9 @@ namespace Z64.Forms
             else
             {
                 _segForm = new SegmentEditorForm(_game, _renderer);
-                _segForm.SegmentsChanged += (sender, seg) =>
+                _segForm.SegmentsChanged += (sender, e) =>
                 {
-                    int idx = (int)sender;
+                    int idx = e.SegmentID;
 
                     if (idx == 0xD && _skel is FlexSkeletonHolder)
                         MessageBox.Show(
@@ -594,7 +594,7 @@ namespace Z64.Forms
                         );
                     else
                     {
-                        _renderer.Memory.Segments[(int)sender] = seg;
+                        _renderer.Memory.Segments[(int)sender] = e.Segment;
 
                         UpdateLimbsDlists();
                         NewRender();

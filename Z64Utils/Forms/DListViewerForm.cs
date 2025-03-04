@@ -212,9 +212,9 @@ namespace Z64.Forms
             }
         }
 
-        private void SegForm_SegmentsChanged(object sender, F3DZEX.Memory.Segment e)
+        private void SegForm_SegmentsChanged(object sender, SegmentEditorForm.SegmentChangedEvent e)
         {
-            _renderer.Memory.Segments[(int)sender] = e;
+            _renderer.Memory.Segments[e.SegmentID] = e.Segment;
 
             DecodeDlists();
             NewRender();
