@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ using F3DZEX;
 using F3DZEX.Command;
 using N64;
 using RDP;
+
+#nullable enable
 
 namespace Z64
 {
@@ -40,7 +43,11 @@ namespace Z64
                 public CmdID ID { get; private set; }
                 private List<Tuple<int, List<CmdID>>> _pattern;
 
-                private OpCodePattern() { }
+                private OpCodePattern(CmdID id, List<Tuple<int, List<CmdID>>> pattern)
+                {
+                    ID = id;
+                    _pattern = pattern;
+                }
 
                 public bool Check(byte[] data, int off)
                 {
@@ -72,10 +79,8 @@ namespace Z64
                     return false;
                 }
 
-                public static OpCodePattern Parse(string exp)
+                public static OpCodePattern? Parse(string exp)
                 {
-                    var ret = new OpCodePattern();
-
                     exp = exp.Replace(" ", "");
                     var parts = exp.Split(':');
                     if (parts.Length != 2)
@@ -84,19 +89,19 @@ namespace Z64
                     if (!ValidOpCodeID(parts[0]))
                         return null;
 
-                    ret.ID = (CmdID)Enum.Parse(typeof(CmdID), parts[0]);
+                    var id = Enum.Parse<CmdID>(parts[0]);
                     var entries = parts[1].Split(',').ToList();
                     if (entries.FindAll(s => s == "*").Count != 1)
                         return null;
 
                     int idx = entries.IndexOf("*");
 
-                    ret._pattern = new List<Tuple<int, List<CmdID>>>();
+                    var pattern = new List<Tuple<int, List<CmdID>>>();
                     for (int i = 0; i < entries.Count; i++)
                     {
                         if (entries[i] == "*")
                         {
-                            ret._pattern.Add(
+                            pattern.Add(
                                 new Tuple<int, List<CmdID>>(0, new List<CmdID>() { ret.ID })
                             );
                             continue;
@@ -104,9 +109,7 @@ namespace Z64
 
                         if (entries[i] == "?")
                         {
-                            ret._pattern.Add(
-                                new Tuple<int, List<CmdID>>(i - idx, new List<CmdID>())
-                            );
+                            pattern.Add(new Tuple<int, List<CmdID>>(i - idx, new List<CmdID>()));
                             continue;
                         }
 
@@ -118,10 +121,10 @@ namespace Z64
                         foreach (var s in idStr)
                             ids.Add((CmdID)Enum.Parse(typeof(CmdID), s));
 
-                        ret._pattern.Add(new Tuple<int, List<CmdID>>(i - idx, ids));
+                        pattern.Add(new Tuple<int, List<CmdID>>(i - idx, ids));
                     }
 
-                    return ret;
+                    return new OpCodePattern(id, pattern);
                 }
 
                 public override string ToString()
@@ -626,14 +629,15 @@ namespace Z64
 
         public static void FindPlayerAnimations(Z64Object obj, byte[] data, int segmentId)
         {
+            if (obj.Game == null)
+                return;
+            Debug.Assert(obj.FileName != null);
+
             // only search in gameplay_keep
             if (!obj.FileName.Contains("gameplay_keep"))
                 return;
 
-            if (obj.Game == null)
-                return;
-
-            Z64File linkAnimetion = obj.Game.GetFileByName("link_animetion");
+            Z64File? linkAnimetion = obj.Game.GetFileByName("link_animetion");
             // only search if the link_animetion file is known
             if (linkAnimetion == null)
                 return;
@@ -680,7 +684,8 @@ namespace Z64
                 // check free and skip whole region if occupied
                 if (!obj.IsOffsetFree(i))
                 {
-                    Z64Object.ObjectHolder holder = obj.GetHolderAtOffset(i);
+                    Z64Object.ObjectHolder? holder = obj.GetHolderAtOffset(i);
+                    Debug.Assert(holder != null);
                     i = obj.OffsetOf(holder) + holder.GetSize();
                     if (i % 4 != 0)
                         i += (4 - i % 4);
@@ -857,7 +862,8 @@ namespace Z64
                 // check free and skip whole region if occupied
                 if (!obj.IsOffsetFree(i))
                 {
-                    Z64Object.ObjectHolder holder = obj.GetHolderAtOffset(i);
+                    Z64Object.ObjectHolder? holder = obj.GetHolderAtOffset(i);
+                    Debug.Assert(holder != null);
                     i = obj.OffsetOf(holder) + holder.GetSize();
                     if (i % 4 != 0)
                         i += (4 - i % 4);
@@ -1201,8 +1207,8 @@ namespace Z64
                 uint lastTexAddr = 0xFFFFFFFF;
                 G_IM_FMT lastFmt = (G_IM_FMT)(-1);
                 G_IM_SIZ lastSiz = (G_IM_SIZ)(-1);
-                Z64Object.TextureHolder lastTlut = null;
-                Z64Object.TextureHolder lastCiTex = null;
+                Z64Object.TextureHolder? lastTlut = null;
+                Z64Object.TextureHolder? lastCiTex = null;
 
                 bool exit = false;
                 for (int i = dlist; i < data.Length && !exit; i += 8)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,6 +14,8 @@ using F3DZEX;
 using N64;
 using RDP;
 using Syroot.BinaryData;
+
+#nullable enable
 
 namespace Z64
 {
@@ -180,7 +184,7 @@ namespace Z64
             public int Width { get; set; }
             public int Height { get; set; }
             public N64TexFormat Format { get; set; }
-            public TextureHolder Tlut { get; set; }
+            public TextureHolder? Tlut { get; set; }
 
             public TextureHolder(string name, int w, int h, N64TexFormat format, byte[] tex)
                 : base(name)
@@ -206,6 +210,7 @@ namespace Z64
 
             public override byte[] GetData() => Texture;
 
+            [MemberNotNull(nameof(Texture))]
             public override void SetData(byte[] data)
             {
                 int validSize = N64Texture.GetTexSize(Width * Height, Format);
@@ -245,6 +250,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(Matrices))]
             public override void SetData(byte[] data)
             {
                 if (data.Length % Mtx.SIZE != 0)
@@ -283,14 +289,14 @@ namespace Z64
             public byte Sibling { get; set; }
 
             // Standard and LOD Limb Only
-            public SegmentedAddress DListSeg { get; set; }
+            public SegmentedAddress? DListSeg { get; set; }
 
             // LOD Limb Only
-            public SegmentedAddress DListFarSeg { get; set; }
+            public SegmentedAddress? DListFarSeg { get; set; }
 
             // Skin Limb Only
-            public int SegmentType { get; set; } // indicates the type of data pointed to by SkinSeg
-            public SegmentedAddress SkinSeg { get; set; }
+            public int? SegmentType { get; set; } // indicates the type of data pointed to by SkinSeg
+            public SegmentedAddress? SkinSeg { get; set; }
 
             public SkeletonLimbHolder(string name, byte[] data, EntryType type)
                 : base(name)
@@ -313,12 +319,21 @@ namespace Z64
                     bw.Write(Sibling);
 
                     if (Type != EntryType.SkinLimb)
+                    {
+                        Debug.Assert(DListSeg != null);
                         bw.Write(DListSeg.VAddr);
+                    }
+
                     if (Type == EntryType.LODLimb)
+                    {
+                        Debug.Assert(DListFarSeg != null);
                         bw.Write(DListFarSeg.VAddr);
+                    }
                     else if (Type == EntryType.SkinLimb)
                     {
-                        bw.Write(SegmentType);
+                        Debug.Assert(SegmentType != null);
+                        Debug.Assert(SkinSeg != null);
+                        bw.Write((int)SegmentType);
                         bw.Write(SkinSeg.VAddr);
                     }
 
@@ -339,6 +354,7 @@ namespace Z64
 
                     if (Type != EntryType.SkinLimb)
                         DListSeg = new SegmentedAddress(br.ReadUInt32());
+
                     if (Type == EntryType.LODLimb)
                         DListFarSeg = new SegmentedAddress(br.ReadUInt32());
                     else if (Type == EntryType.SkinLimb)
@@ -380,6 +396,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(LimbSegments))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % 4) != 0)
@@ -427,6 +444,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(LimbsSeg))]
             public override void SetData(byte[] data)
             {
                 using (var ms = new MemoryStream(data))
@@ -515,6 +533,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(FrameData), nameof(JointIndices))]
             public override void SetData(byte[] data)
             {
                 using (var ms = new MemoryStream(data))
@@ -554,6 +573,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(FrameData))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % 2) != 0)
@@ -612,6 +632,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(JointIndices))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -666,6 +687,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(PlayerAnimationSegment))]
             public override void SetData(byte[] data)
             {
                 using (var ms = new MemoryStream(data))
@@ -726,6 +748,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(JointTable), nameof(Unknown))]
             public override void SetData(byte[] data)
             {
                 // TODO: Validate size
@@ -777,11 +800,11 @@ namespace Z64
             public ushort NbWaterBoxes { get; set; }
             public SegmentedAddress WaterBoxSeg { get; set; }
 
-            public CollisionVerticesHolder VerticesHolder { get; set; }
-            public CollisionPolygonsHolder PolygonsHolder { get; set; }
-            public CollisionSurfaceTypesHolder SurfaceTypesHolder { get; set; }
-            public CollisionCamDataHolder CamDataHolder { get; set; }
-            public WaterBoxHolder WaterBoxHolder { get; set; }
+            public CollisionVerticesHolder? VerticesHolder { get; set; }
+            public CollisionPolygonsHolder? PolygonsHolder { get; set; }
+            public CollisionSurfaceTypesHolder? SurfaceTypesHolder { get; set; }
+            public CollisionCamDataHolder? CamDataHolder { get; set; }
+            public WaterBoxHolder? WaterBoxHolder { get; set; }
 
             public ColHeaderHolder(string name, byte[] data)
                 : base(name)
@@ -822,6 +845,13 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(
+                nameof(VertexListSeg),
+                nameof(PolyListSeg),
+                nameof(SurfaceTypeSeg),
+                nameof(CamDataSeg),
+                nameof(WaterBoxSeg)
+            )]
             public override void SetData(byte[] data)
             {
                 using (MemoryStream ms = new MemoryStream(data))
@@ -887,6 +917,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(Points))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -956,6 +987,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(CollisionPolys))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1027,6 +1059,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(SurfaceTypes))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1085,6 +1118,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(CamData))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1155,6 +1189,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(WaterBoxes))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1217,6 +1252,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(ParamsSeg))]
             public override void SetData(byte[] data)
             {
                 using (MemoryStream ms = new MemoryStream(data))
@@ -1315,6 +1351,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(PrimColors), nameof(EnvColors), nameof(KeyFrames))]
             public override void SetData(byte[] data)
             {
                 using (MemoryStream ms = new MemoryStream(data))
@@ -1374,6 +1411,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(PrimColors))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1441,6 +1479,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(EnvColors))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1496,6 +1535,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(KeyFrames))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1547,6 +1587,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(TextureList), nameof(TextureIndexList))]
             public override void SetData(byte[] data)
             {
                 using (MemoryStream ms = new MemoryStream(data))
@@ -1592,6 +1633,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(TextureIndices))]
             public override void SetData(byte[] data)
             {
                 TextureIndices = new byte[data.Length / ENTRY_SIZE];
@@ -1638,6 +1680,7 @@ namespace Z64
                 }
             }
 
+            [MemberNotNull(nameof(TextureSegments))]
             public override void SetData(byte[] data)
             {
                 if ((data.Length % ENTRY_SIZE) != 0)
@@ -1660,8 +1703,8 @@ namespace Z64
             public override int GetSize() => TextureSegments.Length * ENTRY_SIZE;
         }
 
-        public Z64Game Game;
-        public string FileName;
+        public Z64Game? Game;
+        public string? FileName;
         public List<ObjectHolder> Entries { get; set; }
 
         public Z64Object()
@@ -1939,7 +1982,7 @@ namespace Z64
             }
         }
 
-        public DListHolder AddDList(int size, string name = null, int off = -1)
+        public DListHolder AddDList(int size, string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -1947,7 +1990,7 @@ namespace Z64
             return (DListHolder)AddHolder(holder, off);
         }
 
-        public UnknowHolder AddUnknow(int size, string name = null, int off = -1)
+        public UnknowHolder AddUnknow(int size, string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -1959,7 +2002,7 @@ namespace Z64
             int w,
             int h,
             N64TexFormat format,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -1975,7 +2018,7 @@ namespace Z64
             return (TextureHolder)AddHolder(holder, off);
         }
 
-        public VertexHolder AddVertices(int vtxCount, string name = null, int off = -1)
+        public VertexHolder AddVertices(int vtxCount, string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -1984,7 +2027,7 @@ namespace Z64
             return holder;
         }
 
-        public MtxHolder AddMtx(int mtxCount, string name = null, int off = -1)
+        public MtxHolder AddMtx(int mtxCount, string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -1994,7 +2037,7 @@ namespace Z64
 
         public SkeletonLimbHolder AddSkeletonLimb(
             EntryType type,
-            string name = null,
+            string? name = null,
             int off = -1,
             int skel_off = -1
         )
@@ -2023,7 +2066,7 @@ namespace Z64
 
         public SkeletonLimbsHolder AddSkeletonLimbs(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1,
             int skel_off = -1
         )
@@ -2037,7 +2080,7 @@ namespace Z64
             return (SkeletonLimbsHolder)AddHolder(holder, off);
         }
 
-        public SkeletonHolder AddSkeleton(string name = null, int off = -1)
+        public SkeletonHolder AddSkeleton(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2048,7 +2091,7 @@ namespace Z64
             return (SkeletonHolder)AddHolder(holder, off);
         }
 
-        public FlexSkeletonHolder AddFlexSkeleton(string name = null, int off = -1)
+        public FlexSkeletonHolder AddFlexSkeleton(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2059,7 +2102,7 @@ namespace Z64
             return (FlexSkeletonHolder)AddHolder(holder, off);
         }
 
-        public PlayerAnimationHolder AddPlayerAnimation(string name = null, int off = -1)
+        public PlayerAnimationHolder AddPlayerAnimation(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2070,7 +2113,7 @@ namespace Z64
             return (PlayerAnimationHolder)AddHolder(holder, off);
         }
 
-        public AnimationHolder AddAnimation(string name = null, int off = -1)
+        public AnimationHolder AddAnimation(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2081,7 +2124,7 @@ namespace Z64
             return (AnimationHolder)AddHolder(holder, off);
         }
 
-        public AnimationFrameDataHolder AddFrameData(int count, string name = null, int off = -1)
+        public AnimationFrameDataHolder AddFrameData(int count, string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2094,7 +2137,7 @@ namespace Z64
 
         public AnimationJointIndicesHolder AddJointIndices(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2107,7 +2150,7 @@ namespace Z64
             return (AnimationJointIndicesHolder)AddHolder(holder, off);
         }
 
-        public ColHeaderHolder AddCollisionHeader(string name = null, int off = -1)
+        public ColHeaderHolder AddCollisionHeader(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2120,7 +2163,7 @@ namespace Z64
 
         public CollisionVerticesHolder AddCollisionVertices(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2135,7 +2178,7 @@ namespace Z64
 
         public CollisionPolygonsHolder AddCollisionPolygons(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2150,7 +2193,7 @@ namespace Z64
 
         public CollisionSurfaceTypesHolder AddCollisionSurfaceTypes(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2165,7 +2208,7 @@ namespace Z64
 
         public CollisionCamDataHolder AddCollisionCamData(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2178,7 +2221,7 @@ namespace Z64
             return (CollisionCamDataHolder)AddHolder(holder, off);
         }
 
-        public WaterBoxHolder AddWaterBoxes(int count, string name = null, int off = -1)
+        public WaterBoxHolder AddWaterBoxes(int count, string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2189,7 +2232,7 @@ namespace Z64
             return (WaterBoxHolder)AddHolder(holder, off);
         }
 
-        public MatAnimHeaderHolder AddMatAnimHeader(string name = null, int off = -1)
+        public MatAnimHeaderHolder AddMatAnimHeader(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2210,7 +2253,7 @@ namespace Z64
         }
 
         public MatAnimTexScrollParamsHolder AddMatAnimTexScrollParams(
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2223,7 +2266,7 @@ namespace Z64
             return (MatAnimTexScrollParamsHolder)AddHolder(holder, off);
         }
 
-        public MatAnimColorParamsHolder AddMatAnimColorParams(string name = null, int off = -1)
+        public MatAnimColorParamsHolder AddMatAnimColorParams(string? name = null, int off = -1)
         {
             if (off == -1)
                 off = GetSize();
@@ -2236,7 +2279,7 @@ namespace Z64
 
         public MatAnimPrimColorsHolder AddMatAnimPrimColors(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2251,7 +2294,7 @@ namespace Z64
 
         public MatAnimEnvColorsHolder AddMatAnimEnvColors(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2266,7 +2309,7 @@ namespace Z64
 
         public MatAnimKeyFramesHolder AddMatAnimKeyFrames(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2280,7 +2323,7 @@ namespace Z64
         }
 
         public MatAnimTexCycleParamsHolder AddMatAnimTexCycleParams(
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2295,7 +2338,7 @@ namespace Z64
 
         public MatAnimTextureIndexListHolder AddMatAnimTextureIndexList(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2310,7 +2353,7 @@ namespace Z64
 
         public MatAnimTextureListHolder AddMatAnimTextureList(
             int count,
-            string name = null,
+            string? name = null,
             int off = -1
         )
         {
@@ -2452,7 +2495,7 @@ namespace Z64
             }
         }
 
-        public ObjectHolder GetHolderAtOffset(int target)
+        public ObjectHolder? GetHolderAtOffset(int target)
         {
             int entryOff = 0;
             foreach (var entry in Entries)
@@ -2531,7 +2574,7 @@ namespace Z64
 
         private class JsonObjectHolder
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             [JsonConverter(typeof(JsonStringEnumConverter))]
             public EntryType EntryType { get; set; }
@@ -2559,7 +2602,7 @@ namespace Z64
 
             [JsonConverter(typeof(JsonStringEnumConverter))]
             public N64TexFormat Format { get; set; }
-            public string Tlut { get; set; }
+            public string? Tlut { get; set; }
         }
 
         private class JsonArrayHolder : JsonObjectHolder
@@ -2836,14 +2879,15 @@ namespace Z64
         {
             Z64Object obj = new Z64Object();
             var list = JsonSerializer.Deserialize<List<object>>(json);
+            if (list == null)
+                throw new Exception("Could not deserialize json");
 
             foreach (JsonElement iter in list)
             {
-                var type = (EntryType)
-                    Enum.Parse(
-                        typeof(EntryType),
-                        iter.GetProperty(nameof(JsonObjectHolder.EntryType)).GetString()
-                    );
+                var typeStr = iter.GetProperty(nameof(JsonObjectHolder.EntryType)).GetString();
+                if (typeStr == null)
+                    throw new Exception("Could not deserialize json");
+                var type = Enum.Parse<EntryType>(typeStr);
                 switch (type)
                 {
                     case EntryType.DList:
@@ -3014,7 +3058,7 @@ namespace Z64
                 var holder = ((JsonElement)list[i]).ToObject<JsonTextureHolder>();
                 if (holder.EntryType == EntryType.Texture)
                 {
-                    var tlut = (TextureHolder)
+                    var tlut = (TextureHolder?)
                         obj.Entries.Find(e =>
                             e.GetEntryType() == EntryType.Texture && e.Name == holder.Tlut
                         );
