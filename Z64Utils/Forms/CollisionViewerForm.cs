@@ -92,7 +92,7 @@ namespace Z64.Forms
             if (_cullBack)
             {
                 GL.Enable(EnableCap.CullFace);
-                GL.CullFace(CullFaceMode.Back);
+                GL.CullFace(TriangleFace.Back);
             }
             else
             {
