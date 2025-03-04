@@ -101,14 +101,10 @@ namespace Z64
 
             [MemberNotNull(nameof(BuildTeam))]
             [MemberNotNull(nameof(BuildDate))]
-            [MemberNotNull(nameof(RomName))]
-            [MemberNotNull(nameof(RomCode))]
             public void AssertValid()
             {
                 Debug.Assert(BuildTeam != null);
                 Debug.Assert(BuildDate != null);
-                Debug.Assert(RomName != null);
-                Debug.Assert(RomCode != null);
             }
         }
 
