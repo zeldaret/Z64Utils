@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common;
+using F3DZEX.Command;
+using F3DZEX.Render;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
@@ -27,32 +29,27 @@ namespace Z64.Forms
 
         public struct RenderColPoly
         {
-            public double[][] Points;
+            public float[][] Points;
             public Vec3s Normal;
         }
 
-        Z64Game? _game;
-        F3DZEX.Render.Renderer _renderer;
-        F3DZEX.Render.Renderer.Config _rendererCfg;
-        SettingsForm? _settingsForm;
+        private Z64Game? _game;
 
-        Z64Object.ColHeaderHolder? _colHeader;
-        RenderColPoly[]? _polygons;
+        private Z64Object.ColHeaderHolder? _colHeader;
+        private RenderColPoly[]? _polygons;
 
-        bool _cullBack;
+        private bool _cullBack;
+        private bool _wireframe;
 
         private CollisionViewerForm(Z64Game? game)
         {
             _game = game;
-            _rendererCfg = new F3DZEX.Render.Renderer.Config();
-            _rendererCfg.HighlightColor = Color.Gray;
-            _rendererCfg.RenderMode = F3DZEX.Render.RdpVertexDrawer.ModelRenderMode.Wireframe;
-            _renderer = new F3DZEX.Render.Renderer(game, _rendererCfg);
 
             _colHeader = null;
             _polygons = null;
 
             _cullBack = true;
+            _wireframe = false;
 
             InitializeComponent();
             Toolkit.Init();
@@ -82,13 +79,15 @@ namespace Z64.Forms
             NewRender();
         }
 
+        private CollisionVertexDrawer? cvd;
+
         private void RenderCallback(Matrix4 proj, Matrix4 view)
         {
             if (_polygons == null)
                 return;
 
-            _renderer.RenderStart(proj, view);
-            _renderer.PrepareForCollisionRender();
+            GL.ClearColor(Color.DarkCyan);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             if (_cullBack)
             {
@@ -100,21 +99,29 @@ namespace Z64.Forms
                 GL.Disable(EnableCap.CullFace);
             }
 
-            GL.Begin(PrimitiveType.Triangles);
-            foreach (var poly in _polygons)
+            if (cvd == null)
+                cvd = new();
+
+            cvd.SendProjViewMatrices(ref proj, ref view);
+            cvd.SendModelMatrix(Matrix4.Identity);
+            cvd.SendColor(Color.LightGray);
+
+            // TODO it would be better to only call the SetData functions once instead of every time
+            if (_wireframe)
             {
-                GL.Normal3(poly.Normal.X, poly.Normal.Y, poly.Normal.Z);
-                GL.Vertex3(poly.Points[0]);
-                GL.Vertex3(poly.Points[1]);
-                GL.Vertex3(poly.Points[2]);
+                GL.LineWidth(3);
+                cvd.SetDataLines(_polygons, BufferUsageHint.DynamicDraw);
+                cvd.Draw(PrimitiveType.Lines);
             }
-            GL.End();
+            else
+            {
+                cvd.SetDataTriangles(_polygons, BufferUsageHint.DynamicDraw);
+                cvd.Draw(PrimitiveType.Triangles);
+            }
         }
 
         private void NewRender()
         {
-            _renderer.ClearErrors();
-
             toolStripStatusErrorLabel.Text = "";
 
             if (_colHeader != null)
@@ -134,11 +141,11 @@ namespace Z64.Forms
 
                     _polygons[i] = new RenderColPoly()
                     {
-                        Points = new double[3][]
+                        Points = new float[3][]
                         {
-                            new double[3] { v0.X, v0.Y, v0.Z },
-                            new double[3] { v1.X, v1.Y, v1.Z },
-                            new double[3] { v2.X, v2.Y, v2.Z },
+                            new float[3] { v0.X, v0.Y, v0.Z },
+                            new float[3] { v1.X, v1.Y, v1.Z },
+                            new float[3] { v2.X, v2.Y, v2.Z },
                         },
                         Normal = colPoly.Normal,
                     };
@@ -155,25 +162,13 @@ namespace Z64.Forms
         private void ColViewerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Instance = null;
-            _settingsForm?.Close();
         }
 
         private void toolStripRenderCfgBtn_Click(object sender, EventArgs e)
         {
-            if (_settingsForm != null)
-            {
-                _settingsForm.Activate();
-            }
-            else
-            {
-                _settingsForm = new SettingsForm(_rendererCfg);
-                _settingsForm.FormClosed += (sender, e) => _settingsForm = null;
-                _settingsForm.SettingsChanged += (sender, e) =>
-                {
-                    modelViewer.Render();
-                };
-                _settingsForm.Show();
-            }
+            // TODO open actual render config instead of just toggling wireframe rendering
+            _wireframe = !_wireframe;
+            modelViewer.Render();
         }
 
         private void cullingCfgBtn_Click(object sender, EventArgs e)
