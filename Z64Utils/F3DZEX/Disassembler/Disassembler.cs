@@ -40,7 +40,7 @@ namespace F3DZEX
         Config _cfg;
         Dlist _dlist = new Dlist();
 
-        public Disassembler(Dlist dlist, Config? cfg = null)
+        public Disassembler(Dlist? dlist, Config? cfg = null)
         {
             _cfg = cfg ?? StaticConfig;
             _dlist = dlist ?? new Dlist();

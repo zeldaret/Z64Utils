@@ -731,12 +731,13 @@ namespace Z64.Forms
                             anims.Add((Z64Object.AnimationHolder)e);
                     });
 
-                    SkeletonViewerForm form = new SkeletonViewerForm(_game, _segment);
-                    form.SetSegment(
+                    SkeletonViewerForm form = new SkeletonViewerForm(
+                        _game,
                         _segment,
-                        F3DZEX.Memory.Segment.FromBytes("[Current Object]", _data)
+                        F3DZEX.Memory.Segment.FromBytes("[Current Object]", _data),
+                        skel,
+                        anims
                     );
-                    form.SetSkeleton(skel, anims);
                     form.Show();
                     break;
                 }
@@ -750,12 +751,13 @@ namespace Z64.Forms
                             anims.Add((Z64Object.AnimationHolder)e);
                     });
 
-                    SkeletonViewerForm form = new SkeletonViewerForm(_game, _segment);
-                    form.SetSegment(
+                    SkeletonViewerForm form = new SkeletonViewerForm(
+                        _game,
                         _segment,
-                        F3DZEX.Memory.Segment.FromBytes("[Current Object]", _data)
+                        F3DZEX.Memory.Segment.FromBytes("[Current Object]", _data),
+                        skel,
+                        anims
                     );
-                    form.SetSkeleton(skel, anims);
                     form.Show();
                     break;
                 }

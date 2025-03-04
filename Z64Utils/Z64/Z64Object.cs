@@ -301,6 +301,11 @@ namespace Z64
             public SkeletonLimbHolder(string name, byte[] data, EntryType type)
                 : base(name)
             {
+                Debug.Assert(
+                    type == EntryType.StandardLimb
+                        || type == EntryType.LODLimb
+                        || type == EntryType.SkinLimb
+                );
                 Type = type;
                 SetData(data);
             }
