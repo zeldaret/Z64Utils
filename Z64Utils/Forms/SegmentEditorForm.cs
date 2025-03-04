@@ -2,17 +2,31 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+#nullable enable
+
 namespace Z64.Forms
 {
     public partial class SegmentEditorForm : MicrosoftFontForm
     {
-        public event EventHandler<F3DZEX.Memory.Segment> SegmentsChanged;
+        public class SegmentChangedEvent
+        {
+            public int SegmentID;
+            public F3DZEX.Memory.Segment Segment;
+            public SegmentChangedEvent(int segmentID, F3DZEX.Memory.Segment segment)
+            {
+                SegmentID = segmentID;
+                Segment = segment;
+            }
+        }
+
+        public event EventHandler<SegmentChangedEvent>? SegmentsChanged;
 
         public SegmentEditorForm(Z64Game game, F3DZEX.Render.Renderer renderer)
         {
@@ -26,9 +40,9 @@ namespace Z64.Forms
             }
         }
 
-        private void Seg_SegmentChanged(object sender, F3DZEX.Memory.Segment e)
+        private void Seg_SegmentChanged(object? sender, SegmentChangedEvent e)
         {
-            SegmentsChanged?.Invoke(((SegmentControl)sender).SegmentID, e);
+            SegmentsChanged?.Invoke(this, e);
         }
     }
 }

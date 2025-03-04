@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -18,7 +19,7 @@ namespace Z64.Forms
 {
     public partial class SegmentControl : UserControl
     {
-        public event EventHandler<Memory.Segment>? SegmentChanged;
+        public event EventHandler<SegmentEditorForm.SegmentChangedEvent>? SegmentChanged;
         public int SegmentID
         {
             get { return _segmentId; }
@@ -60,8 +61,9 @@ namespace Z64.Forms
             form.Text += " " + SegmentID;
             if (form.ShowDialog() == DialogResult.OK)
             {
+                Debug.Assert(form.ResultSegment != null);
                 SetSegment(form.ResultSegment);
-                SegmentChanged?.Invoke(this, form.ResultSegment);
+                SegmentChanged?.Invoke(this, new(_segmentId, form.ResultSegment));
             }
         }
     }
