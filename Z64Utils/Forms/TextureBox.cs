@@ -48,7 +48,7 @@ namespace Z64.Forms
             }
         }
 
-        private void TextureBox_MouseClick(object sender, MouseEventArgs e)
+        private void TextureBox_MouseClick(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
