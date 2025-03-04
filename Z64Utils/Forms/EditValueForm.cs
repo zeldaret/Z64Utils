@@ -20,7 +20,7 @@ namespace Z64.Forms
         public EditValueForm(
             string title,
             string desc,
-            Func<string, string> valid,
+            Func<string, string?>? valid,
             string? defaultValue = null
         )
         {
