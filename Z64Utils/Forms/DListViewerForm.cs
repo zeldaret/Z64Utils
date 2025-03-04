@@ -78,7 +78,9 @@ namespace Z64.Forms
             {
                 var gameplay_keepFile = game.GetFileByName("gameplay_keep");
                 if (gameplay_keepFile == null || !gameplay_keepFile.Valid())
-                    MessageBox.Show("Could not find valid gameplay_keep file for setting segment 4");
+                    MessageBox.Show(
+                        "Could not find valid gameplay_keep file for setting segment 4"
+                    );
                 else
                     _renderer.Memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
                         "gameplay_keep",
@@ -220,7 +222,10 @@ namespace Z64.Forms
             }
         }
 
-        private void SegForm_SegmentsChanged(object? sender, SegmentEditorForm.SegmentChangedEvent e)
+        private void SegForm_SegmentsChanged(
+            object? sender,
+            SegmentEditorForm.SegmentChangedEvent e
+        )
         {
             _renderer.Memory.Segments[e.SegmentID] = e.Segment;
 
