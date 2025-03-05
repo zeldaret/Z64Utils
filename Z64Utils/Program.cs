@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +14,12 @@ namespace Z64
 {
     static class Program
     {
+        public static readonly string Version =
+            Assembly
+                .GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion ?? "UnknownVersion";
+
         [System.Runtime.InteropServices.DllImport("nvapi64.dll", EntryPoint = "fake")]
         static extern int LoadNvApi64();
 

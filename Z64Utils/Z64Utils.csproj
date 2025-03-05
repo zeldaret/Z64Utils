@@ -3,9 +3,18 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Z64</RootNamespace>
     <AssemblyName>Z64Utils</AssemblyName>
+
+    <!--
+        https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
+        https://semver.org/
+        Use `dotnet build '-'-version-suffix ...` to override the version suffix when building
+        a release. (may need rebuilding from scratch)
+    -->
+    <VersionPrefix>2.2.1</VersionPrefix>
+    <VersionSuffix>dev</VersionSuffix>
+
     <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604;CS8605;CS8618;CS8619;CS8622;CS8625</WarningsAsErrors>
     <Nullable>enable</Nullable>
   </PropertyGroup>
