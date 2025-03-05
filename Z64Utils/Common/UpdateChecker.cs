@@ -170,8 +170,8 @@ namespace Common
     public static class UpdateChecker
     {
         public const string ReleaseURL =
-            @"https://api.github.com/repos/tom-overton/Z64Utils/releases/latest";
-        public const string CurrentTag = "v2.2.1";
+            @"https://api.github.com/repos/zeldaret/Z64Utils/releases/latest";
+        public static readonly string CurrentTag = "v" + Z64.Program.Version;
 
         public static GithubRelease? GetLatestRelease()
         {

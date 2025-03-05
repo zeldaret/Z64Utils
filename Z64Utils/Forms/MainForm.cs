@@ -463,7 +463,11 @@ namespace Z64.Forms
             else if (UpdateChecker.CurrentTag != release.TagName)
             {
                 var res = MessageBox.Show(
-                    $"A new release is available on github (tag {release.TagName}).\r\nWould you like to open the release page?",
+                    (
+                        $"Current version: {UpdateChecker.CurrentTag}\n"
+                        + $"A new release is available on github (tag {release.TagName}).\n"
+                        + "Would you like to open the release page?"
+                    ),
                     "New Release Available",
                     MessageBoxButtons.YesNo
                 );
