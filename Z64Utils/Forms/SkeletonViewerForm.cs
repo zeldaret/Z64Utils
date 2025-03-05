@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using RDP;
 using Syroot.BinaryData;
 using static Z64.Z64Object;
@@ -67,7 +68,6 @@ namespace Z64.Forms
             _rendererCfg = new F3DZEX.Render.Renderer.Config();
 
             InitializeComponent();
-            Toolkit.Init();
 
             _renderer = new F3DZEX.Render.Renderer(game, _rendererCfg);
             modelViewer.RenderCallback = RenderCallback;

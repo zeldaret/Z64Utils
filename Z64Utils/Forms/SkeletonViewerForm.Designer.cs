@@ -66,7 +66,6 @@ namespace Z64.Forms
             this.modelViewer.RenderCallback = null;
             this.modelViewer.Size = new System.Drawing.Size(506, 508);
             this.modelViewer.TabIndex = 0;
-            this.modelViewer.VSync = true;
             // 
             // treeView_hierarchy
             // 
