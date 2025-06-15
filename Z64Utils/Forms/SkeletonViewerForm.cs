@@ -155,18 +155,15 @@ namespace Z64.Forms
         F3DZEX.Render.Renderer.Config _rendererCfg;
 
         int _curSegment;
-        SkeletonHolder _skel;
+        Z64Skeleton _skeleton;
         List<ISkeletonViewerAnimationEntry> _animations;
-        List<SkeletonLimbHolder> _limbs;
         List<F3DZEX.Command.Dlist?> _limbDlists;
-        List<bool> _limbDlistRenderFlags;
+        bool[] _limbDlistRenderFlags;
 
-        ISkeletonViewerAnimationEntry? _curAnimation;
-
-        short[]? _frameData;
-        AnimationJointIndicesHolder.JointIndex[]? _curJoints;
-
-        PlayerAnimationJointTableHolder.JointTableEntry[,]? _curPlayerJointTable;
+        Z64Animation? _curRegularAnim;
+        Z64PlayerAnimation? _curPlayerAnim;
+        Matrix4[] _curPose;
+        int _curPoseFrame;
 
         string? _animationError;
 
@@ -229,61 +226,60 @@ namespace Z64.Forms
 
             SetSegment(curSegment, curSegmentData);
 
-            _skel = skel;
+            if (skel is FlexSkeletonHolder flexSkel)
+                _skeleton = Z64FlexSkeleton.Get(_renderer.Memory, flexSkel);
+            else
+                _skeleton = Z64Skeleton.Get(_renderer.Memory, skel);
+
             _animations = new();
             anims.ForEach(ah => _animations.Add(new SkeletonViewerRegularAnimationEntry(ah)));
 
             listBox_anims.Items.Clear();
             _animations.ForEach(a => listBox_anims.Items.Add(a.GetName()));
 
+            SetIdentityPose();
+            _curPoseFrame = -1;
+
             UpdateSkeleton();
             NewRender();
         }
 
-        void RenderLimb(int limbIdx, bool overlay = false)
+        [MemberNotNull(nameof(_curPose))]
+        void SetIdentityPose()
         {
-            _renderer.RdpMtxStack.Push();
-
-            _renderer.RdpMtxStack.Load(CalcMatrix(_renderer.RdpMtxStack.Top(), limbIdx));
-
-            if (overlay)
+            _curPose = new Matrix4[_skeleton.Limbs.Count];
+            for (int i = 0; i < _curPose.Length; i++)
             {
-                GL.Begin(PrimitiveType.Points);
-                GL.Vertex3(0, 0, 0);
-                GL.End();
+                _curPose[i] = Matrix4.Identity;
+            }
+        }
 
-                if (_limbs[limbIdx].Child != 0xFF)
-                {
-                    Vector3 childPos;
-
-                    if (_curAnimation != null && _curJoints != null)
-                        childPos = GetLimbPos(_limbs[limbIdx].Child);
-                    else
-                        childPos = new Vector3(0, 0, 0);
-
-                    GL.Begin(PrimitiveType.Lines);
-                    GL.Vertex3(0, 0, 0);
-                    GL.Vertex3(childPos);
-                    GL.End();
-                }
+        void UpdateCurPose()
+        {
+            if (_curRegularAnim == null && _curPlayerAnim == null)
+            {
+                SetIdentityPose();
             }
             else
             {
-                var node = treeView_hierarchy.SelectedNode;
-                _renderer.SetHightlightEnabled(node?.Tag?.Equals(_limbs[limbIdx]) ?? false);
-
-                var dl = _limbDlists[limbIdx];
-                if (dl != null && _limbDlistRenderFlags[limbIdx])
-                    _renderer.RenderDList(dl);
+                if (_curPoseFrame != trackBar_anim.Value)
+                {
+                    if (_curRegularAnim != null)
+                    {
+                        _curPose = Z64SkeletonPose
+                            .Get(_skeleton, _curRegularAnim, trackBar_anim.Value)
+                            .LimbsPose;
+                    }
+                    else
+                    {
+                        Debug.Assert(_curPlayerAnim != null);
+                        _curPose = Z64SkeletonPose
+                            .Get(_skeleton, _curPlayerAnim, trackBar_anim.Value)
+                            .LimbsPose;
+                    }
+                    _curPoseFrame = trackBar_anim.Value;
+                }
             }
-
-            if (_limbs[limbIdx].Child != 0xFF)
-                RenderLimb(_limbs[limbIdx].Child, overlay);
-
-            _renderer.RdpMtxStack.Pop();
-
-            if (_limbs[limbIdx].Sibling != 0xFF)
-                RenderLimb(_limbs[limbIdx].Sibling, overlay);
         }
 
         void RenderCallback(Matrix4 proj, Matrix4 view)
@@ -295,14 +291,18 @@ namespace Z64.Forms
             }
 
             _renderer.RenderStart(proj, view);
-            RenderLimb(0);
+            UpdateCurPose();
+            _skeleton.Root.Visit(index =>
+            {
+                _renderer.RdpMtxStack.Load(_curPose[index]);
 
-            /*
-            GL.PointSize(10.0f);
-            GL.LineWidth(2.0f);
-            GL.Color3(0xFF, 0, 0);
-            RenderLimb(0, true);
-            */
+                var node = treeView_hierarchy.SelectedNode;
+                _renderer.SetHightlightEnabled(node?.Tag?.Equals(_skeleton.Limbs[index]) ?? false);
+
+                var dl = _limbDlists[index];
+                if (dl != null && _limbDlistRenderFlags[index])
+                    _renderer.RenderDList(dl);
+            });
 
             if (_renderer.RenderFailed())
             {
@@ -324,7 +324,7 @@ namespace Z64.Forms
             var tag = treeView_hierarchy.SelectedNode?.Tag ?? null;
             if (tag != null && tag is SkeletonLimbHolder)
             {
-                var dlist = _limbDlists[_limbs.IndexOf((SkeletonLimbHolder)tag)];
+                var dlist = _limbDlists[_skeleton.Limbs.IndexOf((SkeletonLimbHolder)tag)];
                 if (dlist != null)
                     _disasForm?.UpdateDlist(dlist);
                 else
@@ -341,7 +341,7 @@ namespace Z64.Forms
                 var tag = e.Node.Tag ?? null;
                 if (tag != null && tag is SkeletonLimbHolder)
                 {
-                    var index = _limbs.IndexOf((SkeletonLimbHolder)tag);
+                    var index = _skeleton.Limbs.IndexOf((SkeletonLimbHolder)tag);
                     _limbDlistRenderFlags[index] = !_limbDlistRenderFlags[index];
                     if (!_limbDlistRenderFlags[index])
                         e.Node.ForeColor = Color.Gray;
@@ -368,7 +368,7 @@ namespace Z64.Forms
             _dlistError = null;
             _limbDlists = new();
 
-            foreach (var limb in _limbs)
+            foreach (var limb in _skeleton.Limbs)
             {
                 if (limb.Type != EntryType.StandardLimb && limb.Type != EntryType.LODLimb)
                     throw new Exception($"Unimplemented limb type in skeleton viewer {limb.Type}");
@@ -390,29 +390,17 @@ namespace Z64.Forms
         }
 
         // Updates skeleton -> limbs / limbs dlists -> matrices
-        [MemberNotNull(nameof(_limbs), nameof(_limbDlistRenderFlags))]
+        [MemberNotNull(nameof(_limbDlistRenderFlags))]
         [MemberNotNull(nameof(_limbDlists))]
         void UpdateSkeleton()
         {
             treeView_hierarchy.Nodes.Clear();
-            var root = treeView_hierarchy.Nodes.Add("skeleton");
-            root.Tag = _skel;
+            treeView_hierarchy.Nodes.Add("skeleton");
 
-            byte[] limbsData = _renderer.Memory.ReadBytes(_skel.LimbsSeg, _skel.LimbCount * 4);
-
-            var limbs = new SkeletonLimbsHolder("limbs", limbsData);
-
-            _limbs = new List<SkeletonLimbHolder>();
-            _limbDlistRenderFlags = new List<bool>();
-            for (int i = 0; i < limbs.LimbSegments.Length; i++)
+            _limbDlistRenderFlags = new bool[_skeleton.Limbs.Count];
+            for (int i = 0; i < _limbDlistRenderFlags.Length; i++)
             {
-                byte[] limbData = _renderer.Memory.ReadBytes(
-                    limbs.LimbSegments[i],
-                    SkeletonLimbHolder.STANDARD_LIMB_SIZE
-                );
-                var limb = new SkeletonLimbHolder($"limb_{i}", limbData, EntryType.StandardLimb); // TODO support other limb types
-                _limbs.Add(limb);
-                _limbDlistRenderFlags.Add(true);
+                _limbDlistRenderFlags[i] = true;
             }
 
             UpdateLimbsDlists();
@@ -424,263 +412,70 @@ namespace Z64.Forms
         {
             TreeNode skelNode = treeView_hierarchy.Nodes[0];
 
-            if (_limbs.Count > 0)
-                AddLimbRoutine(skelNode, 0, 0, 0, 0);
+            AddLimbRoutine(skelNode, _skeleton.Root);
 
             UpdateMatrixBuf();
         }
 
-        void AddLimbRoutine(TreeNode parent, int i, int x, int y, int z)
+        void AddLimbRoutine(TreeNode parent, Z64SkeletonTreeLimb treeLimb)
         {
-            var node = parent.Nodes.Add($"limb_{i}");
-            node.Tag = _limbs[i];
+            var node = parent.Nodes.Add($"limb_{treeLimb.Index}");
+            node.Tag = _skeleton.Limbs[treeLimb.Index];
 
-            if (_limbs[i].Sibling != 0xFF)
-                AddLimbRoutine(parent, _limbs[i].Sibling, x, y, z);
-            if (_limbs[i].Child != 0xFF)
-                AddLimbRoutine(
-                    node,
-                    _limbs[i].Child,
-                    x + _limbs[i].JointX,
-                    y + _limbs[i].JointY,
-                    z + _limbs[i].JointZ
-                );
-        }
-
-        float S16ToRad(short x) => x * (float)Math.PI / 0x7FFF;
-
-        float S16ToDeg(short x) => x * 360.0f / 0xFFFF;
-
-        float DegToRad(float x) => x * (float)Math.PI / 180.0f;
-
-        short GetFrameData(int frameDataIdx)
-        {
-            Debug.Assert(_frameData != null);
-            var curRegularAnimation = _curAnimation as ISkeletonViewerRegularAnimationEntry;
-            Debug.Assert(curRegularAnimation != null);
-            return _frameData[
-                frameDataIdx < curRegularAnimation.GetAnim().StaticIndexMax
-                    ? frameDataIdx
-                    : frameDataIdx + trackBar_anim.Value
-            ];
-        }
-
-        Vector3 GetLimbPos(int limbIdx)
-        {
-            if (_curAnimation is ISkeletonViewerPlayerAnimationEntry)
-            {
-                return new Vector3(
-                    _limbs[limbIdx].JointX,
-                    _limbs[limbIdx].JointY,
-                    _limbs[limbIdx].JointZ
-                );
-            }
-
-            return (_curJoints == null) ? new Vector3(0, 0, 0)
-                : (limbIdx == 0)
-                    ? new Vector3(
-                        _curJoints[limbIdx].X,
-                        _curJoints[limbIdx].Y,
-                        _curJoints[limbIdx].Z
-                    )
-                : new Vector3(
-                    _limbs[limbIdx].JointX,
-                    _limbs[limbIdx].JointY,
-                    _limbs[limbIdx].JointZ
-                );
+            if (treeLimb.Sibling != null)
+                AddLimbRoutine(parent, treeLimb.Sibling);
+            if (treeLimb.Child != null)
+                AddLimbRoutine(node, treeLimb.Child);
         }
 
         // Update anims -> matrices
         void UpdateRegularAnim()
         {
-            var curRegularAnimation = _curAnimation as ISkeletonViewerRegularAnimationEntry;
-            Debug.Assert(curRegularAnimation != null);
-            var curAH = curRegularAnimation.GetAnim();
+            Debug.Assert(_curRegularAnim != null);
 
             trackBar_anim.Minimum = 0;
-            trackBar_anim.Maximum = curAH.FrameCount - 1;
+            trackBar_anim.Maximum = _curRegularAnim.FrameCount - 1;
             trackBar_anim.Value = 0;
-
-            int? savedSegment = null;
-            F3DZEX.Memory.Segment? savedData = null;
-
-            if (_curAnimation is ISkeletonViewerExternalAnimationEntry curExternalAnimation)
-            {
-                savedSegment = curExternalAnimation.GetExternalSegment();
-                savedData = _renderer.Memory.Segments[curExternalAnimation.GetExternalSegment()];
-
-                _renderer.Memory.Segments[curExternalAnimation.GetExternalSegment()] =
-                    curExternalAnimation.GetExternalData();
-            }
-
-            byte[] buff = _renderer.Memory.ReadBytes(
-                curAH.JointIndices,
-                (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE
-            );
-            _curJoints = new AnimationJointIndicesHolder("joints", buff).JointIndices;
-
-            int max = 0;
-            foreach (var joint in _curJoints)
-            {
-                max = Math.Max(max, joint.X);
-                max = Math.Max(max, joint.Y);
-                max = Math.Max(max, joint.Z);
-            }
-
-            int bytesToRead = (max < curAH.StaticIndexMax ? max + 1 : curAH.FrameCount + max) * 2;
-
-            var curSegmentData = _renderer.Memory.Segments[curAH.FrameData.SegmentId].Data;
-            Debug.Assert(curSegmentData != null);
-            if (bytesToRead + curAH.FrameData.SegmentOff > curSegmentData.Length)
-            {
-                _curAnimation = null;
-                _curJoints = null;
-                _frameData = null;
-                _animationError =
-                    "Animation is glitchy; displaying folded pose. To view this animation, load it in-game.";
-            }
-            else
-            {
-                buff = _renderer.Memory.ReadBytes(curAH.FrameData, bytesToRead);
-                _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
-                _animationError = "";
-            }
-
-            if (savedSegment != null)
-            {
-                Debug.Assert(savedData != null);
-                _renderer.Memory.Segments[(int)savedSegment] = savedData;
-            }
 
             UpdateMatrixBuf();
         }
 
         void UpdatePlayerAnim()
         {
-            var curPlayerAnimation = _curAnimation as ISkeletonViewerPlayerAnimationEntry;
-            Debug.Assert(curPlayerAnimation != null);
-            var curPAH = curPlayerAnimation.GetPlayerAnim();
+            Debug.Assert(_curPlayerAnim != null);
 
             trackBar_anim.Minimum = 0;
-            trackBar_anim.Maximum = curPAH.FrameCount - 1;
+            trackBar_anim.Maximum = _curPlayerAnim.FrameCount - 1;
             trackBar_anim.Value = 0;
 
-            if (_game == null)
-                return;
-
-            var Saved = _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId];
-            var link_animetionFile = _game.GetFileByName("link_animetion");
-            Debug.Assert(link_animetionFile != null);
-            Debug.Assert(link_animetionFile.Valid());
-            _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] =
-                F3DZEX.Memory.Segment.FromBytes("link_animetion", link_animetionFile.Data);
-
-            byte[] buff = _renderer.Memory.ReadBytes(
-                curPAH.PlayerAnimationSegment,
-                ((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * curPAH.FrameCount * 2
-            );
-            _curPlayerJointTable = new PlayerAnimationJointTableHolder("joints", buff).JointTable;
-
-            _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] = Saved;
             UpdateMatrixBuf();
-        }
-
-        Matrix4 CalcMatrix(Matrix4 src, int limbIdx)
-        {
-            if (_curAnimation == null)
-                return src;
-
-            if (_curAnimation is ISkeletonViewerPlayerAnimationEntry)
-            {
-                return CalcMatrixPlayer(src, limbIdx);
-            }
-            else
-            {
-                Debug.Assert(_curAnimation is ISkeletonViewerRegularAnimationEntry);
-                return CalcMatrixRegular(src, limbIdx);
-            }
-        }
-
-        Matrix4 CalcMatrixRegular(Matrix4 src, int limbIdx)
-        {
-            if (_curAnimation == null || _curJoints == null)
-                return src;
-
-            Vector3 pos = GetLimbPos(limbIdx);
-
-            short rotX = GetFrameData(_curJoints[limbIdx + 1].X);
-            short rotY = GetFrameData(_curJoints[limbIdx + 1].Y);
-            short rotZ = GetFrameData(_curJoints[limbIdx + 1].Z);
-
-            src =
-                Matrix4.CreateRotationX(S16ToRad(rotX))
-                * Matrix4.CreateRotationY(S16ToRad(rotY))
-                * Matrix4.CreateRotationZ(S16ToRad(rotZ))
-                * Matrix4.CreateTranslation(pos)
-                * src;
-
-            return src;
-        }
-
-        Matrix4 CalcMatrixPlayer(Matrix4 src, int limbIdx)
-        {
-            if (_curPlayerJointTable == null)
-                return src;
-
-            Vector3 pos = GetLimbPos(limbIdx);
-
-            short rotX = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].X;
-            short rotY = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].Y;
-            short rotZ = _curPlayerJointTable[trackBar_anim.Value, limbIdx + 1].Z;
-
-            src =
-                Matrix4.CreateRotationX(S16ToRad(rotX))
-                * Matrix4.CreateRotationY(S16ToRad(rotY))
-                * Matrix4.CreateRotationZ(S16ToRad(rotZ))
-                * Matrix4.CreateTranslation(pos)
-                * src;
-
-            return src;
         }
 
         // Flex Only
         void UpdateMatrixBuf()
         {
-            if (!(_skel is FlexSkeletonHolder flexSkel))
+            if (!(_skeleton is Z64FlexSkeleton flexSkeleton))
                 return;
 
-            byte[] mtxBuff = new byte[flexSkel.DListCount * Mtx.SIZE];
+            UpdateCurPose();
+
+            byte[] mtxBuff = new byte[flexSkeleton.DListCount * Mtx.SIZE];
 
             using (MemoryStream ms = new MemoryStream(mtxBuff))
             {
                 BinaryStream bw = new BinaryStream(ms, Syroot.BinaryData.ByteConverter.Big);
 
-                UpdateMatrixBuf(bw, 0, 0, Matrix4.Identity);
+                _skeleton.Root.Visit(index =>
+                {
+                    if (_limbDlists[index] != null)
+                        Mtx.FromMatrix4(_curPose[index]).Write(bw);
+                });
             }
 
             _renderer.Memory.Segments[0xD] = F3DZEX.Memory.Segment.FromBytes(
                 "[RESERVED] Anim Matrices",
                 mtxBuff
             );
-        }
-
-        int UpdateMatrixBuf(BinaryStream bw, int limbIdx, int dlistIdx, Matrix4 src)
-        {
-            Matrix4 mtx = CalcMatrix(src, limbIdx);
-
-            if (_limbDlists[limbIdx] != null)
-            {
-                bw.Seek(dlistIdx++ * Mtx.SIZE, SeekOrigin.Begin);
-                Mtx.FromMatrix4(mtx).Write(bw);
-            }
-
-            if (_limbs[limbIdx].Child != 0xFF)
-                dlistIdx = UpdateMatrixBuf(bw, _limbs[limbIdx].Child, dlistIdx, mtx);
-
-            if (_limbs[limbIdx].Sibling != 0xFF)
-                dlistIdx = UpdateMatrixBuf(bw, _limbs[limbIdx].Sibling, dlistIdx, src);
-
-            return dlistIdx;
         }
 
         private void ToolStripRenderCfgBtn_Click(object sender, System.EventArgs e)
@@ -718,7 +513,7 @@ namespace Z64.Forms
             var tag = treeView_hierarchy.SelectedNode?.Tag ?? null;
             if (tag != null && tag is SkeletonLimbHolder)
             {
-                var dlist = _limbDlists[_limbs.IndexOf((SkeletonLimbHolder)tag)];
+                var dlist = _limbDlists[_skeleton.Limbs.IndexOf((SkeletonLimbHolder)tag)];
                 _disasForm.UpdateDlist(dlist);
             }
         }
@@ -737,7 +532,8 @@ namespace Z64.Forms
 
             _renderer.Memory.Segments[idx] = seg;
 
-            if (_limbs != null)
+            // _skeleton can be null when SetSegment is called from the constructor
+            if (_skeleton != null)
                 UpdateLimbsDlists();
         }
 
@@ -752,7 +548,7 @@ namespace Z64.Forms
                 _segForm = new SegmentEditorForm(_game, _renderer);
                 _segForm.SegmentsChanged += (sender, e) =>
                 {
-                    if (e.SegmentID == 0xD && _skel is FlexSkeletonHolder)
+                    if (e.SegmentID == 0xD && _skeleton is Z64FlexSkeleton)
                         MessageBox.Show(
                             "Error",
                             "Cannot set segment 13 (reserved for animation matrices)"
@@ -777,17 +573,73 @@ namespace Z64.Forms
                 trackBar_anim.Enabled =
                     listBox_anims.SelectedIndex >= 0;
 
-            _curAnimation = null;
+            _curRegularAnim = null;
+            _curPlayerAnim = null;
+            _curPoseFrame = -1; // Recompute the pose on animation change
             if (listBox_anims.SelectedIndex >= 0)
             {
-                _curAnimation = _animations[listBox_anims.SelectedIndex];
-                if (_curAnimation is ISkeletonViewerRegularAnimationEntry)
+                var curAnimEntry = _animations[listBox_anims.SelectedIndex];
+                if (curAnimEntry is ISkeletonViewerRegularAnimationEntry curRegularAnimationEntry)
                 {
-                    UpdateRegularAnim();
+                    int? savedSegment = null;
+                    F3DZEX.Memory.Segment? savedData = null;
+
+                    if (curAnimEntry is ISkeletonViewerExternalAnimationEntry curExternalAnimation)
+                    {
+                        savedSegment = curExternalAnimation.GetExternalSegment();
+                        savedData = _renderer.Memory.Segments[
+                            curExternalAnimation.GetExternalSegment()
+                        ];
+
+                        _renderer.Memory.Segments[curExternalAnimation.GetExternalSegment()] =
+                            curExternalAnimation.GetExternalData();
+                    }
+
+                    try
+                    {
+                        _curRegularAnim = Z64Animation.Get(
+                            _renderer.Memory,
+                            curRegularAnimationEntry.GetAnim(),
+                            _skeleton.Limbs.Count
+                        );
+                    }
+                    catch (Exception)
+                    {
+                        _animationError =
+                            "Animation is glitchy; displaying folded pose. To view this animation, load it in-game.";
+                    }
+
+                    if (savedSegment != null)
+                    {
+                        Debug.Assert(savedData != null);
+                        _renderer.Memory.Segments[(int)savedSegment] = savedData;
+                    }
+
+                    if (_curRegularAnim != null)
+                        UpdateRegularAnim();
                 }
                 else
                 {
-                    Debug.Assert(_curAnimation is ISkeletonViewerPlayerAnimationEntry);
+                    var curPlayerAnimationEntry =
+                        curAnimEntry as ISkeletonViewerPlayerAnimationEntry;
+                    Debug.Assert(curPlayerAnimationEntry != null);
+
+                    var curPAH = curPlayerAnimationEntry.GetPlayerAnim();
+
+                    if (_game == null)
+                        return;
+
+                    var Saved = _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId];
+                    var link_animetionFile = _game.GetFileByName("link_animetion");
+                    Debug.Assert(link_animetionFile != null);
+                    Debug.Assert(link_animetionFile.Valid());
+                    _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] =
+                        F3DZEX.Memory.Segment.FromBytes("link_animetion", link_animetionFile.Data);
+
+                    _curPlayerAnim = Z64PlayerAnimation.Get(_renderer.Memory, curPAH);
+
+                    _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] = Saved;
+
                     UpdatePlayerAnim();
                 }
 
