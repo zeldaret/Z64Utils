@@ -23,6 +23,125 @@ namespace Z64.Forms
             Backward,
         }
 
+        interface ISkeletonViewerAnimationEntry
+        {
+            string GetName();
+        }
+
+        interface ISkeletonViewerRegularAnimationEntry : ISkeletonViewerAnimationEntry
+        {
+            AnimationHolder GetAnim();
+        }
+
+        interface ISkeletonViewerPlayerAnimationEntry : ISkeletonViewerAnimationEntry
+        {
+            PlayerAnimationHolder GetPlayerAnim();
+        }
+
+        interface ISkeletonViewerExternalAnimationEntry : ISkeletonViewerAnimationEntry
+        {
+            int GetExternalSegment();
+            F3DZEX.Memory.Segment GetExternalData();
+        }
+
+        class SkeletonViewerRegularAnimationEntry : ISkeletonViewerRegularAnimationEntry
+        {
+            private AnimationHolder _anim;
+
+            public SkeletonViewerRegularAnimationEntry(AnimationHolder anim)
+            {
+                _anim = anim;
+            }
+
+            public string GetName()
+            {
+                return _anim.Name;
+            }
+
+            public AnimationHolder GetAnim()
+            {
+                return _anim;
+            }
+        }
+
+        class SkeletonViewerPlayerAnimationEntry : ISkeletonViewerPlayerAnimationEntry
+        {
+            private PlayerAnimationHolder _playerAnim;
+
+            public SkeletonViewerPlayerAnimationEntry(PlayerAnimationHolder playerAnim)
+            {
+                _playerAnim = playerAnim;
+            }
+
+            public string GetName()
+            {
+                return _playerAnim.Name;
+            }
+
+            public PlayerAnimationHolder GetPlayerAnim()
+            {
+                return _playerAnim;
+            }
+        }
+
+        class SkeletonViewerExternalRegularAnimationEntry
+            : SkeletonViewerRegularAnimationEntry,
+                ISkeletonViewerExternalAnimationEntry
+        {
+            private int _segment;
+            private F3DZEX.Memory.Segment _data;
+
+            public SkeletonViewerExternalRegularAnimationEntry(
+                AnimationHolder anim,
+                int segment,
+                F3DZEX.Memory.Segment data
+            )
+                : base(anim)
+            {
+                _segment = segment;
+                _data = data;
+            }
+
+            public int GetExternalSegment()
+            {
+                return _segment;
+            }
+
+            public F3DZEX.Memory.Segment GetExternalData()
+            {
+                return _data;
+            }
+        }
+
+        class SkeletonViewerExternalPlayerAnimationEntry
+            : SkeletonViewerPlayerAnimationEntry,
+                ISkeletonViewerExternalAnimationEntry
+        {
+            private int _segment;
+            private F3DZEX.Memory.Segment _data;
+
+            public SkeletonViewerExternalPlayerAnimationEntry(
+                PlayerAnimationHolder playerAnim,
+                int segment,
+                F3DZEX.Memory.Segment data
+            )
+                : base(playerAnim)
+            {
+                _segment = segment;
+                _data = data;
+            }
+
+            public int GetExternalSegment()
+            {
+                return _segment;
+            }
+
+            public F3DZEX.Memory.Segment GetExternalData()
+            {
+                return _data;
+            }
+        }
+
         bool _formClosing = false;
         System.Timers.Timer _timer;
         PlayState _playState;
@@ -35,25 +154,21 @@ namespace Z64.Forms
         SettingsForm? _settingsForm;
         F3DZEX.Render.Renderer.Config _rendererCfg;
 
+        int _curSegment;
         SkeletonHolder _skel;
-        List<AnimationHolder> _anims;
-        List<PlayerAnimationHolder> _playerAnims;
+        List<ISkeletonViewerAnimationEntry> _animations;
         List<SkeletonLimbHolder> _limbs;
         List<F3DZEX.Command.Dlist?> _limbDlists;
         List<bool> _limbDlistRenderFlags;
 
-        AnimationHolder? _curAnim;
+        ISkeletonViewerAnimationEntry? _curAnimation;
+
         short[]? _frameData;
         AnimationJointIndicesHolder.JointIndex[]? _curJoints;
 
-        PlayerAnimationHolder? _curPlayerAnim;
         PlayerAnimationJointTableHolder.JointTableEntry[,]? _curPlayerJointTable;
 
         string? _animationError;
-
-        byte[]? _animFile;
-        int _curSegment = 6;
-        int _extAnimSegment = 6;
 
         public SkeletonViewerForm(
             Z64Game? game,
@@ -113,7 +228,16 @@ namespace Z64.Forms
             _playState = PlayState.Pause;
 
             SetSegment(curSegment, curSegmentData);
-            SetSkeleton(skel, anims);
+
+            _skel = skel;
+            _animations = new();
+            anims.ForEach(ah => _animations.Add(new SkeletonViewerRegularAnimationEntry(ah)));
+
+            listBox_anims.Items.Clear();
+            _animations.ForEach(a => listBox_anims.Items.Add(a.GetName()));
+
+            UpdateSkeleton();
+            NewRender();
         }
 
         void RenderLimb(int limbIdx, bool overlay = false)
@@ -132,7 +256,7 @@ namespace Z64.Forms
                 {
                     Vector3 childPos;
 
-                    if (_curAnim != null && _curJoints != null)
+                    if (_curAnimation != null && _curJoints != null)
                         childPos = GetLimbPos(_limbs[limbIdx].Child);
                     else
                         childPos = new Vector3(0, 0, 0);
@@ -238,22 +362,6 @@ namespace Z64.Forms
             modelViewer.Render();
         }
 
-        [MemberNotNull(nameof(_skel), nameof(_anims), nameof(_playerAnims))]
-        [MemberNotNull(nameof(_limbs), nameof(_limbDlistRenderFlags))]
-        [MemberNotNull(nameof(_limbDlists))]
-        public void SetSkeleton(SkeletonHolder skel, List<AnimationHolder> anims)
-        {
-            _skel = skel;
-            _anims = anims;
-            _playerAnims = new List<PlayerAnimationHolder>();
-
-            listBox_anims.Items.Clear();
-            _anims.ForEach(a => listBox_anims.Items.Add(a.Name));
-
-            UpdateSkeleton();
-            NewRender();
-        }
-
         [MemberNotNull(nameof(_limbDlists))]
         void UpdateLimbsDlists()
         {
@@ -348,9 +456,10 @@ namespace Z64.Forms
         short GetFrameData(int frameDataIdx)
         {
             Debug.Assert(_frameData != null);
-            Debug.Assert(_curAnim != null);
+            var curRegularAnimation = _curAnimation as ISkeletonViewerRegularAnimationEntry;
+            Debug.Assert(curRegularAnimation != null);
             return _frameData[
-                frameDataIdx < _curAnim.StaticIndexMax
+                frameDataIdx < curRegularAnimation.GetAnim().StaticIndexMax
                     ? frameDataIdx
                     : frameDataIdx + trackBar_anim.Value
             ];
@@ -358,7 +467,7 @@ namespace Z64.Forms
 
         Vector3 GetLimbPos(int limbIdx)
         {
-            if (_curPlayerAnim != null)
+            if (_curAnimation is ISkeletonViewerPlayerAnimationEntry)
             {
                 return new Vector3(
                     _limbs[limbIdx].JointX,
@@ -382,26 +491,30 @@ namespace Z64.Forms
         }
 
         // Update anims -> matrices
-        void UpdateAnim()
+        void UpdateRegularAnim()
         {
-            Debug.Assert(_curAnim != null);
+            var curRegularAnimation = _curAnimation as ISkeletonViewerRegularAnimationEntry;
+            Debug.Assert(curRegularAnimation != null);
+            var curAH = curRegularAnimation.GetAnim();
+
             trackBar_anim.Minimum = 0;
-            trackBar_anim.Maximum = _curAnim.FrameCount - 1;
+            trackBar_anim.Maximum = curAH.FrameCount - 1;
             trackBar_anim.Value = 0;
 
-            var Saved = _renderer.Memory.Segments[_curSegment];
+            int? savedSegment = null;
+            F3DZEX.Memory.Segment? savedData = null;
 
-            if (_curAnim.extAnim)
+            if (_curAnimation is ISkeletonViewerExternalAnimationEntry curExternalAnimation)
             {
-                Debug.Assert(_animFile != null); // extAnim = true is only set with _animFile set
-                _renderer.Memory.Segments[_extAnimSegment] = F3DZEX.Memory.Segment.FromBytes(
-                    "",
-                    _animFile
-                );
+                savedSegment = curExternalAnimation.GetExternalSegment();
+                savedData = _renderer.Memory.Segments[curExternalAnimation.GetExternalSegment()];
+
+                _renderer.Memory.Segments[curExternalAnimation.GetExternalSegment()] =
+                    curExternalAnimation.GetExternalData();
             }
 
             byte[] buff = _renderer.Memory.ReadBytes(
-                _curAnim.JointIndices,
+                curAH.JointIndices,
                 (_limbs.Count + 1) * AnimationJointIndicesHolder.ENTRY_SIZE
             );
             _curJoints = new AnimationJointIndicesHolder("joints", buff).JointIndices;
@@ -414,14 +527,13 @@ namespace Z64.Forms
                 max = Math.Max(max, joint.Z);
             }
 
-            int bytesToRead =
-                (max < _curAnim.StaticIndexMax ? max + 1 : _curAnim.FrameCount + max) * 2;
+            int bytesToRead = (max < curAH.StaticIndexMax ? max + 1 : curAH.FrameCount + max) * 2;
 
-            var curSegmentData = _renderer.Memory.Segments[_curSegment].Data;
+            var curSegmentData = _renderer.Memory.Segments[curAH.FrameData.SegmentId].Data;
             Debug.Assert(curSegmentData != null);
-            if (bytesToRead + _curAnim.FrameData.SegmentOff > curSegmentData.Length)
+            if (bytesToRead + curAH.FrameData.SegmentOff > curSegmentData.Length)
             {
-                _curAnim = null;
+                _curAnimation = null;
                 _curJoints = null;
                 _frameData = null;
                 _animationError =
@@ -429,56 +541,69 @@ namespace Z64.Forms
             }
             else
             {
-                buff = _renderer.Memory.ReadBytes(_curAnim.FrameData, bytesToRead);
+                buff = _renderer.Memory.ReadBytes(curAH.FrameData, bytesToRead);
                 _frameData = new AnimationFrameDataHolder("framedata", buff).FrameData;
                 _animationError = "";
             }
 
-            _renderer.Memory.Segments[_curSegment] = Saved;
+            if (savedSegment != null)
+            {
+                Debug.Assert(savedData != null);
+                _renderer.Memory.Segments[(int)savedSegment] = savedData;
+            }
+
             UpdateMatrixBuf();
         }
 
         void UpdatePlayerAnim()
         {
-            Debug.Assert(_curPlayerAnim != null);
+            var curPlayerAnimation = _curAnimation as ISkeletonViewerPlayerAnimationEntry;
+            Debug.Assert(curPlayerAnimation != null);
+            var curPAH = curPlayerAnimation.GetPlayerAnim();
 
             trackBar_anim.Minimum = 0;
-            trackBar_anim.Maximum = _curPlayerAnim.FrameCount - 1;
+            trackBar_anim.Maximum = curPAH.FrameCount - 1;
             trackBar_anim.Value = 0;
 
             if (_game == null)
                 return;
 
-            var Saved = _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId];
+            var Saved = _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId];
             var link_animetionFile = _game.GetFileByName("link_animetion");
             Debug.Assert(link_animetionFile != null);
             Debug.Assert(link_animetionFile.Valid());
-            _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] =
+            _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] =
                 F3DZEX.Memory.Segment.FromBytes("link_animetion", link_animetionFile.Data);
 
             byte[] buff = _renderer.Memory.ReadBytes(
-                _curPlayerAnim.PlayerAnimationSegment,
-                ((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * _curPlayerAnim.FrameCount * 2
+                curPAH.PlayerAnimationSegment,
+                ((PlayerAnimationHolder.PLAYER_LIMB_COUNT * 3) + 1) * curPAH.FrameCount * 2
             );
             _curPlayerJointTable = new PlayerAnimationJointTableHolder("joints", buff).JointTable;
 
-            _renderer.Memory.Segments[_curPlayerAnim.PlayerAnimationSegment.SegmentId] = Saved;
+            _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] = Saved;
             UpdateMatrixBuf();
         }
 
         Matrix4 CalcMatrix(Matrix4 src, int limbIdx)
         {
-            if (_curPlayerAnim != null)
+            if (_curAnimation == null)
+                return src;
+
+            if (_curAnimation is ISkeletonViewerPlayerAnimationEntry)
             {
                 return CalcMatrixPlayer(src, limbIdx);
             }
-
-            return CalcMatrixNormal(src, limbIdx);
+            else
+            {
+                Debug.Assert(_curAnimation is ISkeletonViewerRegularAnimationEntry);
+                return CalcMatrixRegular(src, limbIdx);
+            }
         }
 
-        Matrix4 CalcMatrixNormal(Matrix4 src, int limbIdx)
+        Matrix4 CalcMatrixRegular(Matrix4 src, int limbIdx)
         {
-            if (_curAnim == null || _curJoints == null)
+            if (_curAnimation == null || _curJoints == null)
                 return src;
 
             Vector3 pos = GetLimbPos(limbIdx);
@@ -652,18 +777,17 @@ namespace Z64.Forms
                 trackBar_anim.Enabled =
                     listBox_anims.SelectedIndex >= 0;
 
-            _curAnim = null;
-            _curPlayerAnim = null;
+            _curAnimation = null;
             if (listBox_anims.SelectedIndex >= 0)
             {
-                if (listBox_anims.SelectedIndex < _anims.Count)
+                _curAnimation = _animations[listBox_anims.SelectedIndex];
+                if (_curAnimation is ISkeletonViewerRegularAnimationEntry)
                 {
-                    _curAnim = _anims[listBox_anims.SelectedIndex];
-                    UpdateAnim();
+                    UpdateRegularAnim();
                 }
                 else
                 {
-                    _curPlayerAnim = _playerAnims[listBox_anims.SelectedIndex - _anims.Count];
+                    Debug.Assert(_curAnimation is ISkeletonViewerPlayerAnimationEntry);
                     UpdatePlayerAnim();
                 }
 
@@ -761,55 +885,72 @@ namespace Z64.Forms
             button_playAnim.BackgroundImage = Properties.Resources.play_icon;
             button_playbackAnim.BackgroundImage = Properties.Resources.playback_icon;
 
-            OpenFileDialog of = new OpenFileDialog();
-            DialogResult DR = of.ShowDialog();
+            OpenFileDialog openFileDialog = new();
 
-            if (DR == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _animFile = File.ReadAllBytes(of.FileName);
+                var animFileData = File.ReadAllBytes(openFileDialog.FileName);
                 int segment = _curSegment;
-                if (of.FileName.Contains("gameplay_keep"))
+                if (openFileDialog.FileName.Contains("gameplay_keep"))
                 {
                     segment = 4;
                 }
                 else if (
-                    of.FileName.Contains("gameplay_dangeon_keep")
-                    || of.FileName.Contains("gameplay_field_keep")
+                    openFileDialog.FileName.Contains("gameplay_dangeon_keep")
+                    || openFileDialog.FileName.Contains("gameplay_field_keep")
                 )
                 {
                     segment = 5;
                 }
-                else if ((segment == 4 || segment == 5) && !of.FileName.Contains("keep"))
+                else if (
+                    (segment == 4 || segment == 5) && !openFileDialog.FileName.Contains("keep")
+                )
                 {
                     segment = 6;
                 }
-                _extAnimSegment = segment;
 
-                using (var form = new ObjectAnalyzerForm(_game, _animFile, of.FileName, segment))
+                var data = F3DZEX.Memory.Segment.FromBytes("", animFileData);
+
+                using (
+                    var form = new ObjectAnalyzerForm(
+                        _game,
+                        animFileData,
+                        openFileDialog.FileName,
+                        segment
+                    )
+                )
                 {
-                    _anims.Clear();
-                    _playerAnims.Clear();
+                    _animations.Clear();
 
                     form._obj.Entries.ForEach(e =>
                     {
                         if (e is Z64Object.AnimationHolder eAnim)
                         {
-                            eAnim.extAnim = true;
                             eAnim.Name = "ext_" + eAnim.Name;
-                            _anims.Add(eAnim);
+                            _animations.Add(
+                                new SkeletonViewerExternalRegularAnimationEntry(
+                                    eAnim,
+                                    segment,
+                                    data
+                                )
+                            );
                         }
                         if (e is Z64Object.PlayerAnimationHolder ePlayerAnim)
                         {
-                            ePlayerAnim.extAnim = true;
                             ePlayerAnim.Name = "ext_" + ePlayerAnim.Name;
-                            _playerAnims.Add(ePlayerAnim);
+                            _animations.Add(
+                                new SkeletonViewerExternalPlayerAnimationEntry(
+                                    ePlayerAnim,
+                                    segment,
+                                    data
+                                )
+                            );
                         }
                     });
                 }
 
                 listBox_anims.Items.Clear();
-                _anims.ForEach(a => listBox_anims.Items.Add(a.Name));
-                _playerAnims.ForEach(a => listBox_anims.Items.Add(a.Name));
+                _animations.ForEach(a => listBox_anims.Items.Add(a.GetName()));
             }
         }
     }
