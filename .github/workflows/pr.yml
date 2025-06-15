@@ -1,0 +1,9 @@
+name: PR
+
+on: [pull_request]
+
+jobs:
+  check-format:
+    uses: ./.github/workflows/format.yml
+  build:
+    uses: ./.github/workflows/build.yml
