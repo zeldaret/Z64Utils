@@ -473,7 +473,16 @@ namespace F3DZEX.Render
             CheckGLErros();
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             CheckGLErros();
-            //GL.Enable(EnableCap.Texture2D); // TODO InvalidEnum
+            GL.Enable(EnableCap.Texture2D);
+            var err = GL.GetError();
+            if (err == ErrorCode.InvalidEnum)
+            {
+                // Ignore
+            }
+            else if (err != ErrorCode.NoError)
+            {
+                throw new Exception($"GL.GetError() -> {err}");
+            }
             CheckGLErros();
 
             if (CurrentConfig.ShowGrid)
