@@ -173,7 +173,11 @@ namespace Common
         public const string ReleaseURL =
             @"https://api.github.com/repos/zeldaret/Z64Utils/releases/latest";
         public static readonly string CurrentTag = "v" + Z64.Program.Version;
-        private static HttpClient GithubApiHttpClient = new() { BaseAddress = new("https://api.github.com") };
+        private static HttpClient GithubApiHttpClient = new()
+        {
+            BaseAddress = new("https://api.github.com"),
+        };
+
         static UpdateChecker()
         {
             GithubApiHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Z64Utils Updater");
