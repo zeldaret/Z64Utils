@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Avalonia.Threading;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
-using F3DZEX.Command;
-using F3DZEX.Render;
 using OpenTK.Mathematics;
 using RDP;
 using Syroot.BinaryData;
@@ -47,9 +46,9 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     public class AnimationEntry
     {
         public string Name { get; }
-        public Z64.Z64Object.AnimationHolder AnimationHolder { get; }
+        public Z64Object.AnimationHolder AnimationHolder { get; }
 
-        public AnimationEntry(string name, Z64.Z64Object.AnimationHolder animationHolder)
+        public AnimationEntry(string name, Z64Object.AnimationHolder animationHolder)
         {
             Name = name;
             AnimationHolder = animationHolder;
@@ -63,6 +62,18 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     private double _playAnimTickPeriodMs;
     private DispatcherTimer _playAnimTimer = new();
     private bool _playAnimForwards;
+
+    [ObservableProperty]
+    Z64Skeleton? _skel;
+
+    [ObservableProperty]
+    Z64Animation? _curAnim;
+
+    [ObservableProperty]
+    F3DZEX.Command.Dlist?[]? _limbsDLists;
+
+    [ObservableProperty]
+    Matrix4[]? _curPose;
 
     public SkeletonViewerWindowViewModel()
     {
@@ -87,12 +98,35 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     if (Renderer != null)
                         Renderer.PropertyChanged += OnRendererPropertyChanged;
                     break;
+                case nameof(Skel):
+                    CurAnim = null;
+                    if (Skel != null)
+                    {
+                        UpdateLimbNodes();
+                        UpdateLimbsDLists();
+                    }
+                    else
+                    {
+                        SkeletonRootLimbNode.Clear();
+                        DisplayElements.Clear();
+                    }
+                    break;
+                case nameof(CurAnim):
+                    if (CurAnim != null)
+                        MaxFrame = CurAnim.FrameCount - 1;
+                    else
+                        MaxFrame = 0;
+                    CurFrame = 0;
+                    UpdateCurPose();
+                    break;
                 case nameof(CurFrame):
                     Utils.Assert(CurFrame >= 0 && CurFrame <= MaxFrame);
+                    UpdateCurPose();
+                    break;
+                case nameof(CurPose):
                     UpdateDisplayElements();
                     break;
                 case nameof(PlayAnimTickPeriodMs):
-                    Debug.WriteLine("PlayAnimTickPeriodMs changed");
                     if (PlayAnimTickPeriodMs < 1)
                         PlayAnimTickPeriodMs = 1;
                     _playAnimTimer.Interval = TimeSpan.FromMilliseconds(PlayAnimTickPeriodMs);
@@ -140,72 +174,80 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         // TODO
     }
 
-    Z64Object.SkeletonHolder? _bruhwip_skel;
-    Z64Object.SkeletonLimbHolder[]? _bruhwip_limbs;
-    Z64Object.AnimationHolder? _bruhwip_anim;
-    Z64Object.AnimationFrameDataHolder? _bruhwip_animFrameData;
-    Z64Object.AnimationJointIndicesHolder? _bruhwip_animJointIndices;
-
-    public void SetSkeleton(Z64.Z64Object.SkeletonHolder skeletonHolder)
+    public void SetSkeleton(Z64Object.SkeletonHolder skeletonHolder)
     {
-        // TODO most of this should absolutely be in Model
-
         Utils.Assert(Renderer != null);
 
-        Z64Object.SkeletonLimbHolder[] limbHolders;
-
-        {
-            byte[] limbsData = Renderer.Memory.ReadBytes(
-                skeletonHolder.LimbsSeg,
-                skeletonHolder.LimbCount * 4
-            );
-            var limbsHolder = new Z64.Z64Object.SkeletonLimbsHolder("limbs", limbsData);
-
-            limbHolders = new Z64Object.SkeletonLimbHolder[limbsHolder.LimbSegments.Length];
-
-            for (int i = 0; i < limbsHolder.LimbSegments.Length; i++)
-            {
-                byte[] limbData = Renderer.Memory.ReadBytes(
-                    limbsHolder.LimbSegments[i],
-                    Z64.Z64Object.SkeletonLimbHolder.STANDARD_LIMB_SIZE
-                );
-                var limbHolder = new Z64.Z64Object.SkeletonLimbHolder(
-                    $"limb_{i}",
-                    limbData,
-                    Z64.Z64Object.EntryType.StandardLimb
-                ); // TODO support other limb types
-
-                limbHolders[i] = limbHolder;
-            }
-        }
-
-        void AddLimbAndSiblingsNodes(int i, List<SkeletonViewerLimbNode> list)
-        {
-            const byte LIMB_NONE = 0xFF;
-
-            var limbHolder = limbHolders[i];
-
-            List<SkeletonViewerLimbNode> children = new();
-            if (limbHolder.Child != LIMB_NONE)
-            {
-                AddLimbAndSiblingsNodes(limbHolder.Child, children);
-            }
-            list.Add(new SkeletonViewerLimbNode(limbHolder.Name, children));
-            if (limbHolder.Sibling != LIMB_NONE)
-            {
-                AddLimbAndSiblingsNodes(limbHolder.Sibling, list);
-            }
-        }
-
-        List<SkeletonViewerLimbNode> root = new();
-        AddLimbAndSiblingsNodes(0, root);
-        SkeletonRootLimbNode = new() { root.Single() };
-
-        _bruhwip_skel = skeletonHolder;
-        _bruhwip_limbs = limbHolders;
+        if (skeletonHolder is Z64Object.FlexSkeletonHolder flexSkeletonHolder)
+            Skel = Z64FlexSkeleton.Get(Renderer.Memory, flexSkeletonHolder);
+        else
+            Skel = Z64Skeleton.Get(Renderer.Memory, skeletonHolder);
     }
 
-    public void SetAnimations(IEnumerable<Z64.Z64Object.AnimationHolder> animationHolders)
+    void UpdateLimbNodes()
+    {
+        Utils.Assert(Skel != null);
+
+        void VisitLimb(SkeletonViewerLimbNode parent, Z64SkeletonTreeLimb treeLimb)
+        {
+            Utils.Assert(Skel != null);
+            var limbHolder = Skel.Limbs[treeLimb.Index];
+            var node = new SkeletonViewerLimbNode(limbHolder.Name);
+            parent.ChildrenLimbs.Add(node);
+
+            if (treeLimb.Sibling != null)
+                VisitLimb(parent, treeLimb.Sibling);
+            if (treeLimb.Child != null)
+                VisitLimb(node, treeLimb.Child);
+        }
+
+        var skeletonRootLimbNode = new SkeletonViewerLimbNode(Skel.Limbs[0].Name);
+        if (Skel.Root.Child != null)
+            VisitLimb(skeletonRootLimbNode, Skel.Root.Child);
+        Utils.Assert(Skel.Root.Sibling == null);
+        SkeletonRootLimbNode = new() { skeletonRootLimbNode };
+    }
+
+    void UpdateLimbsDLists()
+    {
+        Utils.Assert(Renderer != null);
+        Utils.Assert(Skel != null);
+
+        DecodeError = null;
+        var limbsDLists = new F3DZEX.Command.Dlist?[Skel.Limbs.Count];
+
+        for (int i = 0; i < Skel.Limbs.Count; i++)
+        {
+            var limb = Skel.Limbs[i];
+            if (
+                limb.Type != Z64Object.EntryType.StandardLimb
+                && limb.Type != Z64Object.EntryType.LODLimb
+            )
+                throw new Exception($"Unimplemented limb type in skeleton viewer {limb.Type}");
+            Utils.Assert(limb.DListSeg != null); // always set for Standard and LOD limbs
+            F3DZEX.Command.Dlist? dlist = null;
+            try
+            {
+                if (limb.DListSeg.VAddr != 0)
+                    dlist = Renderer.GetDlist(limb.DListSeg);
+            }
+            catch (Exception ex)
+            {
+                if (DecodeError == null)
+                    DecodeError =
+                        $"Error while decoding dlist 0x{limb.DListSeg.VAddr:X8} : {ex.Message}";
+            }
+            if (dlist != null)
+                limbsDLists[i] = dlist;
+        }
+
+        if (DecodeError == null)
+            LimbsDLists = limbsDLists;
+        else
+            LimbsDLists = null;
+    }
+
+    public void SetAnimations(IEnumerable<Z64Object.AnimationHolder> animationHolders)
     {
         ObservableCollection<AnimationEntry> newAnimations = new(
             animationHolders.Select(animationHolder => new AnimationEntry(
@@ -216,49 +258,71 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         AnimationEntries = newAnimations;
     }
 
-    // TODO cleanup
+    [MemberNotNull(nameof(CurPose))]
+    void SetIdentityPose()
+    {
+        Utils.Assert(Skel != null);
+        CurPose = new Matrix4[Skel.Limbs.Count];
+        for (int i = 0; i < CurPose.Length; i++)
+        {
+            CurPose[i] = Matrix4.Identity;
+        }
+    }
+
+    void UpdateCurPose()
+    {
+        if (CurAnim == null)
+        {
+            SetIdentityPose();
+        }
+        else
+        {
+            Utils.Assert(Skel != null);
+            CurPose = Z64SkeletonPose.Get(Skel, CurAnim, CurFrame).LimbsPose;
+        }
+
+        if (Skel is Z64FlexSkeleton flexSkeleton)
+        {
+            Utils.Assert(Renderer != null);
+
+            byte[] mtxBuff = new byte[flexSkeleton.DListCount * Mtx.SIZE];
+
+            using (MemoryStream ms = new MemoryStream(mtxBuff))
+            {
+                BinaryStream bw = new BinaryStream(ms, Syroot.BinaryData.ByteConverter.Big);
+
+                flexSkeleton.Root.Visit(index =>
+                {
+                    var seg = flexSkeleton.Limbs[index].DListSeg;
+                    Utils.Assert(seg != null);
+                    if (seg.VAddr != 0)
+                        Mtx.FromMatrix4(CurPose[index]).Write(bw);
+                });
+            }
+
+            Renderer.Memory.Segments[0xD] = F3DZEX.Memory.Segment.FromBytes(
+                "[RESERVED] Anim Matrices",
+                mtxBuff
+            );
+        }
+    }
+
     public void UpdateDisplayElements()
     {
         DisplayElements.Clear();
 
-        Utils.Assert(_bruhwip_skel != null);
-        Utils.Assert(_bruhwip_limbs != null);
-        Utils.Assert(_bruhwip_anim != null);
-        Utils.Assert(_bruhwip_animFrameData != null);
-        Utils.Assert(_bruhwip_animJointIndices != null);
-        Utils.Assert(Renderer != null);
+        Utils.Assert(Skel != null);
+        Utils.Assert(LimbsDLists != null);
+        Utils.Assert(CurPose != null);
 
-        var jointTable = ComputeJointTable(
-            _bruhwip_skel,
-            _bruhwip_anim,
-            _bruhwip_animFrameData,
-            _bruhwip_animJointIndices,
-            CurFrame
-        );
-        var matrices = ComputeMatricesFromJointTable(_bruhwip_skel, _bruhwip_limbs, jointTable);
-
-        foreach (var i in Enumerable.Range(0, _bruhwip_skel.LimbCount))
+        Skel.Root.Visit(index =>
         {
-            var vaddr = _bruhwip_limbs[i].DListSeg;
-            if (vaddr == null || vaddr == 0)
-            {
-                continue;
-            }
-
-            Dlist dList;
-            try
-            {
-                dList = Renderer.GetDlist(vaddr);
-            }
-            catch (Exception e)
-            {
-                DecodeError = $"Could not decode DL 0x{vaddr:X8} (limb {i}): {e.Message}";
-                break;
-            }
-            DisplayElements.Add(
-                new DLViewerControlDlistWithMatrixDisplayElement(dList, matrices[i])
-            );
-        }
+            var dl = LimbsDLists[index];
+            if (dl != null)
+                DisplayElements.Add(
+                    new DLViewerControlDlistWithMatrixDisplayElement(dl, CurPose[index])
+                );
+        });
     }
 
     public void PlayAnimBackwardsCommand()
@@ -294,148 +358,15 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     public void OnAnimationEntrySelected(AnimationEntry animationEntry)
     {
-        MaxFrame = animationEntry.AnimationHolder.FrameCount - 1;
-
         Utils.Assert(Renderer != null);
-        Utils.Assert(_bruhwip_skel != null);
+        Utils.Assert(Skel != null);
 
-        // adapted from SkeletonViewerForm.UpdateAnim
-        _bruhwip_anim = animationEntry.AnimationHolder;
-        _bruhwip_animJointIndices = new Z64Object.AnimationJointIndicesHolder(
-            "jointIndices",
-            Renderer.Memory.ReadBytes(
-                _bruhwip_anim.JointIndices,
-                (1 + _bruhwip_skel.LimbCount) * Z64Object.AnimationJointIndicesHolder.ENTRY_SIZE
-            )
+        CurAnim = Z64Animation.Get(
+            Renderer.Memory,
+            animationEntry.AnimationHolder,
+            Skel.Limbs.Count
         );
-        int max = 0;
-        foreach (var joint in _bruhwip_animJointIndices.JointIndices)
-        {
-            max = Math.Max(max, joint.X);
-            max = Math.Max(max, joint.Y);
-            max = Math.Max(max, joint.Z);
-        }
-        int bytesToRead =
-            (max < _bruhwip_anim.StaticIndexMax ? max + 1 : _bruhwip_anim.FrameCount + max) * 2;
-        _bruhwip_animFrameData = new Z64Object.AnimationFrameDataHolder(
-            "frameData",
-            Renderer.Memory.ReadBytes(_bruhwip_anim.FrameData, bytesToRead)
-        );
-
-        UpdateDisplayElements();
     }
-
-    // should go in model
-    public Vector3i[] ComputeJointTable(
-        Z64Object.SkeletonHolder skel,
-        Z64Object.AnimationHolder anim,
-        Z64Object.AnimationFrameDataHolder animFrameData,
-        Z64Object.AnimationJointIndicesHolder animJointIndices,
-        int frameIndex
-    )
-    {
-        short GetFrameData(int frameDataIdx)
-        {
-            return animFrameData.FrameData[
-                frameDataIdx < anim.StaticIndexMax ? frameDataIdx : frameDataIdx + frameIndex
-            ];
-        }
-        Vector3i[] jointTable = new Vector3i[1 + skel.LimbCount];
-        foreach (var i in Enumerable.Range(0, jointTable.Length))
-        {
-            jointTable[i].X = GetFrameData(animJointIndices.JointIndices[i].X);
-            jointTable[i].Y = GetFrameData(animJointIndices.JointIndices[i].Y);
-            jointTable[i].Z = GetFrameData(animJointIndices.JointIndices[i].Z);
-        }
-
-        return jointTable;
-    }
-
-    public Matrix4[] ComputeMatricesFromJointTable(
-        Z64Object.SkeletonHolder skel,
-        Z64Object.SkeletonLimbHolder[] skelLimbsArray,
-        Vector3i[] jointTable
-    )
-    {
-        float S16ToRad(int x) => x * (float)Math.PI / 0x8000;
-
-        Stack<Matrix4> matrixStack = new();
-        Matrix4[] matricesByLimb = new Matrix4[skel.LimbCount];
-        List<Matrix4> matrixBufferForFlex = new();
-        void ProcessLimb(int limbIdx)
-        {
-            var pos = new Vector3(
-                skelLimbsArray[limbIdx].JointX,
-                skelLimbsArray[limbIdx].JointY,
-                skelLimbsArray[limbIdx].JointZ
-            );
-            Vector3i rotS = jointTable[1 + limbIdx];
-            // idk where this is documented but OpenTK matrices transform row vectors multiplied to the left of the matrix
-            Matrix4 limbMtx =
-                Matrix4.CreateRotationX(S16ToRad(rotS.X))
-                * Matrix4.CreateRotationY(S16ToRad(rotS.Y))
-                * Matrix4.CreateRotationZ(S16ToRad(rotS.Z))
-                * Matrix4.CreateTranslation(pos)
-                * matrixStack.Peek();
-
-            matricesByLimb[limbIdx] = limbMtx;
-            var seg = skelLimbsArray[limbIdx].DListSeg;
-            Utils.Assert(seg != null);
-            if (seg.VAddr != 0)
-                matrixBufferForFlex.Add(limbMtx);
-
-            matrixStack.Push(limbMtx);
-
-            if (skelLimbsArray[limbIdx].Child != 0xFF)
-                ProcessLimb(skelLimbsArray[limbIdx].Child);
-
-            matrixStack.Pop();
-
-            if (skelLimbsArray[limbIdx].Sibling != 0xFF)
-                ProcessLimb(skelLimbsArray[limbIdx].Sibling);
-        }
-
-        Vector3i rootPos = jointTable[0];
-        Vector3i rootRotS = jointTable[1];
-        Matrix4 rootLimbMtx =
-            Matrix4.CreateRotationX(S16ToRad(rootRotS.X))
-            * Matrix4.CreateRotationY(S16ToRad(rootRotS.Y))
-            * Matrix4.CreateRotationZ(S16ToRad(rootRotS.Z))
-            * Matrix4.CreateTranslation(rootPos);
-
-        matricesByLimb[0] = rootLimbMtx;
-        var seg = skelLimbsArray[0].DListSeg;
-        Utils.Assert(seg != null);
-        if (seg.VAddr != 0)
-            matrixBufferForFlex.Add(rootLimbMtx);
-
-        matrixStack.Push(rootLimbMtx);
-
-        if (skelLimbsArray[0].Child != 0xFF)
-            ProcessLimb(skelLimbsArray[0].Child);
-
-        matrixStack.Pop();
-
-        var mtxBufForFlexBytes = new byte[matrixBufferForFlex.Count * Mtx.SIZE];
-        using (
-            BinaryStream bw = new(
-                new MemoryStream(mtxBufForFlexBytes),
-                Syroot.BinaryData.ByteConverter.Big
-            )
-        )
-        {
-            foreach (var mtx in matrixBufferForFlex)
-            {
-                Mtx.FromMatrix4(mtx).Write(bw);
-            }
-        }
-
-        Utils.Assert(Renderer != null);
-        Renderer.Memory.Segments[0xD] = F3DZEX.Memory.Segment.FromBytes("flex", mtxBufForFlexBytes);
-
-        return matricesByLimb;
-    }
-    //
 }
 
 public class SkeletonViewerLimbNode
