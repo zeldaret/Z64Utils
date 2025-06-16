@@ -134,7 +134,7 @@ namespace Common
 
         class AssertFailedException : Exception { }
 
-        // Avoid using Utils.Assert because that uses FailFast which kills the application
+        // Avoid using Debug.Assert because that uses FailFast which kills the application
         // without giving us a chance to log the exception.
         [Conditional("DEBUG")]
         public static void Assert([DoesNotReturnIf(false)] bool condition)
