@@ -22,7 +22,7 @@ namespace Common
                 if (Value.HasFlag(v))
                 {
                     var name = Enum.GetName(typeof(T), v);
-                    Debug.Assert(name != null);
+                    Utils.Assert(name != null);
                     if (count == 0)
                         ret = name;
                     else
@@ -33,7 +33,7 @@ namespace Common
             if (count == 0)
             {
                 var name = Enum.GetName(typeof(T), 0);
-                Debug.Assert(name != null);
+                Utils.Assert(name != null);
                 return name;
             }
 

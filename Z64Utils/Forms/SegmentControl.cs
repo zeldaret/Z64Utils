@@ -59,7 +59,7 @@ namespace Z64.Forms
             form.Text += " " + SegmentID;
             if (form.ShowDialog() == DialogResult.OK)
             {
-                Debug.Assert(form.ResultSegment != null);
+                Utils.Assert(form.ResultSegment != null);
                 SetSegment(form.ResultSegment);
                 SegmentChanged?.Invoke(this, new(_segmentId, form.ResultSegment));
             }

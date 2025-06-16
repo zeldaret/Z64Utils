@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Common;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -272,7 +273,7 @@ namespace Z64.Forms
                     }
                     else
                     {
-                        Debug.Assert(_curPlayerAnim != null);
+                        Utils.Assert(_curPlayerAnim != null);
                         _curPose = Z64SkeletonPose
                             .Get(_skeleton, _curPlayerAnim, trackBar_anim.Value)
                             .LimbsPose;
@@ -372,7 +373,7 @@ namespace Z64.Forms
             {
                 if (limb.Type != EntryType.StandardLimb && limb.Type != EntryType.LODLimb)
                     throw new Exception($"Unimplemented limb type in skeleton viewer {limb.Type}");
-                Debug.Assert(limb.DListSeg != null); // always set for Standard and LOD limbs
+                Utils.Assert(limb.DListSeg != null); // always set for Standard and LOD limbs
                 F3DZEX.Command.Dlist? dlist = null;
                 try
                 {
@@ -431,7 +432,7 @@ namespace Z64.Forms
         // Update anims -> matrices
         void UpdateRegularAnim()
         {
-            Debug.Assert(_curRegularAnim != null);
+            Utils.Assert(_curRegularAnim != null);
 
             trackBar_anim.Minimum = 0;
             trackBar_anim.Maximum = _curRegularAnim.FrameCount - 1;
@@ -442,7 +443,7 @@ namespace Z64.Forms
 
         void UpdatePlayerAnim()
         {
-            Debug.Assert(_curPlayerAnim != null);
+            Utils.Assert(_curPlayerAnim != null);
 
             trackBar_anim.Minimum = 0;
             trackBar_anim.Maximum = _curPlayerAnim.FrameCount - 1;
@@ -611,7 +612,7 @@ namespace Z64.Forms
 
                     if (savedSegment != null)
                     {
-                        Debug.Assert(savedData != null);
+                        Utils.Assert(savedData != null);
                         _renderer.Memory.Segments[(int)savedSegment] = savedData;
                     }
 
@@ -622,7 +623,7 @@ namespace Z64.Forms
                 {
                     var curPlayerAnimationEntry =
                         curAnimEntry as ISkeletonViewerPlayerAnimationEntry;
-                    Debug.Assert(curPlayerAnimationEntry != null);
+                    Utils.Assert(curPlayerAnimationEntry != null);
 
                     var curPAH = curPlayerAnimationEntry.GetPlayerAnim();
 
@@ -631,8 +632,8 @@ namespace Z64.Forms
 
                     var Saved = _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId];
                     var link_animetionFile = _game.GetFileByName("link_animetion");
-                    Debug.Assert(link_animetionFile != null);
-                    Debug.Assert(link_animetionFile.Valid());
+                    Utils.Assert(link_animetionFile != null);
+                    Utils.Assert(link_animetionFile.Valid());
                     _renderer.Memory.Segments[curPAH.PlayerAnimationSegment.SegmentId] =
                         F3DZEX.Memory.Segment.FromBytes("link_animetion", link_animetionFile.Data);
 

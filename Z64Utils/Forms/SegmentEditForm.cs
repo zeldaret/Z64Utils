@@ -104,12 +104,12 @@ namespace Z64.Forms
         {
             if (comboBox1.SelectedItem == (object)SRC_ROM_FS) // ROM FS
             {
-                Debug.Assert(_game != null);
+                Utils.Assert(_game != null);
                 DmaFileSelectForm form = new DmaFileSelectForm(_game);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    Debug.Assert(form.SelectedFile != null);
-                    Debug.Assert(form.SelectedFile.Valid()); // DmaFileSelectForm only allows selecting valid files
+                    Utils.Assert(form.SelectedFile != null);
+                    Utils.Assert(form.SelectedFile.Valid()); // DmaFileSelectForm only allows selecting valid files
                     _dmaFileName = _game.GetFileName(form.SelectedFile.VRomStart);
                     ResultSegment = Memory.Segment.FromBytes(_dmaFileName, form.SelectedFile.Data);
                     button1.ForeColor = Color.Green;
@@ -153,7 +153,7 @@ namespace Z64.Forms
             {
                 case SRC_ADDR:
                     var sa = SegmentedAddress.Parse(addressValue.Text);
-                    Debug.Assert(sa != null); // OK button is only enabled if the value is valid
+                    Utils.Assert(sa != null); // OK button is only enabled if the value is valid
                     uint addr = sa.VAddr;
                     ResultSegment = Memory.Segment.FromVram($"{addr:X8}", addr);
                     break;

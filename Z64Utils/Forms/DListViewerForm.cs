@@ -136,7 +136,7 @@ namespace Z64.Forms
                 _renderer.ModelMtxStack.Push(
                     Matrix4.CreateTranslation(routine.X, routine.Y, routine.Z)
                 );
-                Debug.Assert(routine.Dlist != null);
+                Utils.Assert(routine.Dlist != null);
                 _renderer.RenderDList(routine.Dlist);
                 _renderer.ModelMtxStack.Pop();
             }
@@ -367,13 +367,13 @@ namespace Z64.Forms
             );
             if (form.ShowDialog() == DialogResult.OK)
             {
-                Debug.Assert(form.Result != null);
+                Utils.Assert(form.Result != null);
                 var parts = form.Result.Replace(" ", "").Split(";");
                 int x = 0,
                     y = 0,
                     z = 0;
                 var addr = SegmentedAddress.Parse(parts[0], true);
-                Debug.Assert(addr != null);
+                Utils.Assert(addr != null);
                 if (parts.Length > 1)
                 {
                     x = int.Parse(parts[1]);
@@ -401,12 +401,12 @@ namespace Z64.Forms
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    Debug.Assert(form.Result != null);
+                    Utils.Assert(form.Result != null);
                     var parts = form.Result.Replace(" ", "").Split(";");
 
                     routine.X = routine.Y = routine.Z = 0;
                     var addr = SegmentedAddress.Parse(parts[0], true);
-                    Debug.Assert(addr != null);
+                    Utils.Assert(addr != null);
                     routine.Address = addr;
 
                     if (parts.Length > 1)

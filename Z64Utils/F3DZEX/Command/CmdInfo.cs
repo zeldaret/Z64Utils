@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using RDP;
 
 namespace F3DZEX.Command
@@ -407,7 +408,7 @@ namespace F3DZEX.Command
                 throw new InvalidF3DZEXOpCodeException("Invalid ID");
 
             object? obj = Activator.CreateInstance(t);
-            Debug.Assert(obj != null);
+            Utils.Assert(obj != null);
 
             foreach (var prop in t.GetProperties())
             {

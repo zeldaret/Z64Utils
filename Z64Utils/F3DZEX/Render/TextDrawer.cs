@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Common;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -57,9 +58,9 @@ namespace F3DZEX.Render
             _tex = new TextureHandler();
 
             TextFont = new Font("Arial", 50);
-            Debug.Assert(_font != null);
-            Debug.Assert(_charSpaces != null);
-            Debug.Assert(_texData != null);
+            Utils.Assert(_font != null);
+            Utils.Assert(_charSpaces != null);
+            Utils.Assert(_texData != null);
 
             _lastStr = null;
             Scale = 0.35f;

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Common;
 using F3DZEX.Command;
 
 namespace Z64.Forms
@@ -79,7 +80,7 @@ namespace Z64.Forms
             foreach (var patternStr in patternsStr)
             {
                 var pattern = Z64ObjectAnalyzer.Config.OpCodePattern.Parse(patternStr);
-                Debug.Assert(pattern != null);
+                Utils.Assert(pattern != null);
                 Result.Patterns.Add(pattern);
             }
             UpdateTextBoxes();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -128,6 +129,19 @@ namespace Common
             {
                 decompStream.CopyTo(outStream);
                 return outStream.GetBuffer();
+            }
+        }
+
+        class AssertFailedException : Exception { }
+
+        // Avoid using Debug.Assert because that uses FailFast which kills the application
+        // without giving us a chance to log the exception.
+        [Conditional("DEBUG")]
+        public static void Assert([DoesNotReturnIf(false)] bool condition)
+        {
+            if (!condition)
+            {
+                throw new AssertFailedException();
             }
         }
     }

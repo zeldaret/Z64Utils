@@ -215,7 +215,7 @@ namespace Z64
             if (file == null)
                 throw new Z64GameException("Invalid VROM");
 
-            Debug.Assert(file.Data != null);
+            Utils.Assert(file.Data != null);
 
             int oldSize = file.Compressed ? file.RomEnd - file.RomStart : file.Data.Length;
 
@@ -273,8 +273,8 @@ namespace Z64
         private void FixDmaDataTable()
         {
             var dmatable = GetFile(GetVrom("dmadata"));
-            Debug.Assert(dmatable != null);
-            Debug.Assert(dmatable.Valid());
+            Utils.Assert(dmatable != null);
+            Utils.Assert(dmatable.Valid());
 
             byte[] newTable;
             using (MemoryStream ms = new MemoryStream())
@@ -363,7 +363,7 @@ namespace Z64
                 {
                     if (i == 2) //dmadata
                     {
-                        Debug.Assert(file.Data != null);
+                        Utils.Assert(file.Data != null);
                         filecount = file.Data.Length / 0x10;
 
                         lastprogressI = -filecount; // force a progress update

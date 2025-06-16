@@ -18,6 +18,8 @@ namespace Z64.Forms
 {
     public partial class ModelViewerControl : GLControl
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public Matrix4 Projection => _projectionMtx;
         public Matrix4 View => _viewMtx;
 
@@ -120,7 +122,7 @@ namespace Z64.Forms
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Warn(ex);
             }
 
             if (Height == 0)
