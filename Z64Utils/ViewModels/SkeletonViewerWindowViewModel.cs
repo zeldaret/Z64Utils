@@ -102,14 +102,20 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     CurAnim = null;
                     if (Skel != null)
                     {
+                        UpdateCurPose();
                         UpdateLimbNodes();
                         UpdateLimbsDLists();
                     }
                     else
                     {
+                        LimbsDLists = null;
                         SkeletonRootLimbNode.Clear();
                         DisplayElements.Clear();
                     }
+                    break;
+                case nameof(LimbsDLists):
+                    if (LimbsDLists != null)
+                        UpdateDisplayElements();
                     break;
                 case nameof(CurAnim):
                     if (CurAnim != null)
@@ -124,7 +130,8 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     UpdateCurPose();
                     break;
                 case nameof(CurPose):
-                    UpdateDisplayElements();
+                    if (LimbsDLists != null)
+                        UpdateDisplayElements();
                     break;
                 case nameof(PlayAnimTickPeriodMs):
                     if (PlayAnimTickPeriodMs < 1)
@@ -165,7 +172,10 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         {
             Renderer.Memory.Segments[index] = segment;
 
-            // TODO redecode dlist, rerender
+            if (Skel != null)
+            {
+                UpdateLimbsDLists();
+            }
         }
     }
 
