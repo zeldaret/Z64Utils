@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.ROMRAMConversionsWindow"
+    x:DataType="vm:ROMRAMConversionsWindowViewModel"
+    Title="ROM/RAM Conversions"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <ComboBox SelectedIndex="{Binding InputAddressTypeIndex}">
+                <!-- keep in sync with InputAddressTypeEnum in the view model -->
+                <ComboBoxItem>ROM</ComboBoxItem>
+                <ComboBoxItem>VROM</ComboBoxItem>
+                <ComboBoxItem>VRAM</ComboBoxItem>
+            </ComboBox>
+            <TextBox Text="{Binding InputAddressStr}" Watermark="0x0421_2048" />
+        </StackPanel>
+        <TextBlock Text="{Binding OutputText}" FontFamily="{StaticResource MonospacedFont}" MinWidth="400" MinHeight="100"
+            Margin="10" />
+    </StackPanel>
+</Window>

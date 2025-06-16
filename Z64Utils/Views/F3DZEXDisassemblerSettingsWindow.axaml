@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.F3DZEXDisassemblerSettingsWindow"
+    x:DataType="vm:F3DZEXDisassemblerSettingsViewModel"
+    Title="Disassembly Settings"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel>
+        <CheckBox IsChecked="{Binding ShowAddress}">ShowAddress</CheckBox>
+        <CheckBox IsChecked="{Binding RelativeAddress}">RelativeAddress</CheckBox>
+        <CheckBox IsChecked="{Binding DisasMultiCmdMacro}">DisasMultiCmdMacro</CheckBox>
+        <CheckBox IsChecked="{Binding AddressLiteral}">AddressLiteral</CheckBox>
+        <CheckBox IsChecked="{Binding Static}">Static</CheckBox>
+        <TextBlock>Preview:</TextBlock>
+        <TextBox AcceptsReturn="True" IsReadOnly="True" FontFamily="Monospace"
+            Text="{Binding OutputDisasPreview}" />
+    </StackPanel>
+</Window>

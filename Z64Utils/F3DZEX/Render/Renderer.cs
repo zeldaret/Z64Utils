@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
+using CommunityToolkit.Mvvm.ComponentModel;
 using F3DZEX.Command;
 using N64;
 using OpenTK;
@@ -20,7 +21,7 @@ using Z64;
 
 namespace F3DZEX.Render
 {
-    public class Renderer
+    public partial class Renderer : ObservableObject
     {
         public class Config
         {
@@ -260,6 +261,9 @@ namespace F3DZEX.Render
 
         public uint RenderErrorAddr { get; private set; } = 0xFFFFFFFF;
         public string? ErrorMsg { get; private set; } = null;
+
+        [ObservableProperty]
+        private bool _hasError = false;
         public Config CurrentConfig { get; set; }
         public Memory Memory { get; private set; }
 
@@ -317,7 +321,7 @@ namespace F3DZEX.Render
             nameof(_rdpVtxDrawer),
             nameof(_gridDrawer),
             nameof(_axisDrawer),
-            nameof(_textDrawer),
+            //FIXME-textDrawerLinux nameof(_textDrawer),
             nameof(_tex0),
             nameof(_tex1)
         )]
@@ -328,12 +332,16 @@ namespace F3DZEX.Render
             Utils.Assert(_rdpVtxDrawer != null);
             Utils.Assert(_gridDrawer != null);
             Utils.Assert(_axisDrawer != null);
-            Utils.Assert(_textDrawer != null);
+            //FIXME-textDrawerLinux Utils.Assert(_textDrawer != null);
             Utils.Assert(_tex0 != null);
             Utils.Assert(_tex1 != null);
         }
 
-        public void ClearErrors() => ErrorMsg = null;
+        public void ClearErrors()
+        {
+            ErrorMsg = null;
+            HasError = false;
+        }
 
         private void CheckGLErros()
         {
@@ -377,14 +385,17 @@ namespace F3DZEX.Render
             _rdpVtxDrawer = new RdpVertexDrawer();
             _gridDrawer = new SimpleVertexDrawer();
             _axisDrawer = new ColoredVertexDrawer();
-            _textDrawer = new TextDrawer();
+            //FIXME-textDrawerLinux _textDrawer = new TextDrawer();
 
+            CheckGLErros();
             float[] vertices = RenderHelper.GenerateGridVertices(CurrentConfig.GridScale, 6, false);
             _gridDrawer.SetData(vertices, BufferUsageHint.StaticDraw);
 
+            CheckGLErros();
             vertices = RenderHelper.GenerateAxisvertices(CurrentConfig.GridScale);
             _axisDrawer.SetData(vertices, BufferUsageHint.StaticDraw);
 
+            CheckGLErros();
             _rdpVtxDrawer.SetData(
                 new byte[32 * (Vertex.SIZE + 4 * 4 * 4)],
                 BufferUsageHint.DynamicDraw
@@ -437,7 +448,7 @@ namespace F3DZEX.Render
             _rdpVtxDrawer.SendInitialColors(CurrentConfig);
             CheckGLErros();
             Matrix4 id = Matrix4.Identity;
-            _textDrawer.SendProjViewMatrices(ref id, ref id);
+            //FIXME-textDrawerLinux _textDrawer.SendProjViewMatrices(ref id, ref id);
 
             _rdpVtxDrawer.SendModelMatrix(ModelMtxStack.Top());
             _gridDrawer.SendModelMatrix(Matrix4.Identity);
@@ -462,16 +473,7 @@ namespace F3DZEX.Render
             CheckGLErros();
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             CheckGLErros();
-            GL.Enable(EnableCap.Texture2D);
-            var err = GL.GetError();
-            if (err == ErrorCode.InvalidEnum)
-            {
-                // Ignore
-            }
-            else if (err != ErrorCode.NoError)
-            {
-                throw new Exception($"GL.GetError() -> {err}");
-            }
+            //GL.Enable(EnableCap.Texture2D); // TODO InvalidEnum
             CheckGLErros();
 
             if (CurrentConfig.ShowGrid)
@@ -482,6 +484,7 @@ namespace F3DZEX.Render
 
             if (CurrentConfig.ShowGLInfo)
             {
+                Utils.Assert(_textDrawer != null);
                 _textDrawer.DrawString(
                     //$"Extensions: {GL.GetString(StringName.Extensions)}\n" +
                     $"Shading Language Version: {GL.GetString(StringName.ShadingLanguageVersion)}\n"
@@ -518,8 +521,11 @@ namespace F3DZEX.Render
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Renderer.RenderDList(): unhandled exception");
+                Debug.WriteLine(ex);
                 RenderErrorAddr = addr;
                 ErrorMsg = ex.Message;
+                HasError = true;
             }
         }
 

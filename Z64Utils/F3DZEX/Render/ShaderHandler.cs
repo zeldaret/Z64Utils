@@ -62,6 +62,45 @@ namespace F3DZEX.Render
             RecompileShaders(vertSrc, fragSrc, geomSrc);
         }
 
+        public static ShaderHandler FromSrcFiles(
+            string vertSrcFile,
+            string fragSrcFile,
+            string? geomSrcFile = null
+        )
+        {
+            try
+            {
+                return new ShaderHandler(
+                    vertSrc: File.ReadAllText(vertSrcFile),
+                    fragSrc: File.ReadAllText(fragSrcFile),
+                    geomSrc: geomSrcFile == null ? null : File.ReadAllText(geomSrcFile)
+                );
+            }
+            catch
+            {
+                var logger = NLog.LogManager.GetCurrentClassLogger();
+                logger.Warn("new ShaderHandler() failed");
+                logger.Warn("vertSrcFile={vertSrcFile}", vertSrcFile);
+                logger.Warn("fragSrcFile={fragSrcFile}", fragSrcFile);
+                logger.Warn("geomSrcFile={geomSrcFile}", geomSrcFile);
+                throw;
+            }
+        }
+
+        public static ShaderHandler FromSrcFilesInShadersDir(
+            string vertSrcFileName,
+            string fragSrcFileName,
+            string? geomSrcFileName = null
+        )
+        {
+            string shadersDir = Path.Join(AppContext.BaseDirectory, "Shaders");
+            return FromSrcFiles(
+                vertSrcFile: Path.Join(shadersDir, vertSrcFileName),
+                fragSrcFile: Path.Join(shadersDir, fragSrcFileName),
+                geomSrcFile: geomSrcFileName == null ? null : Path.Join(shadersDir, geomSrcFileName)
+            );
+        }
+
         public void RecompileShaders(string vertSrc, string fragSrc, string? geomSrc = null)
         {
             Unbind();

@@ -1,0 +1,84 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:v="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.SkeletonViewerWindow"
+    x:DataType="vm:SkeletonViewerWindowViewModel"
+    Title="Skeleton Viewer"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
+            <MenuItem Header="Disassembly" />
+            <MenuItem Header="Segments" />
+        </Menu>
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock>Decode error:</TextBlock>
+            <TextBlock Text="{Binding DecodeError}" />
+            <TextBlock>Render error:</TextBlock>
+            <TextBlock Text="{Binding RenderError}" />
+        </StackPanel>
+        <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Center">
+            <Button DockPanel.Dock="Left" Command="{Binding PlayAnimBackwardsCommand}">backwards</Button>
+            <Button DockPanel.Dock="Left" Command="{Binding PlayAnimForwardsCommand}">play</Button>
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
+                <NumericUpDown Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}" FormatString="0" MinWidth="120" />
+                <TextBlock VerticalAlignment="Center">/</TextBlock>
+                <TextBlock Text="{Binding MaxFrame}" VerticalAlignment="Center" />
+            </StackPanel>
+            <DockPanel DockPanel.Dock="Right">
+                <TextBlock DockPanel.Dock="Top">Playback speed:</TextBlock>
+                <NumericUpDown Value="{Binding PlayAnimTickPeriodMs}" />
+            </DockPanel>
+            <Slider Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}" Margin="10,0,10,0" />
+        </DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="100"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto" MinWidth="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <v:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL" Renderer="{Binding Renderer}"
+                DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="100"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto" MinHeight="100"></RowDefinition>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <TextBlock DockPanel.Dock="Top">Limbs</TextBlock>
+                    <TreeView ItemsSource="{Binding SkeletonRootLimbNode}">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate x:DataType="vm:SkeletonViewerLimbNode"
+                                ItemsSource="{Binding ChildrenLimbs}">
+                                <TextBlock Text="{Binding Name}" />
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+                <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+                <DockPanel Grid.Row="2">
+                    <TextBlock DockPanel.Dock="Top">Animations</TextBlock>
+                    <DataGrid
+                        Name="AnimationEntriesDataGrid"
+                        ItemsSource="{Binding AnimationEntries}"
+                        IsReadOnly="True"
+                        CanUserResizeColumns="True"
+                        GridLinesVisibility="All"
+                        SelectionMode="Single"
+                        SelectionChanged="OnAnimationEntriesDataGridSelectionChanged"
+                    >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>

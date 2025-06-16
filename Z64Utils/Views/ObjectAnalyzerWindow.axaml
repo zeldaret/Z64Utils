@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.ObjectAnalyzerWindow"
+    x:DataType="vm:ObjectAnalyzerWindowViewModel"
+    Title="{Binding WindowTitle}">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Analysis">
+                <MenuItem Header="Find DLists" Command="{Binding FindDListsCommand}" />
+                <MenuItem Header="Analyze DLists" Command="{Binding AnalyzeDListsCommand}" />
+                <MenuItem Header="Import JSON" Command="{Binding ImportJSONCommand}" />
+                <MenuItem Header="Export JSON" Command="{Binding ExportJSONCommand}" />
+                <MenuItem Header="Reset" Command="{Binding ResetCommand}" />
+            </MenuItem>
+            <MenuItem Header="Settings">
+                <MenuItem Header="Disassembly Settings"
+                    Command="{Binding DisassemblySettingsCommand}" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="100"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*" MinWidth="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0">
+                <DockPanel DockPanel.Dock="Top">
+                    <Label DockPanel.Dock="Left" Target="FilterTextBox">Filter:</Label>
+                    <TextBox Name="FilterTextBox" Text="{Binding FilterText}" />
+                </DockPanel>
+                <DataGrid
+                    Name="ObjectHolderEntriesDataGrid"
+                    ItemsSource="{Binding ObjectHolderEntries}"
+                    IsReadOnly="True"
+                    CanUserResizeColumns="True"
+                    GridLinesVisibility="All"
+                    SelectionMode="Single"
+                    SelectionChanged="OnObjectHolderEntriesDataGridSelectionChanged"
+                    LoadingRow="OnObjectHolderEntriesDataGridLoadingRow"
+                >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Offset" Binding="{Binding Offset}" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+            <TabControl Grid.Column="2">
+                <TabItem Header="Details"
+                    IsVisible="{Binding ObjectHolderEntryDetailsViewModel,
+                                Converter={x:Static ObjectConverters.IsNotNull}}"
+                >
+                    <ContentControl Content="{Binding ObjectHolderEntryDetailsViewModel}">
+                        <ContentControl.DataTemplates>
+                            <vm:OHEDViewLocator />
+                        </ContentControl.DataTemplates>
+                    </ContentControl>
+                </TabItem>
+                <TabItem Header="Binary">
+                    <vm:HexViewerControl
+                        DataBytes="{Binding ObjectHolderEntryDataBytes}"
+                        FirstByteAddress="{Binding ObjectHolderEntryFirstByteAddress}"
+                    />
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>
