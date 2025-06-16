@@ -12,10 +12,7 @@ namespace F3DZEX.Render
     {
         public ColoredVertexDrawer()
             : base(
-                new ShaderHandler(
-                    File.ReadAllText("Shaders/coloredVtx.vert"),
-                    File.ReadAllText("Shaders/coloredVtx.frag")
-                ),
+                ShaderHandler.FromSrcFilesInShadersDir("coloredVtx.vert", "coloredVtx.frag"),
                 new VertexAttribs()
             )
         {

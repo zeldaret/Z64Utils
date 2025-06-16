@@ -334,13 +334,15 @@ namespace Z64
         [MemberNotNull(nameof(_versions))]
         private static void LoadVersions()
         {
-            string path = "versions";
+            string path = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "versions"));
             if (!Directory.Exists(path))
-                throw new Exception($"Could load config files (\"{path}/*.json\").");
+                throw new Exception(
+                    $"Could not load config files (missing versions folder \"{path}\")."
+                );
 
             var files = Directory.GetFiles(path, "*.json");
             if (files.Length == 0)
-                throw new Exception($"Could load config files (\"{path}/*.json\").");
+                throw new Exception($"Could not load config files (\"{path}/*.json\").");
 
             _versions = new();
             var options = new JsonSerializerOptions()

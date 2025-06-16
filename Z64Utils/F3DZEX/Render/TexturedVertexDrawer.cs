@@ -13,10 +13,7 @@ namespace F3DZEX.Render
     {
         public TexturedVertexDrawer()
             : base(
-                new ShaderHandler(
-                    File.ReadAllText("Shaders/texturedVtx.vert"),
-                    File.ReadAllText("Shaders/texturedVtx.frag")
-                ),
+                ShaderHandler.FromSrcFilesInShadersDir("texturedVtx.vert", "texturedVtx.frag"),
                 new VertexAttribs()
             )
         {

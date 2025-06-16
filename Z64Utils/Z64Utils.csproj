@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Z64</RootNamespace>
     <AssemblyName>Z64Utils</AssemblyName>
 
@@ -17,6 +16,12 @@
 
     <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604;CS8605;CS8618;CS8619;CS8622;CS8625</WarningsAsErrors>
     <Nullable>enable</Nullable>
+
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+    <AvaloniaVersion>11.2.5</AvaloniaVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -25,11 +30,24 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Be.Windows.Forms.HexBox" Version="1.6.1" />
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <!-- Condition below is needed to remove Avalonia.Diagnostics package from build output in
+    Release configuration. -->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics"
+      Version="$(AvaloniaVersion)" />
+
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
+
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+
     <PackageReference Include="NLog" Version="5.5.0" />
     <PackageReference Include="OpenTK" Version="4.9.3" />
-    <PackageReference Include="OpenTK.GLControl" Version="4.0.2" />
     <PackageReference Include="Syroot.BinaryData" Version="5.2.2" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
@@ -41,28 +59,11 @@
   </Target>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
+    <AvaloniaResource Include="Assets/**" />
+    <AvaloniaResource Include="Controls/**/Themes/Fluent.xaml" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Update="Shaders\collisionVtx.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -107,6 +108,6 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <ApplicationIcon>kaeton.ico</ApplicationIcon>
+    <ApplicationIcon>Assets/kaeton.ico</ApplicationIcon>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:v="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.DListViewerWindow"
+    x:DataType="vm:DListViewerWindowViewModel"
+    Title="DList Viewer"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
+            <MenuItem Header="Disassembly" Command="{Binding OpenDisassemblyCommand}" />
+            <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
+        </Menu>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding SomeTextForNow}" />
+        <TextBlock DockPanel.Dock="Top">Decode error:</TextBlock>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding DecodeError}" />
+        <TextBlock DockPanel.Dock="Top">Render error:</TextBlock>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding RenderError}" />
+        <v:DLViewerControl Name="DLViewerGL" Renderer="{Binding Renderer}"
+            DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
+    </DockPanel>
+</Window>

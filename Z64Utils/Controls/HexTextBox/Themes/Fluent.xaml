@@ -1,0 +1,14 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="using:Z64Utils_Avalonia">
+    <!-- Style HexTextBox like TextBox -->
+    <ControlTheme x:Key="{x:Type local:HexTextBox}"
+                  BasedOn="{StaticResource {x:Type TextBox}}"
+                  TargetType="{x:Type local:HexTextBox}">
+        <!-- Make text red if the value is invalid -->
+        <Style Selector="^.badHexValue">
+            <Setter Property="Foreground"
+                    Value="#FFFF3333"/>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

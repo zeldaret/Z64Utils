@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:v="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.VertexArrayOHEDView"
+    x:DataType="vm:VertexArrayOHEDViewModel"
+>
+    <DockPanel>
+        <CheckBox DockPanel.Dock="Top" IsThreeState="True"
+            IsChecked="{Binding VertexColorOrNormalIsChecked}"
+        >Show vertex color/normal data as RGB</CheckBox>
+        <DataGrid
+            Name="VertexArrayDataGrid"
+            ItemsSource="{Binding Vertices}"
+            IsReadOnly="True"
+            CanUserResizeColumns="True"
+            GridLinesVisibility="All"
+        >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Index" Binding="{Binding Index}" />
+                <DataGridTextColumn Header="Address"
+                    Binding="{Binding Address, StringFormat='0x\{0:X8\}'}" />
+                <DataGridTextColumn Header="x" Binding="{Binding CoordX}" />
+                <DataGridTextColumn Header="y" Binding="{Binding CoordY}" />
+                <DataGridTextColumn Header="z" Binding="{Binding CoordZ}" />
+                <DataGridTextColumn Header="s" Binding="{Binding TexCoordS}" />
+                <DataGridTextColumn Header="t" Binding="{Binding TexCoordT}" />
+                <DataGridTextColumn Header="r/nx"
+                    Binding="{Binding ColorRorNormalX, StringFormat='0x\{0:X\}'}"
+                    IsVisible="{Binding ShowVertexColorNormalAsUnk}" />
+                <DataGridTextColumn Header="g/ny"
+                    Binding="{Binding ColorGorNormalY, StringFormat='0x\{0:X\}'}"
+                    IsVisible="{Binding ShowVertexColorNormalAsUnk}" />
+                <DataGridTextColumn Header="b/nz"
+                    Binding="{Binding ColorBorNormalZ, StringFormat='0x\{0:X\}'}"
+                    IsVisible="{Binding ShowVertexColorNormalAsUnk}" />
+                <DataGridTextColumn Header="r" Binding="{Binding ColorR}"
+                    IsVisible="{Binding ShowVertexColorNormalAsColor}" />
+                <DataGridTextColumn Header="g" Binding="{Binding ColorG}"
+                    IsVisible="{Binding ShowVertexColorNormalAsColor}" />
+                <DataGridTextColumn Header="b" Binding="{Binding ColorB}"
+                    IsVisible="{Binding ShowVertexColorNormalAsColor}" />
+                <DataGridTextColumn Header="nx" Binding="{Binding NormalX, StringFormat='\{0:0.000\}'}"
+                    IsVisible="{Binding ShowVertexColorNormalAsNormal}" />
+                <DataGridTextColumn Header="ny" Binding="{Binding NormalY, StringFormat='\{0:0.000\}'}"
+                    IsVisible="{Binding ShowVertexColorNormalAsNormal}" />
+                <DataGridTextColumn Header="nz" Binding="{Binding NormalZ, StringFormat='\{0:0.000\}'}"
+                    IsVisible="{Binding ShowVertexColorNormalAsNormal}" />
+                <DataGridTextColumn Header="a" Binding="{Binding Alpha}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

@@ -3,7 +3,8 @@ using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
-using Z64.Forms;
+using Z64;
+using Z64Utils_Avalonia;
 
 namespace F3DZEX.Render
 {
@@ -11,10 +12,7 @@ namespace F3DZEX.Render
     {
         public CollisionVertexDrawer()
             : base(
-                new ShaderHandler(
-                    File.ReadAllText("Shaders/collisionVtx.vert"),
-                    File.ReadAllText("Shaders/collisionVtx.frag")
-                ),
+                ShaderHandler.FromSrcFilesInShadersDir("collisionVtx.vert", "collisionVtx.frag"),
                 new VertexAttribs()
             )
         {
@@ -35,10 +33,7 @@ namespace F3DZEX.Render
             _shader.Send("u_Color", color);
         }
 
-        public void SetDataTriangles(
-            CollisionViewerForm.RenderColPoly[] polys,
-            BufferUsageHint hint
-        )
+        public void SetDataTriangles(CollisionPolygon[] polys, BufferUsageHint hint)
         {
             float[] data = new float[3 * (3 + 3) * polys.Length];
             int i = 0;
@@ -46,18 +41,18 @@ namespace F3DZEX.Render
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    data[i++] = poly.Points[j][0];
-                    data[i++] = poly.Points[j][1];
-                    data[i++] = poly.Points[j][2];
-                    data[i++] = (float)poly.Normal.X / 0x7FFF;
-                    data[i++] = (float)poly.Normal.Y / 0x7FFF;
-                    data[i++] = (float)poly.Normal.Z / 0x7FFF;
+                    data[i++] = poly.verts[j].X;
+                    data[i++] = poly.verts[j].Y;
+                    data[i++] = poly.verts[j].Z;
+                    data[i++] = (float)poly.normal.X / 0x7FFF;
+                    data[i++] = (float)poly.normal.Y / 0x7FFF;
+                    data[i++] = (float)poly.normal.Z / 0x7FFF;
                 }
             }
             SetVertexData(data, sizeof(float) * data.Length, hint);
         }
 
-        public void SetDataLines(CollisionViewerForm.RenderColPoly[] polys, BufferUsageHint hint)
+        public void SetDataLines(CollisionPolygon[] polys, BufferUsageHint hint)
         {
             float[] data = new float[3 * 2 * (3 + 3) * polys.Length];
             int i = 0;
@@ -65,19 +60,19 @@ namespace F3DZEX.Render
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    data[i++] = poly.Points[j][0];
-                    data[i++] = poly.Points[j][1];
-                    data[i++] = poly.Points[j][2];
-                    data[i++] = (float)poly.Normal.X / 0x7FFF;
-                    data[i++] = (float)poly.Normal.Y / 0x7FFF;
-                    data[i++] = (float)poly.Normal.Z / 0x7FFF;
+                    data[i++] = poly.verts[j].X;
+                    data[i++] = poly.verts[j].Y;
+                    data[i++] = poly.verts[j].Z;
+                    data[i++] = (float)poly.normal.X / 0x7FFF;
+                    data[i++] = (float)poly.normal.Y / 0x7FFF;
+                    data[i++] = (float)poly.normal.Z / 0x7FFF;
 
-                    data[i++] = poly.Points[(j + 1) % 3][0];
-                    data[i++] = poly.Points[(j + 1) % 3][1];
-                    data[i++] = poly.Points[(j + 1) % 3][2];
-                    data[i++] = (float)poly.Normal.X / 0x7FFF;
-                    data[i++] = (float)poly.Normal.Y / 0x7FFF;
-                    data[i++] = (float)poly.Normal.Z / 0x7FFF;
+                    data[i++] = poly.verts[(j + 1) % 3].X;
+                    data[i++] = poly.verts[(j + 1) % 3].Y;
+                    data[i++] = poly.verts[(j + 1) % 3].Z;
+                    data[i++] = (float)poly.normal.X / 0x7FFF;
+                    data[i++] = (float)poly.normal.Y / 0x7FFF;
+                    data[i++] = (float)poly.normal.Z / 0x7FFF;
                 }
             }
             SetVertexData(data, sizeof(float) * data.Length, hint);

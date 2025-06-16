@@ -30,19 +30,16 @@ namespace F3DZEX.Render
 
         public RdpVertexDrawer()
         {
-            _shader = new ShaderHandler(
-                File.ReadAllText("Shaders/rdpVtx.vert"),
-                File.ReadAllText("Shaders/rdpVtx.frag")
+            _shader = ShaderHandler.FromSrcFilesInShadersDir("rdpVtx.vert", "rdpVtx.frag");
+            _wireframeShader = ShaderHandler.FromSrcFilesInShadersDir(
+                "rdpVtx.vert",
+                "wireframe.frag",
+                "wireframe.geom"
             );
-            _wireframeShader = new ShaderHandler(
-                File.ReadAllText("Shaders/rdpVtx.vert"),
-                File.ReadAllText("Shaders/wireframe.frag"),
-                File.ReadAllText("Shaders/wireframe.geom")
-            );
-            _nrmShader = new ShaderHandler(
-                File.ReadAllText("Shaders/rdpVtx.vert"),
-                File.ReadAllText("Shaders/coloredVtx.frag"),
-                File.ReadAllText("Shaders/rdpVtxNrm.geom")
+            _nrmShader = ShaderHandler.FromSrcFilesInShadersDir(
+                "rdpVtx.vert",
+                "coloredVtx.frag",
+                "rdpVtxNrm.geom"
             );
             _attrs = new VertexAttribs();
             // position
