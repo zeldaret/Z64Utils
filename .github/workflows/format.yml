@@ -1,6 +1,6 @@
 name: CSharpier formatting check
 
-on: [push, pull_request]
+on: [workflow_call]
 
 jobs:
   format-check:

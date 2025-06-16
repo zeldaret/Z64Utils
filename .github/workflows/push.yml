@@ -1,0 +1,12 @@
+name: Push
+
+on: [push]
+
+jobs:
+  check-format:
+    uses: ./.github/workflows/format.yml
+  build:
+    uses: ./.github/workflows/build.yml
+  nightly-release:
+    needs: build
+    uses: ./.github/workflows/nightly-release.yml
