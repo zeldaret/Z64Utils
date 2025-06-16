@@ -73,7 +73,7 @@ namespace F3DZEX
                         if (macroDis != null)
                         {
                             dis = macroDis;
-                            Debug.Assert(cmdCount > 0);
+                            Utils.Assert(cmdCount > 0);
                             toSkip = cmdCount - 1;
                             comments = new List<string>()
                             {

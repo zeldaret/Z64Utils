@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Common;
 using N64;
 
 namespace Z64.Forms
@@ -45,7 +46,7 @@ namespace Z64.Forms
                     if (addr >= file.VRomStart && addr < file.VRomEnd)
                     {
                         byte[] buffer = new byte[size];
-                        Debug.Assert(file.Valid());
+                        Utils.Assert(file.Valid());
                         Buffer.BlockCopy(
                             file.Data,
                             (int)(addr - (uint)file.VRomStart),

@@ -627,7 +627,7 @@ namespace Z64
         {
             if (obj.Game == null)
                 return;
-            Debug.Assert(obj.FileName != null);
+            Utils.Assert(obj.FileName != null);
 
             // only search in gameplay_keep
             if (!obj.FileName.Contains("gameplay_keep"))
@@ -681,7 +681,7 @@ namespace Z64
                 if (!obj.IsOffsetFree(i))
                 {
                     Z64Object.ObjectHolder? holder = obj.GetHolderAtOffset(i);
-                    Debug.Assert(holder != null);
+                    Utils.Assert(holder != null);
                     i = obj.OffsetOf(holder) + holder.GetSize();
                     if (i % 4 != 0)
                         i += (4 - i % 4);
@@ -859,7 +859,7 @@ namespace Z64
                 if (!obj.IsOffsetFree(i))
                 {
                     Z64Object.ObjectHolder? holder = obj.GetHolderAtOffset(i);
-                    Debug.Assert(holder != null);
+                    Utils.Assert(holder != null);
                     i = obj.OffsetOf(holder) + holder.GetSize();
                     if (i % 4 != 0)
                         i += (4 - i % 4);

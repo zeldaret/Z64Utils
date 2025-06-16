@@ -299,7 +299,7 @@ namespace Z64
             public SkeletonLimbHolder(string name, byte[] data, EntryType type)
                 : base(name)
             {
-                Debug.Assert(
+                Utils.Assert(
                     type == EntryType.StandardLimb
                         || type == EntryType.LODLimb
                         || type == EntryType.SkinLimb
@@ -323,19 +323,19 @@ namespace Z64
 
                     if (Type != EntryType.SkinLimb)
                     {
-                        Debug.Assert(DListSeg != null);
+                        Utils.Assert(DListSeg != null);
                         bw.Write(DListSeg.VAddr);
                     }
 
                     if (Type == EntryType.LODLimb)
                     {
-                        Debug.Assert(DListFarSeg != null);
+                        Utils.Assert(DListFarSeg != null);
                         bw.Write(DListFarSeg.VAddr);
                     }
                     else if (Type == EntryType.SkinLimb)
                     {
-                        Debug.Assert(SegmentType != null);
-                        Debug.Assert(SkinSeg != null);
+                        Utils.Assert(SegmentType != null);
+                        Utils.Assert(SkinSeg != null);
                         bw.Write((int)SegmentType);
                         bw.Write(SkinSeg.VAddr);
                     }

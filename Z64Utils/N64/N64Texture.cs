@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using F3DZEX.Command;
 using Syroot.BinaryData;
 
@@ -245,10 +246,10 @@ namespace N64
                     switch (siz)
                     {
                         case G_IM_SIZ.G_IM_SIZ_4b:
-                            Debug.Assert(tlut != null);
+                            Utils.Assert(tlut != null);
                             return DecodeCI4(texels, buff, tlut);
                         case G_IM_SIZ.G_IM_SIZ_8b:
-                            Debug.Assert(tlut != null);
+                            Utils.Assert(tlut != null);
                             return DecodeCI8(texels, buff, tlut);
                         default:
                             throw new N64TextureException(

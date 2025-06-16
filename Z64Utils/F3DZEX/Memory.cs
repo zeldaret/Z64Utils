@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Common;
 using RDP;
 using Z64;
 
@@ -118,7 +119,7 @@ namespace F3DZEX
                     {
                         case SegmentType.Fill:
                         {
-                            Debug.Assert(seg.Data != null);
+                            Utils.Assert(seg.Data != null);
                             byte[] buff = new byte[count];
                             int rest = count;
                             int dstOff = 0;
@@ -139,7 +140,7 @@ namespace F3DZEX
                             return buff;
                         }
                         case SegmentType.Buffer:
-                            Debug.Assert(seg.Data != null);
+                            Utils.Assert(seg.Data != null);
                             if (addr.SegmentOff + count <= seg.Data.Length)
                             {
                                 byte[] buff = new byte[count];

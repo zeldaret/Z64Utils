@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Common;
 using Z64;
 using Z64.Forms;
 
@@ -14,6 +15,7 @@ namespace Z64
 {
     static class Program
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public static readonly string Version =
             Assembly
                 .GetExecutingAssembly()
@@ -31,6 +33,24 @@ namespace Z64
         /// </summary>
         [STAThread]
         static void Main()
+        {
+            try
+            {
+                Logger.Info("Starting up Z64Utils Version {Version}...", Version);
+                MainImpl();
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+                throw;
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
+        }
+
+        static void MainImpl()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
 

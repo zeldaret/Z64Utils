@@ -128,8 +128,8 @@ namespace Z64.Forms
             {
                 _polygons = new RenderColPoly[_colHeader.NbPolygons];
 
-                Debug.Assert(_colHeader.PolygonsHolder != null);
-                Debug.Assert(_colHeader.VerticesHolder != null);
+                Utils.Assert(_colHeader.PolygonsHolder != null);
+                Utils.Assert(_colHeader.VerticesHolder != null);
                 for (int i = 0; i < _colHeader.NbPolygons; i++)
                 {
                     Z64Object.CollisionPolygonsHolder.CollisionPoly colPoly = _colHeader

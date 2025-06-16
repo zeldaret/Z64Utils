@@ -42,6 +42,8 @@ namespace Z64
 
     public class Z64Version
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         #region JSON Data Type
 
         private class AddrToStringConverter : JsonConverter<uint?>
@@ -101,8 +103,8 @@ namespace Z64
             [MemberNotNull(nameof(BuildDate))]
             public void AssertValid()
             {
-                Debug.Assert(BuildTeam != null);
-                Debug.Assert(BuildDate != null);
+                Utils.Assert(BuildTeam != null);
+                Utils.Assert(BuildDate != null);
             }
         }
 
@@ -189,8 +191,8 @@ namespace Z64
         [MemberNotNull(nameof(Identifier))]
         public void AssertValid()
         {
-            Debug.Assert(VersionName != null);
-            Debug.Assert(Identifier != null);
+            Utils.Assert(VersionName != null);
+            Utils.Assert(Identifier != null);
         }
 
         #endregion JSON Properties
@@ -297,7 +299,7 @@ namespace Z64
             };
             options.Converters.Add(new JsonStringEnumConverter());
 
-            Debug.Assert(_versions != null);
+            Utils.Assert(_versions != null);
             string path = _versions.First(v => v.Value == this).Key;
 
             // sort entries by vrom
@@ -352,7 +354,7 @@ namespace Z64
             {
                 string json = File.ReadAllText(file);
                 var ver = JsonSerializer.Deserialize<Z64Version>(json, options);
-                Debug.Assert(ver != null);
+                Utils.Assert(ver != null);
                 ver.AssertValid();
                 ver.Identifier.AssertValid();
 
@@ -515,7 +517,7 @@ namespace Z64
 
                     if (file.Data.Length <= 0x10)
                     {
-                        Debug.WriteLine($"Skipping small file {name}");
+                        Logger.Debug($"Skipping small file {name}");
                         continue;
                     }
 
@@ -527,7 +529,7 @@ namespace Z64
                     {
                         if (existing.fileName != entry.fileName)
                         {
-                            Debug.WriteLine(
+                            Logger.Debug(
                                 $"name missmatch : {existing.fileName} ({existing.sha256}) -> {entry.fileName}"
                             );
                         }
@@ -536,7 +538,7 @@ namespace Z64
                             && existing.type == Z64FileType.Unknow
                         )
                         {
-                            Debug.WriteLine($"new type found : {existing.type} -> {entry.type}");
+                            Logger.Debug($"new type found : {existing.type} -> {entry.type}");
                             entries.Remove(existing);
                             entries.Add(entry);
                             modifCount++;
@@ -552,7 +554,7 @@ namespace Z64
 
             FileHashEntry.WriteEntries(hashPath, entries);
 
-            Debug.WriteLine($"{addCount} hash exported and {modifCount} hashes modifed!");
+            Logger.Debug($"{addCount} hash exported and {modifCount} hashes modifed!");
 #endif
         }
 
@@ -608,7 +610,7 @@ namespace Z64
                 }
             }
 
-            Debug.WriteLine($"{foundCount} hashes imported!");
+            Logger.Debug($"{foundCount} hashes imported!");
 
             game.Version.Save();
 #endif

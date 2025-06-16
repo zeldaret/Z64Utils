@@ -84,8 +84,8 @@ namespace Z64.Forms
 
         private void UpdateFileList(bool forceReload)
         {
-            Debug.Assert(_game != null);
-            Debug.Assert(_fileItemsText != null);
+            Utils.Assert(_game != null);
+            Utils.Assert(_fileItemsText != null);
 
             if (forceReload)
                 _lastSearch = null;
@@ -153,7 +153,7 @@ namespace Z64.Forms
 
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                Debug.Assert(valueForm.Result != null);
+                Utils.Assert(valueForm.Result != null);
                 var form = new ObjectAnalyzerForm(
                     game,
                     data,
@@ -237,7 +237,7 @@ namespace Z64.Forms
 
         private void RomSaveItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             saveFileDialog1.FileName = "";
             saveFileDialog1.Filter = $"{Filters.N64}|{Filters.ALL}";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -250,7 +250,7 @@ namespace Z64.Forms
 
         private void RomExportFsItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             folderBrowserDialog1.SelectedPath = "";
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -280,7 +280,7 @@ namespace Z64.Forms
 
         private void RomImportNamesItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             openFileDialog1.FileName = "";
             openFileDialog1.Filter = $"{Filters.TXT}|{Filters.ALL}";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -292,7 +292,7 @@ namespace Z64.Forms
 
         private void RomExportNamesItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             saveFileDialog1.FileName = "";
             saveFileDialog1.Filter = $"{Filters.TXT}|{Filters.ALL}";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -303,7 +303,7 @@ namespace Z64.Forms
 
         private void InjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             if (listView_files.SelectedIndices.Count != 1)
                 return;
             var item = listView_files.SelectedItems[0];
@@ -320,7 +320,7 @@ namespace Z64.Forms
 
         private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             if (listView_files.SelectedIndices.Count != 1)
                 return;
             var item = listView_files.SelectedItems[0];
@@ -362,7 +362,7 @@ namespace Z64.Forms
 
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                Debug.Assert(valueForm.Result != null);
+                Utils.Assert(valueForm.Result != null);
                 var form = new ObjectAnalyzerForm(
                     _game,
                     data,
@@ -376,7 +376,7 @@ namespace Z64.Forms
 
         private void OpenObjectViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             if (listView_files.SelectedIndices.Count != 1)
                 return;
             var item = listView_files.SelectedItems[0];
@@ -401,7 +401,7 @@ namespace Z64.Forms
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             if (listView_files.SelectedIndices.Count != 1)
                 return;
             var item = listView_files.SelectedItems[0];
@@ -416,7 +416,7 @@ namespace Z64.Forms
             );
             if (valueForm.ShowDialog() == DialogResult.OK)
             {
-                Debug.Assert(valueForm.Result != null);
+                Utils.Assert(valueForm.Result != null);
                 _game.Version.RenameFile(file.VRomStart, valueForm.Result);
                 listView_files.SelectedItems[0].Text = valueForm.Result;
             }
@@ -429,7 +429,7 @@ namespace Z64.Forms
 
         private void OpenDlistViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             DListViewerForm.OpenInstance(_game);
         }
 
@@ -440,13 +440,13 @@ namespace Z64.Forms
 
         private void ROMRAMConversionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             new ConversionForm(_game).Show();
         }
 
         private void textureViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             new TextureViewer(_game).Show();
         }
 
@@ -492,7 +492,7 @@ namespace Z64.Forms
 
         private void listView_files_DoubleClick(object sender, EventArgs e)
         {
-            Debug.Assert(_game != null);
+            Utils.Assert(_game != null);
             if (listView_files.SelectedIndices.Count != 1)
                 return;
             var item = listView_files.SelectedItems[0];

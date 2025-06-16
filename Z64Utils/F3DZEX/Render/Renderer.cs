@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using F3DZEX.Command;
 using N64;
 using OpenTK;
@@ -324,12 +325,12 @@ namespace F3DZEX.Render
         {
             if (!_initialized)
                 throw new Exception("Not initialized (yet)!");
-            Debug.Assert(_rdpVtxDrawer != null);
-            Debug.Assert(_gridDrawer != null);
-            Debug.Assert(_axisDrawer != null);
-            Debug.Assert(_textDrawer != null);
-            Debug.Assert(_tex0 != null);
-            Debug.Assert(_tex1 != null);
+            Utils.Assert(_rdpVtxDrawer != null);
+            Utils.Assert(_gridDrawer != null);
+            Utils.Assert(_axisDrawer != null);
+            Utils.Assert(_textDrawer != null);
+            Utils.Assert(_tex0 != null);
+            Utils.Assert(_tex1 != null);
         }
 
         public void ClearErrors() => ErrorMsg = null;
