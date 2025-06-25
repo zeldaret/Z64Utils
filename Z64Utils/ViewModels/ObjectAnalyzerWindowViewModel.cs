@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -303,12 +304,28 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         {
             case Z64Object.EntryType.Texture:
                 var textureHolder = (Z64Object.TextureHolder)ohe.ObjectHolder;
-                var bitmap = textureHolder.GetBitmap().ToAvaloniaBitmap();
+                Bitmap? bitmap = null;
+                try
+                {
+                    bitmap = textureHolder.GetBitmap().ToAvaloniaBitmap();
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e);
+                }
                 var imageVM = new ImageOHEDViewModel()
                 {
                     InfoText =
                         $"{textureHolder.Name} {textureHolder.Format}"
-                        + $" {textureHolder.Width}x{textureHolder.Height}",
+                        + $" {textureHolder.Width}x{textureHolder.Height}"
+                        + (
+                            textureHolder.Tlut == null
+                                ? ""
+                                : (
+                                    $" (TLUT: {_object.OffsetOf(textureHolder.Tlut):X6}"
+                                    + $" {textureHolder.Tlut.Name} {textureHolder.Tlut.Format})"
+                                )
+                        ),
                     Image = bitmap,
                 };
                 ObjectHolderEntryDetailsViewModel = imageVM;

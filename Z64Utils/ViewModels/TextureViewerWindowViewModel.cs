@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Globalization;
 using Avalonia.Media;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -92,7 +90,14 @@ public partial class TextureViewerWindowViewModel : ObservableObject
         switch (TextureAddressType)
         {
             case AddressType.VRAM:
-                return _game.Memory.ReadBytes(addr, size);
+                try
+                {
+                    return _game.Memory.ReadBytes(addr, size);
+                }
+                catch (Z64MemoryException)
+                {
+                    return null;
+                }
             case AddressType.ROM:
                 return _game.Rom.RawRom[(int)addr..((int)addr + size)];
             case AddressType.VROM:

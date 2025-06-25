@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Common;
 using F3DZEX;
+using F3DZEX.Command;
 using N64;
 using RDP;
 using Syroot.BinaryData;
@@ -203,6 +204,8 @@ namespace Z64
 
             public ImageRGBA32 GetBitmap()
             {
+                if (N64Texture.ConvertFormat(Format).Item1 == G_IM_FMT.G_IM_FMT_CI)
+                    Utils.Assert(Tlut != null);
                 return N64Texture.DecodeBitmap(Width, Height, Format, Texture, Tlut?.Texture);
             }
 
