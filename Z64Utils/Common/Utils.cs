@@ -141,6 +141,8 @@ namespace Common
         {
             if (!condition)
             {
+                if (Debugger.IsAttached)
+                    Debugger.Break();
                 throw new AssertFailedException();
             }
         }
