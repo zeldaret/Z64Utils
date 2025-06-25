@@ -5,12 +5,15 @@ using System.Diagnostics;
 using Avalonia.Metadata;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Z64;
 
 namespace Z64Utils_Avalonia;
 
 public partial class DListViewerWindowViewModel : ObservableObject
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+    private Z64Game? _game;
 
     // Used by the view to redraw when needed
     public event EventHandler? RenderContextChanged;
@@ -35,9 +38,14 @@ public partial class DListViewerWindowViewModel : ObservableObject
         Func<DListViewerRenderSettingsViewModel>,
         DListViewerRenderSettingsViewModel?
     >? OpenDListViewerRenderSettings;
+    public Func<
+        Func<SegmentsConfigWindowViewModel>,
+        SegmentsConfigWindowViewModel?
+    >? OpenSegmentsConfig;
 
-    public DListViewerWindowViewModel()
+    public DListViewerWindowViewModel(Z64Game? game)
     {
+        _game = game;
         PropertyChanging += (sender, e) =>
         {
             switch (e.PropertyName)
@@ -146,5 +154,20 @@ public partial class DListViewerWindowViewModel : ObservableObject
 
     public void OpenDisassemblyCommand() { }
 
-    public void OpenSegmentsConfigCommand() { }
+    public void OpenSegmentsConfigCommand()
+    {
+        Utils.Assert(OpenSegmentsConfig != null);
+        Utils.Assert(Renderer != null);
+        var vm = OpenSegmentsConfig(
+            () => new SegmentsConfigWindowViewModel(Renderer.Memory, _game)
+        );
+        if (vm == null)
+        {
+            // Was already open
+            return;
+        }
+        vm.SegmentsConfigChanged += (sender, e) => {
+            // TODO
+        };
+    }
 }

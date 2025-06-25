@@ -67,18 +67,16 @@ public partial class MainWindow : Window
         return segmentID;
     }
 
-    private ObjectAnalyzerWindowViewModel OpenObjectAnalyzer()
+    private void OpenObjectAnalyzer(ObjectAnalyzerWindowViewModel vm)
     {
-        var win = new ObjectAnalyzerWindow();
+        var win = new ObjectAnalyzerWindow(vm);
         win.Show();
-        return win.ViewModel;
     }
 
-    private DListViewerWindowViewModel OpenDListViewer()
+    private void OpenDListViewer(DListViewerWindowViewModel vm)
     {
-        var win = new DListViewerWindow();
+        var win = new DListViewerWindow(vm);
         win.Show();
-        return win.ViewModel;
     }
 
     private F3DZEXDisassemblerViewModel OpenF3DZEXDisassembler()

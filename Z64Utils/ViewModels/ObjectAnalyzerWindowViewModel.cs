@@ -44,7 +44,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     private Dlist? _disasDList = null;
 
     // Provided by the view
-    public Func<DListViewerWindowViewModel>? OpenDListViewer;
+    public Action<DListViewerWindowViewModel>? OpenDListViewer;
     public Func<SkeletonViewerWindowViewModel>? OpenSkeletonViewer;
     public Func<CollisionViewerWindowViewModel>? OpenCollisionViewer;
     public Func<F3DZEXDisassemblerSettingsViewModel?>? OpenF3DZEXDisassemblerSettings;
@@ -449,7 +449,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     {
         Utils.Assert(ohe != null);
         Utils.Assert(OpenDListViewer != null);
-        var dlvVM = OpenDListViewer();
+        var dlvVM = new DListViewerWindowViewModel(_game);
+        OpenDListViewer(dlvVM);
         Utils.Assert(_game != null);
         dlvVM.Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config());
         // TODO cleanup, segment config, render config

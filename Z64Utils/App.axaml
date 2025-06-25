@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:Z64Utils_Avalonia"
     x:Class="Z64.App"
     RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available
@@ -17,5 +18,17 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         <FontFamily x:Key="MonospacedFont">avares://Z64Utils/Assets/Fonts#Hack</FontFamily>
+
+        <c:EnumUINameMap x:Key="SegmentTypeEnumUINameMap">
+            <c:EnumUINameMapEntry Enum="EMPTY" UI="Empty" />
+            <c:EnumUINameMapEntry Enum="ADDRESS" UI="Address" />
+            <c:EnumUINameMapEntry Enum="ROM_FILESYSTEM" UI="ROM FS" />
+            <c:EnumUINameMapEntry Enum="FILE" UI="File" />
+            <c:EnumUINameMapEntry Enum="IDENTITY_MATRICES" UI="Identity Matrices" />
+            <c:EnumUINameMapEntry Enum="PRIM_COLOR_DLIST" UI="Prim Color" />
+            <c:EnumUINameMapEntry Enum="ENV_COLOR_DLIST" UI="Env Color" />
+            <c:EnumUINameMapEntry Enum="NULL_BYTES" UI="Null Bytes" />
+            <c:EnumUINameMapEntry Enum="EMPTY_DLIST" UI="Empty DList" />
+        </c:EnumUINameMap>
     </Application.Resources>
 </Application>

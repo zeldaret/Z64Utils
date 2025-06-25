@@ -25,8 +25,8 @@ public partial class MainWindowViewModel : ObservableObject
     // Provided by the view
     public Func<Task<IStorageFile?>>? GetOpenROM;
     public Func<Task<int?>>? PickSegmentID;
-    public Func<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
-    public Func<DListViewerWindowViewModel>? OpenDListViewer;
+    public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
+    public Action<DListViewerWindowViewModel>? OpenDListViewer;
     public Func<F3DZEXDisassemblerViewModel>? OpenF3DZEXDisassembler;
     public Action<ROMRAMConversionsWindowViewModel>? OpenROMRAMConversions;
     public Action<TextureViewerWindowViewModel>? OpenTextureViewer;
@@ -133,7 +133,7 @@ public partial class MainWindowViewModel : ObservableObject
     public void OpenDListViewerCommand()
     {
         Utils.Assert(OpenDListViewer != null);
-        OpenDListViewer();
+        OpenDListViewer(new(_game));
     }
 
     public void F3DZEXDisassemblerCommand()
@@ -171,7 +171,7 @@ public partial class MainWindowViewModel : ObservableObject
         Utils.Assert(OpenObjectAnalyzer != null);
         // TODO open file picker and pass file to object analyzer
         // (this requires refactoring out Z64Game usage which is only available when a full rom is loaded)
-        OpenObjectAnalyzer();
+        OpenObjectAnalyzer(new());
     }
 
     public void CheckNewReleasesCommand() { }
@@ -182,7 +182,8 @@ public partial class MainWindowViewModel : ObservableObject
     {
         Utils.Assert(_game != null);
         Utils.Assert(OpenObjectAnalyzer != null);
-        var objectAnalyzerVM = OpenObjectAnalyzer();
+        var objectAnalyzerVM = new ObjectAnalyzerWindowViewModel();
+        OpenObjectAnalyzer(objectAnalyzerVM);
         objectAnalyzerVM.SetFile(_game, file, segment);
         return objectAnalyzerVM;
     }

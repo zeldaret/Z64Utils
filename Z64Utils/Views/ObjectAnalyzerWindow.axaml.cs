@@ -13,24 +13,21 @@ public partial class ObjectAnalyzerWindow : Window
 
     private F3DZEXDisassemblerSettingsWindow? _currentF3DZEXDisassemblerSettingsWindow;
 
-    public ObjectAnalyzerWindow()
+    public ObjectAnalyzerWindow(ObjectAnalyzerWindowViewModel vm)
     {
-        ViewModel = new ObjectAnalyzerWindowViewModel()
-        {
-            OpenDListViewer = OpenDListViewer,
-            OpenSkeletonViewer = OpenSkeletonViewer,
-            OpenCollisionViewer = OpenCollisionViewer,
-            OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings,
-        };
+        ViewModel = vm;
+        ViewModel.OpenDListViewer = OpenDListViewer;
+        ViewModel.OpenSkeletonViewer = OpenSkeletonViewer;
+        ViewModel.OpenCollisionViewer = OpenCollisionViewer;
+        ViewModel.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
         DataContext = ViewModel;
         InitializeComponent();
     }
 
-    private DListViewerWindowViewModel OpenDListViewer()
+    private void OpenDListViewer(DListViewerWindowViewModel vm)
     {
-        var win = new DListViewerWindow();
+        var win = new DListViewerWindow(vm);
         win.Show();
-        return win.ViewModel;
     }
 
     private SkeletonViewerWindowViewModel OpenSkeletonViewer()

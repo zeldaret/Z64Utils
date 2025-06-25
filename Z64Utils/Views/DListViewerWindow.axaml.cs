@@ -8,10 +8,13 @@ public partial class DListViewerWindow : Window
     public DListViewerWindowViewModel ViewModel;
 
     private DListViewerRenderSettingsWindow? _currentRenderSettingsWindow;
+    private SegmentsConfigWindow? _currentSegmentsConfigWindow;
 
-    public DListViewerWindow()
+    public DListViewerWindow(DListViewerWindowViewModel vm)
     {
-        ViewModel = new() { OpenDListViewerRenderSettings = OpenDListViewerRenderSettings };
+        ViewModel = vm;
+        ViewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
+        ViewModel.OpenSegmentsConfig = OpenSegmentsConfig;
         DataContext = ViewModel;
         InitializeComponent();
         ViewModel.RenderContextChanged += (sender, e) =>
@@ -38,5 +41,25 @@ public partial class DListViewerWindow : Window
         };
         _currentRenderSettingsWindow.Show();
         return _currentRenderSettingsWindow.ViewModel;
+    }
+
+    private SegmentsConfigWindowViewModel? OpenSegmentsConfig(
+        Func<SegmentsConfigWindowViewModel> vmFactory
+    )
+    {
+        if (_currentSegmentsConfigWindow != null)
+        {
+            _currentSegmentsConfigWindow.Activate();
+            return null;
+        }
+
+        var vm = vmFactory();
+        _currentSegmentsConfigWindow = new SegmentsConfigWindow(vm);
+        _currentSegmentsConfigWindow.Closed += (sender, e) =>
+        {
+            _currentSegmentsConfigWindow = null;
+        };
+        _currentSegmentsConfigWindow.Show();
+        return _currentSegmentsConfigWindow.ViewModel;
     }
 }
