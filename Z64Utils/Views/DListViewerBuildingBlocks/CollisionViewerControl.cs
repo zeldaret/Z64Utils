@@ -17,7 +17,7 @@ public class CollisionViewerControl : OpenTKControlBaseWithCamera
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     public static readonly StyledProperty<List<CollisionPolygon>?> PolygonsProperty =
-        AvaloniaProperty.Register<DLViewerControl, List<CollisionPolygon>?>(
+        AvaloniaProperty.Register<CollisionViewerControl, List<CollisionPolygon>?>(
             nameof(Polygons),
             defaultValue: null
         );

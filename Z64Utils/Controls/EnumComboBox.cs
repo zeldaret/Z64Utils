@@ -14,7 +14,7 @@ public class EnumComboBox : ComboBox
     protected override Type StyleKeyOverride => typeof(ComboBox);
 
     public static readonly StyledProperty<Type> EnumTypeProperty = AvaloniaProperty.Register<
-        HexTextBox,
+        EnumComboBox,
         Type
     >(nameof(EnumType));
     public Type EnumType
@@ -24,7 +24,10 @@ public class EnumComboBox : ComboBox
     }
 
     public static readonly StyledProperty<Enum?> SelectedEnumValueProperty =
-        AvaloniaProperty.Register<HexTextBox, Enum?>(nameof(SelectedEnumValue), defaultValue: null);
+        AvaloniaProperty.Register<EnumComboBox, Enum?>(
+            nameof(SelectedEnumValue),
+            defaultValue: null
+        );
     public Enum? SelectedEnumValue
     {
         get => GetValue(SelectedEnumValueProperty);
@@ -32,7 +35,7 @@ public class EnumComboBox : ComboBox
     }
 
     public static readonly StyledProperty<EnumUINameMap?> EnumUINameMapProperty =
-        AvaloniaProperty.Register<HexTextBox, EnumUINameMap?>(
+        AvaloniaProperty.Register<EnumComboBox, EnumUINameMap?>(
             nameof(EnumUINameMap),
             defaultValue: null
         );
@@ -111,7 +114,7 @@ public class EnumUINameMap : AvaloniaObject
 public class EnumUINameMapEntry : AvaloniaObject
 {
     public static readonly StyledProperty<string> EnumProperty = AvaloniaProperty.Register<
-        HexTextBox,
+        EnumUINameMapEntry,
         string
     >(nameof(Enum));
     public string Enum
@@ -121,7 +124,7 @@ public class EnumUINameMapEntry : AvaloniaObject
     }
 
     public static readonly StyledProperty<string> UIProperty = AvaloniaProperty.Register<
-        HexTextBox,
+        EnumUINameMapEntry,
         string
     >(nameof(UI));
     public string UI

@@ -16,7 +16,7 @@ namespace Z64Utils_Avalonia;
 public class CheckPatternControl : Control
 {
     public static readonly StyledProperty<int> CheckerSizeProperty = AvaloniaProperty.Register<
-        DLViewerControl,
+        CheckPatternControl,
         int
     >(nameof(CheckerSize), defaultValue: 10);
     public int CheckerSize

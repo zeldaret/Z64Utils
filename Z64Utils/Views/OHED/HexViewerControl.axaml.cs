@@ -11,7 +11,7 @@ public partial class HexViewerControl : UserControl
     private const int BYTES_PER_ROW = 16;
 
     public static readonly StyledProperty<byte[]?> DataBytesProperty = AvaloniaProperty.Register<
-        DLViewerControl,
+        HexViewerControl,
         byte[]?
     >(nameof(DataBytes), defaultValue: null);
     public byte[]? DataBytes
@@ -21,7 +21,10 @@ public partial class HexViewerControl : UserControl
     }
 
     public static readonly StyledProperty<uint> FirstByteAddressProperty =
-        AvaloniaProperty.Register<DLViewerControl, uint>(nameof(FirstByteAddress), defaultValue: 0);
+        AvaloniaProperty.Register<HexViewerControl, uint>(
+            nameof(FirstByteAddress),
+            defaultValue: 0
+        );
     public uint FirstByteAddress
     {
         get => GetValue(FirstByteAddressProperty);
