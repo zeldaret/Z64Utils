@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Controls;
 
 namespace Z64Utils_Avalonia;

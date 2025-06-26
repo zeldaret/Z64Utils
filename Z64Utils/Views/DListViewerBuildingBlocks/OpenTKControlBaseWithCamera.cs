@@ -4,7 +4,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Rendering;
-using OpenTK;
 using OpenTK.Mathematics;
 
 namespace Z64Utils_Avalonia;

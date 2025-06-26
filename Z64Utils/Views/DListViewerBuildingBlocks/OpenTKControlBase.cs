@@ -1,12 +1,10 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using Avalonia;
 using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
 using Common;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using static Avalonia.OpenGL.GlConsts;
 

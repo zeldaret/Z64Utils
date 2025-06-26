@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using F3DZEX.Command;
-using NLog.Config;
 
 namespace Z64Utils_Avalonia;
 
