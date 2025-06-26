@@ -121,15 +121,14 @@ public class DLViewerControl : OpenTKControlBaseWithCamera
                 Dlist dList;
                 Matrix4? mtx = null;
 
-                // TODO ugly code
-                if (de is DLViewerControlDListDisplayElement)
+                if (de is DLViewerControlDListDisplayElement deDL)
                 {
-                    dList = ((DLViewerControlDListDisplayElement)de).dList;
+                    dList = deDL.dList;
                 }
-                else if (de is DLViewerControlDlistWithMatrixDisplayElement)
+                else if (de is DLViewerControlDlistWithMatrixDisplayElement deDLwithMtx)
                 {
-                    dList = ((DLViewerControlDlistWithMatrixDisplayElement)de).dList;
-                    mtx = ((DLViewerControlDlistWithMatrixDisplayElement)de).mtx;
+                    dList = deDLwithMtx.dList;
+                    mtx = deDLwithMtx.mtx;
                 }
                 else
                 {
