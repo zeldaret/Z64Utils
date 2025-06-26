@@ -29,17 +29,17 @@ jobs:
       - name: dotnet restore
         shell: bash
         run: |
-          dotnet restore ${{ env.restore_args }}
+          dotnet restore Z64Utils/Z64Utils.csproj ${{ env.restore_args }}
 
       - name: dotnet build
         shell: bash
         run: |
-          dotnet build ${{ env.restore_args }} ${{ env.build_args }}
+          dotnet build Z64Utils/Z64Utils.csproj ${{ env.restore_args }} ${{ env.build_args }}
 
       - name: dotnet publish
         shell: bash
         run: |
-          dotnet publish --output publish_out/ ${{ env.restore_args }} ${{ env.build_args }}
+          dotnet publish Z64Utils/Z64Utils.csproj --output publish_out/ ${{ env.restore_args }} ${{ env.build_args }}
 
       - uses: actions/checkout@v4
         with:
