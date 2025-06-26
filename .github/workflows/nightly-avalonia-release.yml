@@ -1,0 +1,47 @@
+name: Release
+
+on: [workflow_call]
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/re_avalonia'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete previous nightly-avalonia release
+        run: |
+            gh release --repo ${{ github.repository }} delete nightly-avalonia --cleanup-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        continue-on-error: true  # In case the release doesn't exist yet
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          path: src
+          fetch-depth: 0
+      - name: Create nightly-avalonia tag
+        run: |
+            git -C src tag nightly-avalonia
+            git -C src push origin nightly-avalonia
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: bin
+      - name: Release info
+        id: release_info
+        run: |
+            echo "now=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+            echo "message=$(git -C src log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+            echo 'files<<EOF' >> $GITHUB_OUTPUT
+            find bin -name '*.tar.gz' >> $GITHUB_OUTPUT
+            echo 'EOF' >> $GITHUB_OUTPUT
+      - name: Create nightly-avalonia release
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          tag_name: nightly-avalonia
+          name: Z64Utils nightly-avalonia ${{ steps.release_info.outputs.now }}
+          body: |
+            Nightly build of Z64Utils Avalonia
+            ${{ steps.release_info.outputs.message }}
+          files: |
+            ${{ steps.release_info.outputs.files }}

@@ -10,3 +10,6 @@ jobs:
   nightly-release:
     needs: build
     uses: ./.github/workflows/nightly-release.yml
+  nightly-avalonia-release:
+    needs: build
+    uses: ./.github/workflows/nightly-avalonia-release.yml
