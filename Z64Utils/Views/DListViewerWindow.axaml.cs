@@ -5,6 +5,8 @@ namespace Z64Utils_Avalonia;
 
 public partial class DListViewerWindow : Window
 {
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
     public DListViewerWindowViewModel ViewModel;
 
     private DListViewerRenderSettingsWindow? _currentRenderSettingsWindow;
@@ -19,7 +21,8 @@ public partial class DListViewerWindow : Window
         InitializeComponent();
         ViewModel.RenderContextChanged += (sender, e) =>
         {
-            DLViewerGL.RequestNextFrameRenderingIfInitialized();
+            Logger.Debug("RenderContextChanged");
+            DLViewerGL.Redraw();
         };
     }
 

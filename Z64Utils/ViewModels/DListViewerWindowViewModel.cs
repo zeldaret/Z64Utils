@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -23,6 +24,8 @@ public partial class DListViewerWindowViewModel : ObservableObject
 
     [ObservableProperty]
     public F3DZEX.Render.Renderer? _renderer;
+
+    public ObservableCollection<uint> DLAddresses { get; } = new();
 
     [ObservableProperty]
     private ObservableCollection<IDLViewerControlDisplayElement> _displayElements = new();
@@ -72,6 +75,7 @@ public partial class DListViewerWindowViewModel : ObservableObject
                     break;
             }
         };
+        DLAddresses.CollectionChanged += (sender, e) => DecodeDLists();
     }
 
     private void OnRendererPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -79,6 +83,8 @@ public partial class DListViewerWindowViewModel : ObservableObject
         Utils.Assert(Renderer != null);
         switch (e.PropertyName)
         {
+            case nameof(Renderer.RenderErrorAddr):
+            case nameof(Renderer.ErrorMsg):
             case nameof(Renderer.HasError):
                 if (Renderer.HasError)
                 {
@@ -106,32 +112,49 @@ public partial class DListViewerWindowViewModel : ObservableObject
         {
             Renderer.Memory.Segments[index] = segment;
 
-            // TODO redecode dlist, rerender
+            DecodeDLists();
+            RenderContextChanged?.Invoke(this, new());
         }
     }
 
     public void SetSingleDlist(uint vaddr)
     {
+        DLAddresses.Clear();
+        DLAddresses.Add(vaddr);
+    }
+
+    private void DecodeDLists()
+    {
         if (Renderer == null)
             throw new Exception("Renderer is null");
 
-        Logger.Debug("vaddr={vaddr}", vaddr);
+        DisplayElements.Clear();
+        var decodeErrors = new List<string>();
 
-        F3DZEX.Command.Dlist? dList;
-        try
+        foreach (var vaddr in DLAddresses)
         {
-            dList = Renderer.GetDlist(vaddr);
+            Logger.Debug("vaddr=0x{vaddr:X8}", vaddr);
+
+            F3DZEX.Command.Dlist? dList;
+            try
+            {
+                dList = Renderer.GetDlist(vaddr);
+            }
+            catch (Exception e)
+            {
+                decodeErrors.Add($"Could not decode DL 0x{vaddr:X8}: {e.Message}");
+                dList = null;
+            }
+            if (dList != null)
+            {
+                DisplayElements.Add(new DLViewerControlDListDisplayElement(dList));
+            }
         }
-        catch (Exception e)
-        {
-            DecodeError = $"Could not decode DL 0x{vaddr:X8}: {e.Message}";
-            dList = null;
-        }
-        if (dList != null)
-        {
-            DisplayElements.Clear();
-            DisplayElements.Add(new DLViewerControlDListDisplayElement(dList));
-        }
+
+        if (decodeErrors.Count == 0)
+            DecodeError = null;
+        else
+            DecodeError = string.Join("\n", decodeErrors);
     }
 
     public void OpenRenderSettingsCommand()
@@ -173,8 +196,13 @@ public partial class DListViewerWindowViewModel : ObservableObject
             // Was already open
             return;
         }
-        vm.SegmentsConfigChanged += (sender, e) => {
-            // TODO
+        vm.SegmentsConfigChanged += (sender, e) =>
+        {
+            Logger.Debug("SegmentsConfigChanged");
+            for (int i = 0; i < F3DZEX.Memory.Segment.COUNT; i++)
+                Logger.Debug("{segmentIndex} {segmentLabel}", i, Renderer.Memory.Segments[i].Label);
+            DecodeDLists();
+            RenderContextChanged?.Invoke(this, new());
         };
     }
 }

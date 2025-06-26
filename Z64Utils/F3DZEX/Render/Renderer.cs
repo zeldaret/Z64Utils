@@ -259,11 +259,15 @@ namespace F3DZEX.Render
             }
         }
 
-        public uint RenderErrorAddr { get; private set; } = 0xFFFFFFFF;
-        public string? ErrorMsg { get; private set; } = null;
+        [ObservableProperty]
+        private uint _renderErrorAddr = 0xFFFFFFFF;
+
+        [ObservableProperty]
+        private string? _errorMsg = null;
 
         [ObservableProperty]
         private bool _hasError = false;
+
         public Config CurrentConfig { get; set; }
         public Memory Memory { get; private set; }
 

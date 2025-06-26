@@ -78,7 +78,7 @@ public class DLViewerControl : OpenTKControlBaseWithCamera
                 Utils.Assert(newValue != null);
                 newValue.CollectionChanged += OnDisplayElementsCollectionChanged;
 
-                RequestNextFrameRenderingIfInitialized();
+                Redraw();
             }
         };
     }
@@ -88,6 +88,13 @@ public class DLViewerControl : OpenTKControlBaseWithCamera
         NotifyCollectionChangedEventArgs e
     )
     {
+        Redraw();
+    }
+
+    public void Redraw()
+    {
+        if (Renderer != null)
+            Renderer.ClearErrors();
         RequestNextFrameRenderingIfInitialized();
     }
 
