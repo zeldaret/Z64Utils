@@ -33,6 +33,9 @@ public partial class DListViewerWindowViewModel : ObservableObject
     [ObservableProperty]
     private string? _renderError;
 
+    [ObservableProperty]
+    private string? _GLInfoText;
+
     // Provided by the view
     public Func<
         Func<DListViewerRenderSettingsViewModel>,
@@ -86,6 +89,10 @@ public partial class DListViewerWindowViewModel : ObservableObject
                 {
                     RenderError = null;
                 }
+                break;
+
+            case nameof(Renderer.GLInfoText):
+                GLInfoText = Renderer.GLInfoText;
                 break;
         }
     }

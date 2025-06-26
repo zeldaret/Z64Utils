@@ -288,9 +288,11 @@ namespace F3DZEX.Render
         RdpVertexDrawer? _rdpVtxDrawer;
         SimpleVertexDrawer? _gridDrawer;
         ColoredVertexDrawer? _axisDrawer;
-        TextDrawer? _textDrawer;
         TextureHandler? _tex0;
         TextureHandler? _tex1;
+
+        [ObservableProperty]
+        string? _GLInfoText;
 
         public bool RenderFailed() => ErrorMsg != null;
 
@@ -321,7 +323,6 @@ namespace F3DZEX.Render
             nameof(_rdpVtxDrawer),
             nameof(_gridDrawer),
             nameof(_axisDrawer),
-            //FIXME-textDrawerLinux nameof(_textDrawer),
             nameof(_tex0),
             nameof(_tex1)
         )]
@@ -332,7 +333,6 @@ namespace F3DZEX.Render
             Utils.Assert(_rdpVtxDrawer != null);
             Utils.Assert(_gridDrawer != null);
             Utils.Assert(_axisDrawer != null);
-            //FIXME-textDrawerLinux Utils.Assert(_textDrawer != null);
             Utils.Assert(_tex0 != null);
             Utils.Assert(_tex1 != null);
         }
@@ -385,7 +385,6 @@ namespace F3DZEX.Render
             _rdpVtxDrawer = new RdpVertexDrawer();
             _gridDrawer = new SimpleVertexDrawer();
             _axisDrawer = new ColoredVertexDrawer();
-            //FIXME-textDrawerLinux _textDrawer = new TextDrawer();
 
             CheckGLErros();
             float[] vertices = RenderHelper.GenerateGridVertices(CurrentConfig.GridScale, 6, false);
@@ -447,8 +446,6 @@ namespace F3DZEX.Render
             _rdpVtxDrawer.SendProjViewMatrices(ref proj, ref view);
             _rdpVtxDrawer.SendInitialColors(CurrentConfig);
             CheckGLErros();
-            Matrix4 id = Matrix4.Identity;
-            //FIXME-textDrawerLinux _textDrawer.SendProjViewMatrices(ref id, ref id);
 
             _rdpVtxDrawer.SendModelMatrix(ModelMtxStack.Top());
             _gridDrawer.SendModelMatrix(Matrix4.Identity);
@@ -493,14 +490,17 @@ namespace F3DZEX.Render
 
             if (CurrentConfig.ShowGLInfo)
             {
-                Utils.Assert(_textDrawer != null);
-                _textDrawer.DrawString(
+                GLInfoText = (
                     //$"Extensions: {GL.GetString(StringName.Extensions)}\n" +
                     $"Shading Language Version: {GL.GetString(StringName.ShadingLanguageVersion)}\n"
-                        + $"Version: {GL.GetString(StringName.Version)}\n"
-                        + $"Renderer: {GL.GetString(StringName.Renderer)}\n"
-                        + $"Vendor: {GL.GetString(StringName.Vendor)}"
+                    + $"Version: {GL.GetString(StringName.Version)}\n"
+                    + $"Renderer: {GL.GetString(StringName.Renderer)}\n"
+                    + $"Vendor: {GL.GetString(StringName.Vendor)}"
                 );
+            }
+            else
+            {
+                GLInfoText = null;
             }
 
             CheckGLErros();

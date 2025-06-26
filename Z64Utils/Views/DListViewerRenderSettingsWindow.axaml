@@ -16,8 +16,7 @@
         </StackPanel>
         <CheckBox IsChecked="{Binding ShowGrid}">ShowGrid</CheckBox>
         <CheckBox IsChecked="{Binding ShowAxis}">ShowAxis</CheckBox>
-        <!-- TODO port ShowGLInfo feature -->
-        <CheckBox IsChecked="{Binding ShowGLInfo}" IsEnabled="false">ShowGLInfo</CheckBox>
+        <CheckBox IsChecked="{Binding ShowGLInfo}">ShowGLInfo</CheckBox>
         <StackPanel Orientation="Horizontal">
             <Label Target="RenderModeComboBox">RenderMode</Label>
             <ComboBox Name="RenderModeComboBox"
