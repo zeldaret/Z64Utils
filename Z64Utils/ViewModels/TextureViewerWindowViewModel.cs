@@ -18,6 +18,9 @@ public partial class TextureViewerWindowViewModel : ObservableObject
     uint? _textureAddress = null;
 
     [ObservableProperty]
+    uint _textureAddressScrollAmountBase = 0x20;
+
+    [ObservableProperty]
     uint? _TLUTAddress = null;
 
     [ObservableProperty]
@@ -51,6 +54,11 @@ public partial class TextureViewerWindowViewModel : ObservableObject
                 case nameof(Height):
                     UpdateImage();
                     break;
+            }
+            if (e.PropertyName == nameof(Format) || e.PropertyName == nameof(Width))
+            {
+                var (_, siz) = N64Texture.ConvertFormat(Format);
+                TextureAddressScrollAmountBase = (uint)N64Texture.GetTexSize(Width, siz);
             }
         };
     }

@@ -19,11 +19,15 @@
                 MinWidth="100" Margin="10" />
             <StackPanel Margin="10">
                 <TextBlock>Texture Address</TextBlock>
-                <c:HexTextBox Value="{Binding TextureAddress}" MinWidth="150" />
+                <c:HexTextBox Value="{Binding TextureAddress}"
+                    ScrollAmountBase="{Binding TextureAddressScrollAmountBase}"
+                    ReverseScrollDirection="true"
+                    MinWidth="150" />
             </StackPanel>
             <StackPanel Margin="10">
                 <TextBlock>TLUT Address</TextBlock>
-                <c:HexTextBox Value="{Binding TLUTAddress}" MinWidth="150" />
+                <c:HexTextBox Value="{Binding TLUTAddress}" ReverseScrollDirection="true"
+                    MinWidth="150" />
             </StackPanel>
             <StackPanel Margin="10">
                 <TextBlock>Format</TextBlock>

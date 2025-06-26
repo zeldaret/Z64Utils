@@ -23,6 +23,25 @@ public class HexTextBox : TextBox
         set => SetValue(ValueProperty, value);
     }
 
+    public static readonly StyledProperty<uint> ScrollAmountBaseProperty =
+        AvaloniaProperty.Register<HexTextBox, uint>(nameof(ScrollAmountBase), defaultValue: 0x10);
+    public uint ScrollAmountBase
+    {
+        get => GetValue(ScrollAmountBaseProperty);
+        set => SetValue(ScrollAmountBaseProperty, value);
+    }
+
+    public static readonly StyledProperty<bool> ReverseScrollDirectionProperty =
+        AvaloniaProperty.Register<HexTextBox, bool>(
+            nameof(ReverseScrollDirection),
+            defaultValue: false
+        );
+    public bool ReverseScrollDirection
+    {
+        get => GetValue(ReverseScrollDirectionProperty);
+        set => SetValue(ReverseScrollDirectionProperty, value);
+    }
+
     public HexTextBox()
     {
         PropertyChanged += (sender, e) =>
@@ -59,49 +78,58 @@ public class HexTextBox : TextBox
 
         PointerWheelChanged += (sender, e) =>
         {
-            if (Value == null)
-                return;
-            int offset;
-            switch (e.KeyModifiers)
-            {
-                case KeyModifiers.Shift | KeyModifiers.Alt:
-                    offset = 1;
-                    break;
-                case KeyModifiers.Control | KeyModifiers.Alt:
-                    offset = 1;
-                    break;
-                case KeyModifiers.Alt:
-                    offset = 4;
-                    break;
-                case KeyModifiers.Control:
-                    offset = 0x100;
-                    break;
-                case KeyModifiers.Shift:
-                    offset = 0x100;
-                    break;
-                case KeyModifiers.Shift | KeyModifiers.Control:
-                    offset = 0x1000;
-                    break;
-                case KeyModifiers.None:
-                    offset = 0x10;
-                    break;
-                default:
-                    offset = 0;
-                    break;
-            }
-            if (offset == 0)
-                return;
-            var newValue = Value + offset * -Math.Sign(e.Delta.Y);
-            if (newValue < 0)
-                Value = 0;
-            else if (newValue > uint.MaxValue)
-                Value = uint.MaxValue;
-            else
-                Value = (uint)newValue;
+            ScrollImpl(Math.Sign(e.Delta.Y), e.KeyModifiers);
+        };
+
+        KeyDown += (sender, e) =>
+        {
+            if (e.Key == Key.Down)
+                ScrollImpl(-1, e.KeyModifiers);
+            else if (e.Key == Key.Up)
+                ScrollImpl(+1, e.KeyModifiers);
         };
     }
 
-    public static uint? ParseHexText(string s)
+    private void ScrollImpl(int direction, KeyModifiers keyModifiers)
+    {
+        if (Value == null)
+            return;
+        var offset = GetScrollOffset(keyModifiers);
+        if (offset == 0)
+            return;
+        var newValue = Value + offset * direction * (ReverseScrollDirection ? -1 : 1);
+        if (newValue < 0)
+            Value = 0;
+        else if (newValue > uint.MaxValue)
+            Value = uint.MaxValue;
+        else
+            Value = (uint)newValue;
+    }
+
+    private uint GetScrollOffset(KeyModifiers keyModifiers)
+    {
+        switch (keyModifiers)
+        {
+            case KeyModifiers.Shift | KeyModifiers.Alt:
+                return 1;
+            case KeyModifiers.Control | KeyModifiers.Alt:
+                return 1;
+            case KeyModifiers.Alt:
+                return ScrollAmountBase / 4;
+            case KeyModifiers.Control:
+                return ScrollAmountBase * 16;
+            case KeyModifiers.Shift:
+                return ScrollAmountBase * 16;
+            case KeyModifiers.Shift | KeyModifiers.Control:
+                return ScrollAmountBase * 16 * 16;
+            case KeyModifiers.None:
+                return ScrollAmountBase;
+            default:
+                return 0;
+        }
+    }
+
+    private static uint? ParseHexText(string s)
     {
         s = s.ToUpper();
         if (s.StartsWith("0X"))
