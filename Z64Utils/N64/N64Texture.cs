@@ -57,7 +57,7 @@ namespace N64
 
         public Bitmap ToAvaloniaBitmap()
         {
-            // TODO this is sketchy
+            // https://github.com/AvaloniaUI/Avalonia/discussions/19127
             Bitmap bitmap;
             unsafe
             {
@@ -65,10 +65,10 @@ namespace N64
                 {
                     bitmap = new Bitmap(
                         PixelFormats.Rgba8888,
-                        AlphaFormat.Unpremul, // Opaque makes the image opaque and Premul isn't right according to its description (also it makes a 0x00FF000A image pixel opaque) so must be Unpremul
+                        AlphaFormat.Unpremul,
                         (IntPtr)p,
                         new PixelSize(Width, Height),
-                        new Vector(96, 96), // somehow not using 96,96 results in the image being padded with transparent pixels. Is 96,96 portable? What is this even for
+                        new Vector(96, 96),
                         Width * 4
                     );
                 }
