@@ -1,6 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:c="using:Z64Utils_Avalonia"
+    xmlns:F3DZEX.Render="using:F3DZEX.Render"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -19,17 +21,8 @@
         <CheckBox IsChecked="{Binding ShowGLInfo}">ShowGLInfo</CheckBox>
         <StackPanel Orientation="Horizontal">
             <Label Target="RenderModeComboBox">RenderMode</Label>
-            <ComboBox Name="RenderModeComboBox"
-                ItemsSource="{Binding RenderModeValues}"
-                SelectedValue="{Binding RenderMode}"
-                SelectedValueBinding="{Binding RenderModeEnum}"
-            >
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding RenderModeName}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+            <c:EnumComboBox EnumType="F3DZEX.Render:RdpVertexDrawer+ModelRenderMode"
+                SelectedItem="{Binding RenderMode}" />
         </StackPanel>
         <CheckBox IsChecked="{Binding EnabledLighting}">EnabledLighting</CheckBox>
         <CheckBox IsChecked="{Binding DrawNormals}">DrawNormals</CheckBox>

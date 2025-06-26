@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using F3DZEX.Render;
 
@@ -8,28 +7,6 @@ namespace Z64Utils_Avalonia;
 public partial class DListViewerRenderSettingsViewModel : ObservableObject
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
-    // TODO surely there is a better way to handle a ComboBox-enum... (for RenderMode)
-    public class RenderModeValue
-    {
-        public string RenderModeName { get; }
-        public RdpVertexDrawer.ModelRenderMode RenderModeEnum { get; }
-
-        public RenderModeValue(RdpVertexDrawer.ModelRenderMode renderModeEnum)
-        {
-            RenderModeName = Enum.GetName(renderModeEnum) ?? "?";
-            RenderModeEnum = renderModeEnum;
-        }
-    }
-
-    private IEnumerable<RenderModeValue> _renderModeValues = new List<RenderModeValue>
-    {
-        new(RdpVertexDrawer.ModelRenderMode.Wireframe),
-        new(RdpVertexDrawer.ModelRenderMode.Textured),
-        new(RdpVertexDrawer.ModelRenderMode.Surface),
-        new(RdpVertexDrawer.ModelRenderMode.Normal),
-    };
-    public IEnumerable<RenderModeValue> RenderModeValues => _renderModeValues;
 
     [ObservableProperty]
     private float _gridScale;
