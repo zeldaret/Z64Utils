@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using Avalonia.Metadata;
 using Avalonia.Threading;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -15,11 +16,12 @@ using Z64;
 
 namespace Z64Utils_Avalonia;
 
-// TODO this is 100% copypaste from DListViewerWindowVM for now, adapt, refactor.
-// also cleanup asserts
 public partial class SkeletonViewerWindowViewModel : ObservableObject
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+    // Used by the view to redraw when needed
+    public event EventHandler? RenderContextChanged;
 
     [ObservableProperty]
     public F3DZEX.Render.Renderer? _renderer;
@@ -87,6 +89,12 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     [ObservableProperty]
     Matrix4[]? _curPose;
+
+    // Provided by the view
+    public Func<
+        Func<DListViewerRenderSettingsViewModel>,
+        DListViewerRenderSettingsViewModel?
+    >? OpenDListViewerRenderSettings;
 
     public SkeletonViewerWindowViewModel()
     {
@@ -200,7 +208,27 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     public void OpenRenderSettingsCommand()
     {
-        // TODO
+        Utils.Assert(OpenDListViewerRenderSettings != null);
+        Utils.Assert(Renderer != null);
+        var vm = OpenDListViewerRenderSettings(
+            () => new DListViewerRenderSettingsViewModel(Renderer.CurrentConfig)
+        );
+        if (vm == null)
+        {
+            // Was already open
+            return;
+        }
+
+        vm.RendererConfigChanged += (sender, e) =>
+        {
+            RenderContextChanged?.Invoke(this, new());
+        };
+    }
+
+    [DependsOn(nameof(Renderer))]
+    public bool CanOpenRenderSettingsCommand(object arg)
+    {
+        return Renderer != null;
     }
 
     public void SetSkeleton(Z64Object.SkeletonHolder skeletonHolder)
