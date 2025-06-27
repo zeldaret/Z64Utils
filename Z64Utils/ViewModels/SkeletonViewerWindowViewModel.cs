@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Metadata;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -83,6 +85,22 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         }
     }
 
+    public class ExternalRegularAnimationEntry : RegularAnimationEntry, IExternalAnimationEntry
+    {
+        public Dictionary<int, F3DZEX.Memory.Segment> ExternalData { get; }
+
+        public ExternalRegularAnimationEntry(
+            SkeletonViewerWindowViewModel parentVM,
+            string name,
+            Z64Object.AnimationHolder animationHolder,
+            Dictionary<int, F3DZEX.Memory.Segment> externalData
+        )
+            : base(parentVM, name, animationHolder)
+        {
+            ExternalData = externalData;
+        }
+    }
+
     public class PlayerAnimationEntry : IAnimationEntry
     {
         private SkeletonViewerWindowViewModel _parentVM;
@@ -154,6 +172,9 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         Func<SegmentsConfigWindowViewModel>,
         SegmentsConfigWindowViewModel?
     >? OpenSegmentsConfig;
+    public Func<ROMFilePickerViewModel, Task<ROMFilePickerViewModel.ROMFile?>>? PickROMFile;
+    public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
+    internal Func<Task<IStorageFile?>>? GetOpenFile;
 
     public SkeletonViewerWindowViewModel(Z64Game? game)
     {
@@ -315,6 +336,75 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
             UpdateLimbsDLists();
             RenderContextChanged?.Invoke(this, new());
         };
+    }
+
+    public async void LoadROMFileAnimationsCommand()
+    {
+        Utils.Assert(_game != null);
+        Utils.Assert(PickROMFile != null);
+
+        List<ROMFilePickerViewModel.ROMFile> files = new();
+        for (int i = 0; i < _game.GetFileCount(); i++)
+        {
+            var f = _game.GetFileFromIndex(i);
+            if (f.Valid())
+                files.Add(new(f, _game.GetFileName(f.VRomStart)));
+        }
+
+        var extROMFile = await PickROMFile(new(files));
+        if (extROMFile == null)
+            return;
+        var extFile = extROMFile.File;
+        Utils.Assert(extFile.Valid());
+
+        await LoadExternalFileAnimationsImpl(extFile.Data);
+    }
+
+    public bool CanLoadROMFileAnimationsCommand(object arg)
+    {
+        return _game != null;
+    }
+
+    public async Task LoadExternalFileAnimationsCommand()
+    {
+        Utils.Assert(GetOpenFile != null);
+        var file = await GetOpenFile();
+        if (file == null)
+            return;
+        await LoadExternalFileAnimationsImpl(File.ReadAllBytes(file.Path.LocalPath));
+    }
+
+    public async Task LoadExternalFileAnimationsImpl(byte[] data)
+    {
+        Utils.Assert(PickSegmentID != null);
+        var segmentPick = await PickSegmentID(new());
+        if (segmentPick == null)
+            return;
+        var segment = (int)segmentPick;
+
+        var extObj = new Z64Object(_game, data, "gameplay_keep");
+        Z64ObjectAnalyzer.FindDlists(extObj, data, segment, new());
+        Z64ObjectAnalyzer.AnalyzeDlists(extObj, data, segment);
+
+        var externalData = new Dictionary<int, F3DZEX.Memory.Segment>()
+        {
+            [segment] = F3DZEX.Memory.Segment.FromBytes("", data),
+        };
+
+        extObj.Entries.ForEach(e =>
+        {
+            if (e is Z64Object.AnimationHolder eAnim)
+            {
+                AnimationEntries.Add(
+                    new ExternalRegularAnimationEntry(
+                        this,
+                        "ext_" + eAnim.Name,
+                        eAnim,
+                        externalData
+                    )
+                );
+            }
+        });
     }
 
     public void LoadPlayerAnimationsCommand()

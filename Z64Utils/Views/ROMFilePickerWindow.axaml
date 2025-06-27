@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.ROMFilePickerWindow"
+    x:DataType="vm:ROMFilePickerViewModel"
+    Title="Pick ROM File"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <Label Target="FilterTextBox" VerticalAlignment="Center">Filter:</Label>
+            <TextBox Name="FilterTextBox" Text="{Binding FilterText}" Width="200" />
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding ROMFiles}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedROMFile}"
+            IsReadOnly="True"
+            CanUserResizeColumns="True"
+            GridLinesVisibility="All"
+            Width="300"
+            Height="400"
+        >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="10">Selected:</TextBlock>
+            <TextBlock Margin="10" Text="{Binding SelectedROMFile.Name}" />
+        </StackPanel>
+        <Button Click="OnOKButtonClick"
+            IsEnabled="{Binding SelectedROMFile, Converter={x:Static ObjectConverters.IsNotNull}}"
+            Padding="5" Margin="5">
+            OK
+        </Button>
+    </StackPanel>
+</Window>

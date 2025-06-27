@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Common;
+using Z64;
 
 namespace Z64Utils_Avalonia;
 
@@ -28,6 +32,9 @@ public partial class SkeletonViewerWindow : Window
                 return;
             _viewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
             _viewModel.OpenSegmentsConfig = OpenSegmentsConfig;
+            _viewModel.PickROMFile = OpenPickROMFile;
+            _viewModel.PickSegmentID = OpenPickSegmentID;
+            _viewModel.GetOpenFile = ShowDialogOpenFileAsync;
             _viewModel.RenderContextChanged += OnRenderContextChanged;
         };
     }
@@ -76,6 +83,46 @@ public partial class SkeletonViewerWindow : Window
         };
         _currentSegmentsConfigWindow.Show();
         return vm;
+    }
+
+    private async Task<ROMFilePickerViewModel.ROMFile?> OpenPickROMFile(ROMFilePickerViewModel vm)
+    {
+        var pickSegmentIDWin = new ROMFilePickerWindow() { DataContext = vm };
+        return await pickSegmentIDWin.ShowDialog<ROMFilePickerViewModel.ROMFile?>(this);
+    }
+
+    private async Task<int?> OpenPickSegmentID(PickSegmentIDWindowViewModel vm)
+    {
+        var pickSegmentIDWin = new PickSegmentIDWindow() { DataContext = vm };
+        var dialogResultTask = pickSegmentIDWin.ShowDialog<int?>(this);
+        int? segmentID = await dialogResultTask;
+        return segmentID;
+    }
+
+    private async Task<IStorageFile?> ShowDialogOpenFileAsync()
+    {
+        Utils.Assert(StorageProvider.CanOpen);
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions()
+            {
+                Title = "Open File",
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>()
+                {
+                    new FilePickerFileType("Any file") { Patterns = new[] { "*" } },
+                },
+            }
+        );
+
+        if (files.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            Utils.Assert(files.Count == 1);
+            return files[0];
+        }
     }
 
     public void OnAnimationEntriesDataGridSelectionChanged(

@@ -15,6 +15,10 @@
             <MenuItem Header="Disassembly" />
             <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
             <MenuItem Header="External Anims">
+                <MenuItem Header="Load From ROM File"
+                    Command="{Binding LoadROMFileAnimationsCommand}" />
+                <MenuItem Header="Load From External File"
+                    Command="{Binding LoadExternalFileAnimationsCommand}" />
                 <MenuItem Header="Load Player Animations"
                     Command="{Binding LoadPlayerAnimationsCommand}" />
             </MenuItem>
