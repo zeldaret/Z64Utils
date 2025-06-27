@@ -68,12 +68,12 @@ public partial class DListViewerWindow : Window
         }
 
         var vm = vmFactory();
-        _currentSegmentsConfigWindow = new SegmentsConfigWindow(vm);
+        _currentSegmentsConfigWindow = new SegmentsConfigWindow() { DataContext = vm };
         _currentSegmentsConfigWindow.Closed += (sender, e) =>
         {
             _currentSegmentsConfigWindow = null;
         };
         _currentSegmentsConfigWindow.Show();
-        return _currentSegmentsConfigWindow.ViewModel;
+        return vm;
     }
 }

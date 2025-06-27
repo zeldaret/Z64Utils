@@ -11,16 +11,16 @@ public partial class SegmentsConfigPickSegmentContentWindow : Window
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public SegmentsConfigPickSegmentContentWindowViewModel ViewModel;
-
-    public SegmentsConfigPickSegmentContentWindow(
-        SegmentsConfigPickSegmentContentWindowViewModel vm
-    )
+    public SegmentsConfigPickSegmentContentWindow()
     {
-        ViewModel = vm;
-        ViewModel.GetOpenFile = ShowDialogOpenFileAsync;
-        DataContext = ViewModel;
         InitializeComponent();
+        DataContextChanged += (sender, e) =>
+        {
+            if (DataContext == null)
+                return;
+            var vm = (SegmentsConfigPickSegmentContentWindowViewModel)DataContext;
+            vm.GetOpenFile = ShowDialogOpenFileAsync;
+        };
     }
 
     private async Task<IStorageFile?> ShowDialogOpenFileAsync()
@@ -51,6 +51,8 @@ public partial class SegmentsConfigPickSegmentContentWindow : Window
 
     public void OnOKButtonClick(object? sender, RoutedEventArgs args)
     {
-        Close(ViewModel.MakeSegmentContent());
+        Utils.Assert(DataContext != null);
+        var vm = (SegmentsConfigPickSegmentContentWindowViewModel)DataContext;
+        Close(vm.MakeSegmentContent());
     }
 }
