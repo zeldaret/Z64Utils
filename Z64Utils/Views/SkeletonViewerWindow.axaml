@@ -14,6 +14,10 @@
             <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
             <MenuItem Header="Disassembly" />
             <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
+            <MenuItem Header="External Anims">
+                <MenuItem Header="Load Player Animations"
+                    Command="{Binding LoadPlayerAnimationsCommand}" />
+            </MenuItem>
         </Menu>
         <StackPanel DockPanel.Dock="Top">
             <StackPanel

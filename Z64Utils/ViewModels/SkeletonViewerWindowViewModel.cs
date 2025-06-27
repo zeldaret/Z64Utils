@@ -49,13 +49,24 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<SkeletonViewerLimbNode> _selectedLimbNodes = new();
 
-    public class AnimationEntry
+    public interface IAnimationEntry
+    {
+        string Name { get; }
+        void OnSelected();
+    }
+
+    public interface IExternalAnimationEntry : IAnimationEntry
+    {
+        Dictionary<int, F3DZEX.Memory.Segment> ExternalData { get; }
+    }
+
+    public class RegularAnimationEntry : IAnimationEntry
     {
         private SkeletonViewerWindowViewModel _parentVM;
         public string Name { get; }
         public Z64Object.AnimationHolder AnimationHolder { get; }
 
-        public AnimationEntry(
+        public RegularAnimationEntry(
             SkeletonViewerWindowViewModel parentVM,
             string name,
             Z64Object.AnimationHolder animationHolder
@@ -72,8 +83,47 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         }
     }
 
+    public class PlayerAnimationEntry : IAnimationEntry
+    {
+        private SkeletonViewerWindowViewModel _parentVM;
+        public string Name { get; }
+        public Z64Object.PlayerAnimationHolder PlayerAnimationHolder { get; }
+
+        public PlayerAnimationEntry(
+            SkeletonViewerWindowViewModel parentVM,
+            string name,
+            Z64Object.PlayerAnimationHolder playerAnimationHolder
+        )
+        {
+            _parentVM = parentVM;
+            Name = name;
+            PlayerAnimationHolder = playerAnimationHolder;
+        }
+
+        public void OnSelected()
+        {
+            _parentVM.OnAnimationEntrySelected(this);
+        }
+    }
+
+    public class ExternalPlayerAnimationEntry : PlayerAnimationEntry, IExternalAnimationEntry
+    {
+        public Dictionary<int, F3DZEX.Memory.Segment> ExternalData { get; }
+
+        public ExternalPlayerAnimationEntry(
+            SkeletonViewerWindowViewModel parentVM,
+            string name,
+            Z64Object.PlayerAnimationHolder playerAnimationHolder,
+            Dictionary<int, F3DZEX.Memory.Segment> externalData
+        )
+            : base(parentVM, name, playerAnimationHolder)
+        {
+            ExternalData = externalData;
+        }
+    }
+
     [ObservableProperty]
-    private ObservableCollection<AnimationEntry> _animationEntries = new();
+    private ObservableCollection<IAnimationEntry> _animationEntries = new();
 
     [ObservableProperty]
     private double _playAnimTickPeriodMs;
@@ -85,6 +135,9 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     [ObservableProperty]
     Z64Animation? _curAnim;
+
+    [ObservableProperty]
+    Z64PlayerAnimation? _curPlayerAnim;
 
     [ObservableProperty]
     F3DZEX.Command.Dlist?[]? _limbsDLists;
@@ -129,6 +182,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     break;
                 case nameof(Skel):
                     CurAnim = null;
+                    CurPlayerAnim = null;
                     if (Skel != null)
                     {
                         UpdateCurPose();
@@ -147,8 +201,11 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                         UpdateDisplayElements();
                     break;
                 case nameof(CurAnim):
+                case nameof(CurPlayerAnim):
                     if (CurAnim != null)
                         MaxFrame = CurAnim.FrameCount - 1;
+                    else if (CurPlayerAnim != null)
+                        MaxFrame = CurPlayerAnim.FrameCount - 1;
                     else
                         MaxFrame = 0;
                     CurFrame = 0;
@@ -260,6 +317,57 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         };
     }
 
+    public void LoadPlayerAnimationsCommand()
+    {
+        Utils.Assert(_game != null);
+
+        Z64File? gKeepFile = _game.GetFileByName("gameplay_keep");
+        if (gKeepFile == null || !gKeepFile.Valid())
+        {
+            Logger.Error("gameplay_keep not found/invalid");
+            // TODO show error
+            return;
+        }
+
+        Z64File? link_animetionFile = _game.GetFileByName("link_animetion");
+        if (link_animetionFile == null || !link_animetionFile.Valid())
+        {
+            Logger.Error("link_animetion not found/invalid");
+            // TODO show error
+            return;
+        }
+
+        var gKeepObj = new Z64Object(_game, gKeepFile.Data, "gameplay_keep");
+        Z64ObjectAnalyzer.FindDlists(gKeepObj, gKeepFile.Data, 4, new());
+        Z64ObjectAnalyzer.AnalyzeDlists(gKeepObj, gKeepFile.Data, 4);
+
+        var externalData = new Dictionary<int, F3DZEX.Memory.Segment>()
+        {
+            [4] = F3DZEX.Memory.Segment.FromBytes("", gKeepFile.Data),
+            [7] = F3DZEX.Memory.Segment.FromBytes("", link_animetionFile.Data),
+        };
+
+        gKeepObj.Entries.ForEach(e =>
+        {
+            if (e is Z64Object.PlayerAnimationHolder ePlayerAnim)
+            {
+                AnimationEntries.Add(
+                    new ExternalPlayerAnimationEntry(
+                        this,
+                        "ext_" + ePlayerAnim.Name,
+                        ePlayerAnim,
+                        externalData
+                    )
+                );
+            }
+        });
+    }
+
+    public bool CanLoadPlayerAnimationsCommand(object arg)
+    {
+        return _game != null;
+    }
+
     public void SetSkeleton(Z64Object.SkeletonHolder skeletonHolder)
     {
         Utils.Assert(Renderer != null);
@@ -335,8 +443,8 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     public void SetAnimations(IEnumerable<Z64Object.AnimationHolder> animationHolders)
     {
-        ObservableCollection<AnimationEntry> newAnimations = new(
-            animationHolders.Select(animationHolder => new AnimationEntry(
+        ObservableCollection<IAnimationEntry> newAnimations = new(
+            animationHolders.Select(animationHolder => new RegularAnimationEntry(
                 this,
                 animationHolder.Name,
                 animationHolder
@@ -358,14 +466,22 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     void UpdateCurPose()
     {
-        if (CurAnim == null)
+        if (CurAnim == null && CurPlayerAnim == null)
         {
             SetIdentityPose();
         }
         else
         {
             Utils.Assert(Skel != null);
-            CurPose = Z64SkeletonPose.Get(Skel, CurAnim, CurFrame).LimbsPose;
+            if (CurAnim != null)
+            {
+                CurPose = Z64SkeletonPose.Get(Skel, CurAnim, CurFrame).LimbsPose;
+            }
+            else
+            {
+                Utils.Assert(CurPlayerAnim != null);
+                CurPose = Z64SkeletonPose.Get(Skel, CurPlayerAnim, CurFrame).LimbsPose;
+            }
         }
 
         if (Skel is Z64FlexSkeleton flexSkeleton)
@@ -447,16 +563,46 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         CurFrame = (CurFrame + (_playAnimForwards ? 1 : ((MaxFrame + 1) - 1))) % (MaxFrame + 1);
     }
 
-    public void OnAnimationEntrySelected(AnimationEntry animationEntry)
+    public void OnAnimationEntrySelected(IAnimationEntry animationEntry)
     {
         Utils.Assert(Renderer != null);
         Utils.Assert(Skel != null);
 
-        CurAnim = Z64Animation.Get(
-            Renderer.Memory,
-            animationEntry.AnimationHolder,
-            Skel.Limbs.Count
-        );
+        CurAnim = null;
+        CurPlayerAnim = null;
+
+        var savedSegmentData = new Dictionary<int, F3DZEX.Memory.Segment>();
+        if (animationEntry is IExternalAnimationEntry externalAnimationEntry)
+        {
+            foreach (var item in externalAnimationEntry.ExternalData)
+            {
+                savedSegmentData[item.Key] = Renderer.Memory.Segments[item.Key];
+                Renderer.Memory.Segments[item.Key] = item.Value;
+            }
+        }
+
+        if (animationEntry is RegularAnimationEntry regularAnimationEntry)
+        {
+            CurAnim = Z64Animation.Get(
+                Renderer.Memory,
+                regularAnimationEntry.AnimationHolder,
+                Skel.Limbs.Count
+            );
+        }
+        else
+        {
+            var playerAnimationEntry = animationEntry as PlayerAnimationEntry;
+            Utils.Assert(playerAnimationEntry != null);
+            CurPlayerAnim = Z64PlayerAnimation.Get(
+                Renderer.Memory,
+                playerAnimationEntry.PlayerAnimationHolder
+            );
+        }
+
+        foreach (var item in savedSegmentData)
+        {
+            Renderer.Memory.Segments[item.Key] = item.Value;
+        }
     }
 }
 

@@ -86,8 +86,8 @@ public partial class SkeletonViewerWindow : Window
         var selectedItem = AnimationEntriesDataGrid.SelectedItem;
         if (selectedItem == null)
             return;
-        Utils.Assert(selectedItem is SkeletonViewerWindowViewModel.AnimationEntry);
-        var animationEntry = (SkeletonViewerWindowViewModel.AnimationEntry)selectedItem;
+        Utils.Assert(selectedItem is SkeletonViewerWindowViewModel.IAnimationEntry);
+        var animationEntry = (SkeletonViewerWindowViewModel.IAnimationEntry)selectedItem;
         animationEntry.OnSelected();
     }
 }
