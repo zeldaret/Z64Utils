@@ -40,6 +40,9 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     private string? _renderError;
 
     [ObservableProperty]
+    private string? _animationError;
+
+    [ObservableProperty]
     private int _maxFrame = 0;
 
     [ObservableProperty]
@@ -658,6 +661,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         Utils.Assert(Renderer != null);
         Utils.Assert(Skel != null);
 
+        AnimationError = null;
         CurAnim = null;
         CurPlayerAnim = null;
 
@@ -673,11 +677,20 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
         if (animationEntry is RegularAnimationEntry regularAnimationEntry)
         {
-            CurAnim = Z64Animation.Get(
-                Renderer.Memory,
-                regularAnimationEntry.AnimationHolder,
-                Skel.Limbs.Count
-            );
+            try
+            {
+                CurAnim = Z64Animation.Get(
+                    Renderer.Memory,
+                    regularAnimationEntry.AnimationHolder,
+                    Skel.Limbs.Count
+                );
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                AnimationError =
+                    "Animation is glitchy; displaying folded pose. To view this animation, load it in-game.";
+            }
         }
         else
         {

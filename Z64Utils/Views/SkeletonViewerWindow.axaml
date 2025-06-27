@@ -34,6 +34,11 @@
                 <TextBlock>Render error:</TextBlock>
                 <TextBlock Text="{Binding RenderError}" />
             </StackPanel>
+            <StackPanel
+                IsVisible="{Binding AnimationError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock>Animation error:</TextBlock>
+                <TextBlock Text="{Binding AnimationError}" />
+            </StackPanel>
         </StackPanel>
         <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Center">
             <Button DockPanel.Dock="Left" Command="{Binding PlayAnimBackwardsCommand}">
