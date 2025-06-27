@@ -15,11 +15,16 @@
             <MenuItem Header="Disassembly" Command="{Binding OpenDisassemblyCommand}" />
             <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
         </Menu>
-        <TextBlock DockPanel.Dock="Top" Text="{Binding SomeTextForNow}" />
-        <TextBlock DockPanel.Dock="Top">Decode error:</TextBlock>
-        <TextBlock DockPanel.Dock="Top" Text="{Binding DecodeError}" />
-        <TextBlock DockPanel.Dock="Top">Render error:</TextBlock>
-        <TextBlock DockPanel.Dock="Top" Text="{Binding RenderError}" />
+        <StackPanel DockPanel.Dock="Top"
+            IsVisible="{Binding DecodeError, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock>Decode error:</TextBlock>
+            <TextBlock DockPanel.Dock="Top" Text="{Binding DecodeError}" />
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top"
+            IsVisible="{Binding RenderError, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock>Render error:</TextBlock>
+            <TextBlock Text="{Binding RenderError}" />
+        </StackPanel>
         <Grid>
             <v:DLViewerControl Name="DLViewerGL" Renderer="{Binding Renderer}"
                 DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />

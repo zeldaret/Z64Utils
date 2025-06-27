@@ -507,7 +507,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         Utils.Assert(_game != null);
         dlvVM.Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config());
         // TODO cleanup, segment config, render config
-        dlvVM.SomeTextForNow = "Viewing DL " + ohe.ObjectHolder.Name;
         Utils.Assert(_file != null);
         Utils.Assert(_file.Valid());
         dlvVM.SetSegment(_segment, F3DZEX.Memory.Segment.FromBytes("[this object]", _file.Data));

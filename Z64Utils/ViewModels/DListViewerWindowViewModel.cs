@@ -19,9 +19,6 @@ public partial class DListViewerWindowViewModel : ObservableObject
     public event EventHandler? RenderContextChanged;
 
     [ObservableProperty]
-    private string _someTextForNow = "";
-
-    [ObservableProperty]
     public F3DZEX.Render.Renderer? _renderer;
 
     public ObservableCollection<uint> DLAddresses { get; } = new();
