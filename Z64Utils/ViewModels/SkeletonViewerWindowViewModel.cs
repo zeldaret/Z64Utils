@@ -23,6 +23,8 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     // Used by the view to redraw when needed
     public event EventHandler? RenderContextChanged;
 
+    private Z64Game? _game;
+
     [ObservableProperty]
     public F3DZEX.Render.Renderer? _renderer;
 
@@ -95,9 +97,14 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         Func<DListViewerRenderSettingsViewModel>,
         DListViewerRenderSettingsViewModel?
     >? OpenDListViewerRenderSettings;
+    public Func<
+        Func<SegmentsConfigWindowViewModel>,
+        SegmentsConfigWindowViewModel?
+    >? OpenSegmentsConfig;
 
-    public SkeletonViewerWindowViewModel()
+    public SkeletonViewerWindowViewModel(Z64Game? game)
     {
+        _game = game;
         PropertyChanging += (sender, e) =>
         {
             switch (e.PropertyName)
@@ -229,6 +236,28 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     public bool CanOpenRenderSettingsCommand(object arg)
     {
         return Renderer != null;
+    }
+
+    public void OpenSegmentsConfigCommand()
+    {
+        Utils.Assert(OpenSegmentsConfig != null);
+        Utils.Assert(Renderer != null);
+        var vm = OpenSegmentsConfig(
+            () => new SegmentsConfigWindowViewModel(Renderer.Memory, _game)
+        );
+        if (vm == null)
+        {
+            // Was already open
+            return;
+        }
+        vm.SegmentsConfigChanged += (sender, e) =>
+        {
+            Logger.Debug("SegmentsConfigChanged");
+            for (int i = 0; i < F3DZEX.Memory.Segment.COUNT; i++)
+                Logger.Debug("{segmentIndex} {segmentLabel}", i, Renderer.Memory.Segments[i].Label);
+            UpdateLimbsDLists();
+            RenderContextChanged?.Invoke(this, new());
+        };
     }
 
     public void SetSkeleton(Z64Object.SkeletonHolder skeletonHolder)

@@ -521,7 +521,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     {
         Utils.Assert(ohe != null);
         Utils.Assert(OpenSkeletonViewer != null);
-        var skelvVM = new SkeletonViewerWindowViewModel();
+        var skelvVM = new SkeletonViewerWindowViewModel(_game);
         OpenSkeletonViewer(skelvVM);
         Utils.Assert(_game != null);
         skelvVM.Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config());

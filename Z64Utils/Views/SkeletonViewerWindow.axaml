@@ -13,7 +13,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
             <MenuItem Header="Disassembly" />
-            <MenuItem Header="Segments" />
+            <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
         </Menu>
         <StackPanel DockPanel.Dock="Top">
             <StackPanel

@@ -11,6 +11,7 @@ public partial class SkeletonViewerWindow : Window
     private SkeletonViewerWindowViewModel? _viewModel;
 
     private DListViewerRenderSettingsWindow? _currentRenderSettingsWindow;
+    private SegmentsConfigWindow? _currentSegmentsConfigWindow;
 
     public SkeletonViewerWindow()
     {
@@ -26,6 +27,7 @@ public partial class SkeletonViewerWindow : Window
             if (_viewModel == null)
                 return;
             _viewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
+            _viewModel.OpenSegmentsConfig = OpenSegmentsConfig;
             _viewModel.RenderContextChanged += OnRenderContextChanged;
         };
     }
@@ -53,6 +55,26 @@ public partial class SkeletonViewerWindow : Window
             _currentRenderSettingsWindow = null;
         };
         _currentRenderSettingsWindow.Show();
+        return vm;
+    }
+
+    private SegmentsConfigWindowViewModel? OpenSegmentsConfig(
+        Func<SegmentsConfigWindowViewModel> vmFactory
+    )
+    {
+        if (_currentSegmentsConfigWindow != null)
+        {
+            _currentSegmentsConfigWindow.Activate();
+            return null;
+        }
+
+        var vm = vmFactory();
+        _currentSegmentsConfigWindow = new SegmentsConfigWindow() { DataContext = vm };
+        _currentSegmentsConfigWindow.Closed += (sender, e) =>
+        {
+            _currentSegmentsConfigWindow = null;
+        };
+        _currentSegmentsConfigWindow.Show();
         return vm;
     }
 
