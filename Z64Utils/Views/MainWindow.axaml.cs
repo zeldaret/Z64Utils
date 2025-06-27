@@ -19,6 +19,7 @@ public partial class MainWindow : Window
                 return;
             var vm = (MainWindowViewModel)DataContext;
             vm.GetOpenROM = ShowDialogOpenROMAsync;
+            vm.GetOpenFile = ShowDialogOpenFileAsync;
             vm.PickSegmentID = OpenPickSegmentID;
             vm.OpenObjectAnalyzer = OpenObjectAnalyzer;
             vm.OpenDListViewer = OpenDListViewer;
@@ -43,6 +44,32 @@ public partial class MainWindow : Window
                         Patterns = new[] { "*.z64" },
                         MimeTypes = new[] { "application/x-n64-rom" },
                     },
+                },
+            }
+        );
+
+        if (files.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            Utils.Assert(files.Count == 1);
+            return files[0];
+        }
+    }
+
+    private async Task<IStorageFile?> ShowDialogOpenFileAsync()
+    {
+        Utils.Assert(StorageProvider.CanOpen);
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions()
+            {
+                Title = "Open File",
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>()
+                {
+                    new FilePickerFileType("Any file") { Patterns = new[] { "*" } },
                 },
             }
         );

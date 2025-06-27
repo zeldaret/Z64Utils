@@ -266,25 +266,22 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     {
         if (_file == null)
         {
-            Utils.Assert(_game == null);
             Utils.Assert(_object == null);
             return false;
         }
         else
         {
-            Utils.Assert(_game != null);
             Utils.Assert(_object != null);
             return true;
         }
     }
 
-    public void SetFile(Z64Game game, Z64File file, int segment)
+    public void SetFile(Z64Game? game, string fileName, Z64File file, int segment)
     {
         ClearFile();
 
         try
         {
-            string fileName = game.GetFileName(file.VRomStart);
             WindowTitle = $"\"{fileName}\" ({file.VRomStart:X8}-{file.VRomEnd:X8})";
 
             _game = game;

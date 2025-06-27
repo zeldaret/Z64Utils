@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using Common;
@@ -21,6 +22,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     // Provided by the view
     public Func<Task<IStorageFile?>>? GetOpenROM;
+    public Func<Task<IStorageFile?>>? GetOpenFile;
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
@@ -163,12 +165,28 @@ public partial class MainWindowViewModel : ObservableObject
         return _game != null;
     }
 
-    public void ObjectAnalyzerCommand()
+    public async void ObjectAnalyzerCommand()
     {
+        Utils.Assert(GetOpenFile != null);
+        Utils.Assert(PickSegmentID != null);
         Utils.Assert(OpenObjectAnalyzer != null);
-        // TODO open file picker and pass file to object analyzer
-        // (this requires refactoring out Z64Game usage which is only available when a full rom is loaded)
-        OpenObjectAnalyzer(new());
+
+        var file = await GetOpenFile();
+        if (file == null)
+            return;
+
+        int? segment = await PickSegmentID(new());
+        if (segment == null)
+            return;
+
+        var vm = new ObjectAnalyzerWindowViewModel();
+        vm.SetFile(
+            null,
+            file.Name,
+            new(File.ReadAllBytes(file.Path.LocalPath), 0, 0, 0, false),
+            (int)segment
+        );
+        OpenObjectAnalyzer(vm);
     }
 
     public void CheckNewReleasesCommand() { }
@@ -181,7 +199,7 @@ public partial class MainWindowViewModel : ObservableObject
         Utils.Assert(OpenObjectAnalyzer != null);
         var objectAnalyzerVM = new ObjectAnalyzerWindowViewModel();
         OpenObjectAnalyzer(objectAnalyzerVM);
-        objectAnalyzerVM.SetFile(_game, file, segment);
+        objectAnalyzerVM.SetFile(_game, _game.GetFileName(file.VRomStart), file, segment);
         return objectAnalyzerVM;
     }
 
