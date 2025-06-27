@@ -109,7 +109,6 @@ public partial class DListViewerWindowViewModel : ObservableObject
             Renderer.Memory.Segments[index] = segment;
 
             DecodeDLists();
-            RenderContextChanged?.Invoke(this, new());
         }
     }
 

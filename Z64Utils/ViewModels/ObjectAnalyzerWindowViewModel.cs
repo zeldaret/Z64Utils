@@ -498,41 +498,58 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         new byte[] { 0xDF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
     );
 
+    private void SetBaseSegmentsConfig(F3DZEX.Memory memory)
+    {
+        if (_game != null)
+        {
+            var gKeepFile = _game.GetFileByName("gameplay_keep");
+            if (gKeepFile != null && gKeepFile.Valid())
+            {
+                memory.Segments[4] = F3DZEX.Memory.Segment.FromBytes(
+                    "gameplay_keep",
+                    gKeepFile.Data
+                );
+            }
+        }
+        Utils.Assert(_file != null);
+        Utils.Assert(_file.Valid());
+        memory.Segments[_segment] = F3DZEX.Memory.Segment.FromBytes("[this object]", _file.Data);
+        for (int i = 8; i <= 15; i++)
+            memory.Segments[i] = EMPTY_DLIST_SEGMENT;
+    }
+
     private void OpenDListViewerObjectHolderEntryCommandExecute(ObjectHolderEntry? ohe)
     {
         Utils.Assert(ohe != null);
-        Utils.Assert(OpenDListViewer != null);
-        var dlvVM = new DListViewerWindowViewModel(_game);
-        OpenDListViewer(dlvVM);
-        Utils.Assert(_game != null);
-        dlvVM.Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config());
-        // TODO cleanup, segment config, render config
-        Utils.Assert(_file != null);
-        Utils.Assert(_file.Valid());
-        dlvVM.SetSegment(_segment, F3DZEX.Memory.Segment.FromBytes("[this object]", _file.Data));
-        dlvVM.SetSegment(8, EMPTY_DLIST_SEGMENT);
         Utils.Assert(_object != null);
+        Utils.Assert(OpenDListViewer != null);
+
+        var dlvVM = new DListViewerWindowViewModel(_game)
+        {
+            Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config()),
+        };
+        SetBaseSegmentsConfig(dlvVM.Renderer.Memory);
+
         dlvVM.SetSingleDlist(
             new SegmentedAddress(_segment, _object.OffsetOf(ohe.ObjectHolder)).VAddr
         );
+
+        OpenDListViewer(dlvVM);
     }
 
     private void OpenSkeletonViewerObjectHolderEntryCommandExecute(ObjectHolderEntry? ohe)
     {
         Utils.Assert(ohe != null);
-        Utils.Assert(OpenSkeletonViewer != null);
-        var skelvVM = new SkeletonViewerWindowViewModel(_game);
-        OpenSkeletonViewer(skelvVM);
-        Utils.Assert(_game != null);
-        skelvVM.Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config());
-        // TODO
-        Utils.Assert(_file != null);
-        Utils.Assert(_file.Valid());
-        skelvVM.SetSegment(_segment, F3DZEX.Memory.Segment.FromBytes("[this object]", _file.Data));
-        skelvVM.SetSegment(8, EMPTY_DLIST_SEGMENT);
-        skelvVM.SetSegment(9, EMPTY_DLIST_SEGMENT);
         Utils.Assert(_object != null);
         Utils.Assert(ohe.ObjectHolder is Z64Object.SkeletonHolder);
+        Utils.Assert(OpenSkeletonViewer != null);
+
+        var skelvVM = new SkeletonViewerWindowViewModel(_game)
+        {
+            Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config()),
+        };
+        SetBaseSegmentsConfig(skelvVM.Renderer.Memory);
+
         var skeletonHolder = (Z64Object.SkeletonHolder)ohe.ObjectHolder;
         skelvVM.SetSkeleton(skeletonHolder);
         skelvVM.SetAnimations(
@@ -540,6 +557,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
                 .Entries.FindAll(oh => oh.GetEntryType() == Z64Object.EntryType.AnimationHeader)
                 .Cast<Z64Object.AnimationHolder>()
         );
+
+        OpenSkeletonViewer(skelvVM);
     }
 
     private void OpenCollisionViewerObjectHolderEntryCommandExecute(ObjectHolderEntry? ohe)
