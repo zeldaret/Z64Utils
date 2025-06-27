@@ -7,7 +7,7 @@ public partial class DListViewerWindow : Window
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public DListViewerWindowViewModel? ViewModel;
+    private DListViewerWindowViewModel? _viewModel;
 
     private DListViewerRenderSettingsWindow? _currentRenderSettingsWindow;
     private SegmentsConfigWindow? _currentSegmentsConfigWindow;
@@ -17,17 +17,17 @@ public partial class DListViewerWindow : Window
         InitializeComponent();
         DataContextChanged += (sender, e) =>
         {
-            if (ViewModel != null)
+            if (_viewModel != null)
             {
-                ViewModel.RenderContextChanged -= OnRenderContextChanged;
+                _viewModel.RenderContextChanged -= OnRenderContextChanged;
             }
 
-            ViewModel = (DListViewerWindowViewModel?)DataContext;
-            if (ViewModel == null)
+            _viewModel = (DListViewerWindowViewModel?)DataContext;
+            if (_viewModel == null)
                 return;
-            ViewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
-            ViewModel.OpenSegmentsConfig = OpenSegmentsConfig;
-            ViewModel.RenderContextChanged += OnRenderContextChanged;
+            _viewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
+            _viewModel.OpenSegmentsConfig = OpenSegmentsConfig;
+            _viewModel.RenderContextChanged += OnRenderContextChanged;
         };
     }
 

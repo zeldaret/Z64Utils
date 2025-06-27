@@ -5,34 +5,37 @@ namespace Z64Utils_Avalonia;
 
 public partial class F3DZEXDisassemblerWindow : Window
 {
-    public F3DZEXDisassemblerViewModel ViewModel { get; }
-
-    private F3DZEXDisassemblerSettingsWindow? CurrentSettingsWindow;
+    private F3DZEXDisassemblerSettingsWindow? _currentSettingsWindow;
 
     public F3DZEXDisassemblerWindow()
     {
-        ViewModel = new() { OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings };
-        DataContext = ViewModel;
         InitializeComponent();
+        DataContextChanged += (sender, e) =>
+        {
+            var vm = (F3DZEXDisassemblerViewModel?)DataContext;
+            if (vm == null)
+                return;
+            vm.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
+        };
     }
 
     private F3DZEXDisassemblerSettingsViewModel? OpenF3DZEXDisassemblerSettings(
         Func<F3DZEXDisassemblerSettingsViewModel> vmFactory
     )
     {
-        if (CurrentSettingsWindow != null)
+        if (_currentSettingsWindow != null)
         {
-            CurrentSettingsWindow.Activate();
+            _currentSettingsWindow.Activate();
             return null;
         }
 
         var vm = vmFactory();
-        CurrentSettingsWindow = new F3DZEXDisassemblerSettingsWindow() { DataContext = vm };
-        CurrentSettingsWindow.Closed += (sender, e) =>
+        _currentSettingsWindow = new F3DZEXDisassemblerSettingsWindow() { DataContext = vm };
+        _currentSettingsWindow.Closed += (sender, e) =>
         {
-            CurrentSettingsWindow = null;
+            _currentSettingsWindow = null;
         };
-        CurrentSettingsWindow.Show();
+        _currentSettingsWindow.Show();
         return vm;
     }
 }

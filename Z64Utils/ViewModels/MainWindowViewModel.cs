@@ -24,7 +24,7 @@ public partial class MainWindowViewModel : ObservableObject
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
-    public Func<F3DZEXDisassemblerViewModel>? OpenF3DZEXDisassembler;
+    public Action<F3DZEXDisassemblerViewModel>? OpenF3DZEXDisassembler;
     public Action<ROMRAMConversionsWindowViewModel>? OpenROMRAMConversions;
     public Action<TextureViewerWindowViewModel>? OpenTextureViewer;
 
@@ -136,7 +136,7 @@ public partial class MainWindowViewModel : ObservableObject
     public void F3DZEXDisassemblerCommand()
     {
         Utils.Assert(OpenF3DZEXDisassembler != null);
-        OpenF3DZEXDisassembler();
+        OpenF3DZEXDisassembler(new());
     }
 
     public void ROMRAMConversionsCommand()

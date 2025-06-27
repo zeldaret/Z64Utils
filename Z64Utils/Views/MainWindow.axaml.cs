@@ -78,11 +78,10 @@ public partial class MainWindow : Window
         win.Show();
     }
 
-    private F3DZEXDisassemblerViewModel OpenF3DZEXDisassembler()
+    private void OpenF3DZEXDisassembler(F3DZEXDisassemblerViewModel vm)
     {
-        var win = new F3DZEXDisassemblerWindow();
+        var win = new F3DZEXDisassemblerWindow() { DataContext = vm };
         win.Show();
-        return win.ViewModel;
     }
 
     private void OpenROMRAMConversions(ROMRAMConversionsWindowViewModel vm)

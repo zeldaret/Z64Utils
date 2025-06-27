@@ -8,7 +8,7 @@ public partial class ObjectAnalyzerWindow : Window
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public ObjectAnalyzerWindowViewModel? ViewModel;
+    private ObjectAnalyzerWindowViewModel? _viewModel;
 
     private F3DZEXDisassemblerSettingsWindow? _currentF3DZEXDisassemblerSettingsWindow;
 
@@ -17,13 +17,13 @@ public partial class ObjectAnalyzerWindow : Window
         InitializeComponent();
         DataContextChanged += (sender, e) =>
         {
-            ViewModel = (ObjectAnalyzerWindowViewModel?)DataContext;
-            if (ViewModel == null)
+            _viewModel = (ObjectAnalyzerWindowViewModel?)DataContext;
+            if (_viewModel == null)
                 return;
-            ViewModel.OpenDListViewer = OpenDListViewer;
-            ViewModel.OpenSkeletonViewer = OpenSkeletonViewer;
-            ViewModel.OpenCollisionViewer = OpenCollisionViewer;
-            ViewModel.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
+            _viewModel.OpenDListViewer = OpenDListViewer;
+            _viewModel.OpenSkeletonViewer = OpenSkeletonViewer;
+            _viewModel.OpenCollisionViewer = OpenCollisionViewer;
+            _viewModel.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
         };
     }
 
@@ -79,9 +79,9 @@ public partial class ObjectAnalyzerWindow : Window
         Utils.Assert(selectedItem is ObjectAnalyzerWindowViewModel.ObjectHolderEntry);
         var ohe = (ObjectAnalyzerWindowViewModel.ObjectHolderEntry)selectedItem;
         var t1 = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        ViewModel?.OnObjectHolderEntrySelected(ohe);
+        _viewModel?.OnObjectHolderEntrySelected(ohe);
         var t2 = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        Logger.Trace("ViewModel.OnObjectHolderEntrySelected(ohe); t2-t1={0}ms", t2 - t1);
+        Logger.Trace("_viewModel?.OnObjectHolderEntrySelected(ohe); t2-t1={0}ms", t2 - t1);
     }
 
     public void OnObjectHolderEntriesDataGridLoadingRow(object? sender, DataGridRowEventArgs ev)
