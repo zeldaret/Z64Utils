@@ -10,22 +10,22 @@ namespace Z64Utils_Avalonia;
 
 public partial class MainWindow : Window
 {
-    public MainWindowViewModel ViewModel;
-
     public MainWindow()
     {
-        ViewModel = new MainWindowViewModel()
-        {
-            GetOpenROM = ShowDialogOpenROMAsync,
-            PickSegmentID = OpenPickSegmentID,
-            OpenObjectAnalyzer = OpenObjectAnalyzer,
-            OpenDListViewer = OpenDListViewer,
-            OpenF3DZEXDisassembler = OpenF3DZEXDisassembler,
-            OpenROMRAMConversions = OpenROMRAMConversions,
-            OpenTextureViewer = OpenTextureViewer,
-        };
-        DataContext = ViewModel;
         InitializeComponent();
+        DataContextChanged += (sender, e) =>
+        {
+            if (DataContext == null)
+                return;
+            var vm = (MainWindowViewModel)DataContext;
+            vm.GetOpenROM = ShowDialogOpenROMAsync;
+            vm.PickSegmentID = OpenPickSegmentID;
+            vm.OpenObjectAnalyzer = OpenObjectAnalyzer;
+            vm.OpenDListViewer = OpenDListViewer;
+            vm.OpenF3DZEXDisassembler = OpenF3DZEXDisassembler;
+            vm.OpenROMRAMConversions = OpenROMRAMConversions;
+            vm.OpenTextureViewer = OpenTextureViewer;
+        };
     }
 
     private async Task<IStorageFile?> ShowDialogOpenROMAsync()
@@ -58,9 +58,9 @@ public partial class MainWindow : Window
         }
     }
 
-    private async Task<int?> OpenPickSegmentID()
+    private async Task<int?> OpenPickSegmentID(PickSegmentIDWindowViewModel vm)
     {
-        var pickSegmentIDWin = new PickSegmentIDWindow();
+        var pickSegmentIDWin = new PickSegmentIDWindow() { DataContext = vm };
         var dialogResultTask = pickSegmentIDWin.ShowDialog<int?>(this);
         int? segmentID = await dialogResultTask;
         return segmentID;
@@ -68,13 +68,13 @@ public partial class MainWindow : Window
 
     private void OpenObjectAnalyzer(ObjectAnalyzerWindowViewModel vm)
     {
-        var win = new ObjectAnalyzerWindow(vm);
+        var win = new ObjectAnalyzerWindow() { DataContext = vm };
         win.Show();
     }
 
     private void OpenDListViewer(DListViewerWindowViewModel vm)
     {
-        var win = new DListViewerWindow(vm);
+        var win = new DListViewerWindow() { DataContext = vm };
         win.Show();
     }
 
@@ -87,13 +87,13 @@ public partial class MainWindow : Window
 
     private void OpenROMRAMConversions(ROMRAMConversionsWindowViewModel vm)
     {
-        var win = new ROMRAMConversionsWindow(vm);
+        var win = new ROMRAMConversionsWindow() { DataContext = vm };
         win.Show();
     }
 
     private void OpenTextureViewer(TextureViewerWindowViewModel vm)
     {
-        var win = new TextureViewerWindow(vm);
+        var win = new TextureViewerWindow() { DataContext = vm };
         win.Show();
     }
 

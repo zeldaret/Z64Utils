@@ -8,42 +8,46 @@ public partial class ObjectAnalyzerWindow : Window
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public ObjectAnalyzerWindowViewModel ViewModel;
+    public ObjectAnalyzerWindowViewModel? ViewModel;
 
     private F3DZEXDisassemblerSettingsWindow? _currentF3DZEXDisassemblerSettingsWindow;
 
-    public ObjectAnalyzerWindow(ObjectAnalyzerWindowViewModel vm)
+    public ObjectAnalyzerWindow()
     {
-        ViewModel = vm;
-        ViewModel.OpenDListViewer = OpenDListViewer;
-        ViewModel.OpenSkeletonViewer = OpenSkeletonViewer;
-        ViewModel.OpenCollisionViewer = OpenCollisionViewer;
-        ViewModel.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
-        DataContext = ViewModel;
         InitializeComponent();
+        DataContextChanged += (sender, e) =>
+        {
+            ViewModel = (ObjectAnalyzerWindowViewModel?)DataContext;
+            if (ViewModel == null)
+                return;
+            ViewModel.OpenDListViewer = OpenDListViewer;
+            ViewModel.OpenSkeletonViewer = OpenSkeletonViewer;
+            ViewModel.OpenCollisionViewer = OpenCollisionViewer;
+            ViewModel.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
+        };
     }
 
     private void OpenDListViewer(DListViewerWindowViewModel vm)
     {
-        var win = new DListViewerWindow(vm);
+        var win = new DListViewerWindow() { DataContext = vm };
         win.Show();
     }
 
-    private SkeletonViewerWindowViewModel OpenSkeletonViewer()
+    private void OpenSkeletonViewer(SkeletonViewerWindowViewModel vm)
     {
-        var win = new SkeletonViewerWindow();
+        var win = new SkeletonViewerWindow() { DataContext = vm };
         win.Show();
-        return win.ViewModel;
     }
 
-    private CollisionViewerWindowViewModel OpenCollisionViewer()
+    private void OpenCollisionViewer(CollisionViewerWindowViewModel vm)
     {
-        var win = new CollisionViewerWindow();
+        var win = new CollisionViewerWindow() { DataContext = vm };
         win.Show();
-        return win.ViewModel;
     }
 
-    private F3DZEXDisassemblerSettingsViewModel? OpenF3DZEXDisassemblerSettings()
+    private F3DZEXDisassemblerSettingsViewModel? OpenF3DZEXDisassemblerSettings(
+        Func<F3DZEXDisassemblerSettingsViewModel> vmFactory
+    )
     {
         if (_currentF3DZEXDisassemblerSettingsWindow != null)
         {
@@ -51,13 +55,17 @@ public partial class ObjectAnalyzerWindow : Window
             return null;
         }
 
-        _currentF3DZEXDisassemblerSettingsWindow = new F3DZEXDisassemblerSettingsWindow();
+        var vm = vmFactory();
+        _currentF3DZEXDisassemblerSettingsWindow = new F3DZEXDisassemblerSettingsWindow()
+        {
+            DataContext = vm,
+        };
         _currentF3DZEXDisassemblerSettingsWindow.Closed += (sender, e) =>
         {
             _currentF3DZEXDisassemblerSettingsWindow = null;
         };
         _currentF3DZEXDisassemblerSettingsWindow.Show();
-        return _currentF3DZEXDisassemblerSettingsWindow.ViewModel;
+        return vm;
     }
 
     public void OnObjectHolderEntriesDataGridSelectionChanged(
@@ -71,7 +79,7 @@ public partial class ObjectAnalyzerWindow : Window
         Utils.Assert(selectedItem is ObjectAnalyzerWindowViewModel.ObjectHolderEntry);
         var ohe = (ObjectAnalyzerWindowViewModel.ObjectHolderEntry)selectedItem;
         var t1 = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        ViewModel.OnObjectHolderEntrySelected(ohe);
+        ViewModel?.OnObjectHolderEntrySelected(ohe);
         var t2 = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         Logger.Trace("ViewModel.OnObjectHolderEntrySelected(ohe); t2-t1={0}ms", t2 - t1);
     }
@@ -83,49 +91,18 @@ public partial class ObjectAnalyzerWindow : Window
         var rowObjectHolderEntry = (ObjectAnalyzerWindowViewModel.ObjectHolderEntry)
             ev.Row.DataContext;
 
-        // TODO should use some kind of "template" xaml thing for this, not code?
         var cm = new ContextMenu();
-        // TODO this is very Model stuff, may not be correct to put in View code
-        switch (rowObjectHolderEntry.ObjectHolder.GetEntryType())
+        foreach (var action in rowObjectHolderEntry.GetAvailableActions())
         {
-            case Z64.Z64Object.EntryType.DList:
-                Utils.Assert(rowObjectHolderEntry != null);
-                cm.Items.Add(
-                    new MenuItem()
-                    {
-                        Header = "Open in DList Viewer",
-                        Command = ViewModel.OpenDListViewerObjectHolderEntryCommand,
-                        CommandParameter = rowObjectHolderEntry,
-                    }
-                );
-                break;
-
-            case Z64.Z64Object.EntryType.SkeletonHeader:
-            case Z64.Z64Object.EntryType.FlexSkeletonHeader:
-                Utils.Assert(rowObjectHolderEntry != null);
-                cm.Items.Add(
-                    new MenuItem()
-                    {
-                        Header = "Open in Skeleton Viewer",
-                        Command = ViewModel.OpenSkeletonViewerObjectHolderEntryCommand,
-                        CommandParameter = rowObjectHolderEntry,
-                    }
-                );
-                break;
-
-            case Z64.Z64Object.EntryType.CollisionHeader:
-                Utils.Assert(rowObjectHolderEntry != null);
-                cm.Items.Add(
-                    new MenuItem()
-                    {
-                        Header = "Open in Collision Viewer",
-                        Command = ViewModel.OpenCollisionViewerObjectHolderEntryCommand,
-                        CommandParameter = rowObjectHolderEntry,
-                    }
-                );
-                break;
+            cm.Items.Add(
+                new MenuItem()
+                {
+                    Header = action.label,
+                    Command = action.command,
+                    CommandParameter = action.commandParameter,
+                }
+            );
         }
-        cm.Items.Add(new MenuItem() { Header = "(TODO)" });
         ev.Row.ContextMenu = cm;
     }
 }

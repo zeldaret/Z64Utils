@@ -4,12 +4,8 @@ namespace Z64Utils_Avalonia;
 
 public partial class DListViewerRenderSettingsWindow : Window
 {
-    public DListViewerRenderSettingsViewModel ViewModel { get; }
-
-    public DListViewerRenderSettingsWindow(DListViewerRenderSettingsViewModel vm)
+    public DListViewerRenderSettingsWindow()
     {
-        ViewModel = vm;
-        DataContext = ViewModel;
         InitializeComponent();
     }
 }

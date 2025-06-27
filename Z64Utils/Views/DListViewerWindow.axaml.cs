@@ -7,23 +7,34 @@ public partial class DListViewerWindow : Window
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public DListViewerWindowViewModel ViewModel;
+    public DListViewerWindowViewModel? ViewModel;
 
     private DListViewerRenderSettingsWindow? _currentRenderSettingsWindow;
     private SegmentsConfigWindow? _currentSegmentsConfigWindow;
 
-    public DListViewerWindow(DListViewerWindowViewModel vm)
+    public DListViewerWindow()
     {
-        ViewModel = vm;
-        ViewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
-        ViewModel.OpenSegmentsConfig = OpenSegmentsConfig;
-        DataContext = ViewModel;
         InitializeComponent();
-        ViewModel.RenderContextChanged += (sender, e) =>
+        DataContextChanged += (sender, e) =>
         {
-            Logger.Debug("RenderContextChanged");
-            DLViewerGL.Redraw();
+            if (ViewModel != null)
+            {
+                ViewModel.RenderContextChanged -= OnRenderContextChanged;
+            }
+
+            ViewModel = (DListViewerWindowViewModel?)DataContext;
+            if (ViewModel == null)
+                return;
+            ViewModel.OpenDListViewerRenderSettings = OpenDListViewerRenderSettings;
+            ViewModel.OpenSegmentsConfig = OpenSegmentsConfig;
+            ViewModel.RenderContextChanged += OnRenderContextChanged;
         };
+    }
+
+    private void OnRenderContextChanged(object? sender, EventArgs e)
+    {
+        Logger.Debug("RenderContextChanged");
+        DLViewerGL.Redraw();
     }
 
     private DListViewerRenderSettingsViewModel? OpenDListViewerRenderSettings(
@@ -37,13 +48,13 @@ public partial class DListViewerWindow : Window
         }
 
         var vm = vmFactory();
-        _currentRenderSettingsWindow = new DListViewerRenderSettingsWindow(vm);
+        _currentRenderSettingsWindow = new DListViewerRenderSettingsWindow() { DataContext = vm };
         _currentRenderSettingsWindow.Closed += (sender, e) =>
         {
             _currentRenderSettingsWindow = null;
         };
         _currentRenderSettingsWindow.Show();
-        return _currentRenderSettingsWindow.ViewModel;
+        return vm;
     }
 
     private SegmentsConfigWindowViewModel? OpenSegmentsConfig(

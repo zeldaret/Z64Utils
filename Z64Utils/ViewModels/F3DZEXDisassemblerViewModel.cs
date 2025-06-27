@@ -30,7 +30,10 @@ public partial class F3DZEXDisassemblerViewModel : ObservableObject
     };
 
     // Provided by the view
-    public Func<F3DZEXDisassemblerSettingsViewModel?>? OpenF3DZEXDisassemblerSettings;
+    public Func<
+        Func<F3DZEXDisassemblerSettingsViewModel>,
+        F3DZEXDisassemblerSettingsViewModel?
+    >? OpenF3DZEXDisassemblerSettings;
 
     public F3DZEXDisassemblerViewModel()
     {
@@ -49,7 +52,7 @@ public partial class F3DZEXDisassemblerViewModel : ObservableObject
     public void OpenDisassemblySettingsCommand()
     {
         Utils.Assert(OpenF3DZEXDisassemblerSettings != null);
-        var vm = OpenF3DZEXDisassemblerSettings();
+        var vm = OpenF3DZEXDisassemblerSettings(() => new());
         if (vm == null)
         {
             // Was already open

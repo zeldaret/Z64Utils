@@ -21,7 +21,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     // Provided by the view
     public Func<Task<IStorageFile?>>? GetOpenROM;
-    public Func<Task<int?>>? PickSegmentID;
+    public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
     public Func<F3DZEXDisassemblerViewModel>? OpenF3DZEXDisassembler;
@@ -271,7 +271,7 @@ public class MainWindowViewModelRomFile
     public async void OpenObjectAnalyzerCommand()
     {
         Utils.Assert(Mwvm.PickSegmentID != null);
-        int? segmentID = await Mwvm.PickSegmentID();
+        int? segmentID = await Mwvm.PickSegmentID(new());
         Logger.Debug("segmentID={segmentID}", segmentID);
         if (segmentID != null)
             Mwvm.OpenObjectAnalyzerByZ64File(File, (int)segmentID);

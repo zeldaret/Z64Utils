@@ -5,12 +5,8 @@ namespace Z64Utils_Avalonia;
 
 public partial class SkeletonViewerWindow : Window
 {
-    public SkeletonViewerWindowViewModel ViewModel;
-
     public SkeletonViewerWindow()
     {
-        ViewModel = new();
-        DataContext = ViewModel;
         InitializeComponent();
     }
 
@@ -24,6 +20,6 @@ public partial class SkeletonViewerWindow : Window
             return;
         Utils.Assert(selectedItem is SkeletonViewerWindowViewModel.AnimationEntry);
         var animationEntry = (SkeletonViewerWindowViewModel.AnimationEntry)selectedItem;
-        ViewModel.OnAnimationEntrySelected(animationEntry);
+        animationEntry.OnSelected();
     }
 }

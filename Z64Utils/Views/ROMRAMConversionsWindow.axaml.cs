@@ -4,12 +4,8 @@ namespace Z64Utils_Avalonia;
 
 public partial class ROMRAMConversionsWindow : Window
 {
-    public ROMRAMConversionsWindowViewModel ViewModel;
-
-    public ROMRAMConversionsWindow(ROMRAMConversionsWindowViewModel viewModel)
+    public ROMRAMConversionsWindow()
     {
-        ViewModel = viewModel;
-        DataContext = ViewModel;
         InitializeComponent();
     }
 }

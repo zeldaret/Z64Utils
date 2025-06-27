@@ -20,7 +20,8 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var win = new MainWindow();
+            var winVM = new MainWindowViewModel();
+            var win = new MainWindow() { DataContext = winVM };
             desktop.MainWindow = win;
 
             win.Opened += (sender, ev) =>
@@ -29,7 +30,7 @@ public partial class App : Application
                 Logger.Debug("romPath={romPath}", romPath);
                 if (romPath != null)
                 {
-                    win.ViewModel.OpenROM(romPath);
+                    winVM.OpenROM(romPath);
                     var objectAnalyzerFileNames = Program.ParsedArgs?.ObjectAnalyzerFileNames;
                     if (objectAnalyzerFileNames != null)
                     {
@@ -40,7 +41,7 @@ public partial class App : Application
                         foreach (var name in objectAnalyzerFileNames)
                         {
                             // TODO un-hardcode segment 6
-                            var oavm = win.ViewModel.OpenObjectAnalyzerByFileName(name, 6);
+                            var oavm = winVM.OpenObjectAnalyzerByFileName(name, 6);
 
                             if (oavm == null)
                             {

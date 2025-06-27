@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 
 namespace Z64Utils_Avalonia;
@@ -15,7 +16,9 @@ public partial class F3DZEXDisassemblerWindow : Window
         InitializeComponent();
     }
 
-    private F3DZEXDisassemblerSettingsViewModel? OpenF3DZEXDisassemblerSettings()
+    private F3DZEXDisassemblerSettingsViewModel? OpenF3DZEXDisassemblerSettings(
+        Func<F3DZEXDisassemblerSettingsViewModel> vmFactory
+    )
     {
         if (CurrentSettingsWindow != null)
         {
@@ -23,12 +26,13 @@ public partial class F3DZEXDisassemblerWindow : Window
             return null;
         }
 
-        CurrentSettingsWindow = new F3DZEXDisassemblerSettingsWindow();
+        var vm = vmFactory();
+        CurrentSettingsWindow = new F3DZEXDisassemblerSettingsWindow() { DataContext = vm };
         CurrentSettingsWindow.Closed += (sender, e) =>
         {
             CurrentSettingsWindow = null;
         };
         CurrentSettingsWindow.Show();
-        return CurrentSettingsWindow.ViewModel;
+        return vm;
     }
 }

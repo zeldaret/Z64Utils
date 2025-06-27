@@ -44,13 +44,24 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     public class AnimationEntry
     {
+        private SkeletonViewerWindowViewModel _parentVM;
         public string Name { get; }
         public Z64Object.AnimationHolder AnimationHolder { get; }
 
-        public AnimationEntry(string name, Z64Object.AnimationHolder animationHolder)
+        public AnimationEntry(
+            SkeletonViewerWindowViewModel parentVM,
+            string name,
+            Z64Object.AnimationHolder animationHolder
+        )
         {
+            _parentVM = parentVM;
             Name = name;
             AnimationHolder = animationHolder;
+        }
+
+        public void OnSelected()
+        {
+            _parentVM.OnAnimationEntrySelected(this);
         }
     }
 
@@ -260,6 +271,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     {
         ObservableCollection<AnimationEntry> newAnimations = new(
             animationHolders.Select(animationHolder => new AnimationEntry(
+                this,
                 animationHolder.Name,
                 animationHolder
             ))

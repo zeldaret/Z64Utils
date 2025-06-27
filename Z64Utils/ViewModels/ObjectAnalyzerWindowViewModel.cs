@@ -44,9 +44,12 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
 
     // Provided by the view
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
-    public Func<SkeletonViewerWindowViewModel>? OpenSkeletonViewer;
-    public Func<CollisionViewerWindowViewModel>? OpenCollisionViewer;
-    public Func<F3DZEXDisassemblerSettingsViewModel?>? OpenF3DZEXDisassemblerSettings;
+    public Action<SkeletonViewerWindowViewModel>? OpenSkeletonViewer;
+    public Action<CollisionViewerWindowViewModel>? OpenCollisionViewer;
+    public Func<
+        Func<F3DZEXDisassemblerSettingsViewModel>,
+        F3DZEXDisassemblerSettingsViewModel?
+    >? OpenF3DZEXDisassemblerSettings;
 
     public ICommand OpenDListViewerObjectHolderEntryCommand;
     public ICommand OpenSkeletonViewerObjectHolderEntryCommand;
@@ -139,7 +142,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     public void DisassemblySettingsCommand()
     {
         Utils.Assert(OpenF3DZEXDisassemblerSettings != null);
-        var vm = OpenF3DZEXDisassemblerSettings();
+        var vm = OpenF3DZEXDisassemblerSettings(() => new());
         if (vm == null)
         {
             // Was already open
@@ -147,14 +150,10 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         }
 
         vm.DisasConfig = F3DZEXDisasConfig;
-        vm.PropertyChanged += (sender, e) =>
+        vm.DisasConfigChanged += (sender, e) =>
         {
-            switch (e.PropertyName)
-            {
-                case nameof(vm.DisasConfig):
-                    F3DZEXDisasConfig = vm.DisasConfig;
-                    break;
-            }
+            Logger.Debug("F3DZEXDisassemblerSettingsViewModel.DisasConfigChanged");
+            F3DZEXDisasConfig = vm.DisasConfig;
         };
     }
 
@@ -168,22 +167,76 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
 
     public class ObjectHolderEntry
     {
+        ObjectAnalyzerWindowViewModel _parentVM;
+
         public string Offset { get; }
         public string Name { get; }
         public string Type { get; }
         public Z64Object.ObjectHolder ObjectHolder { get; }
 
         public ObjectHolderEntry(
+            ObjectAnalyzerWindowViewModel parentVM,
             string offset,
             string name,
             string type,
             Z64Object.ObjectHolder objectHolder
         )
         {
+            _parentVM = parentVM;
             Offset = offset;
             Name = name;
             Type = type;
             ObjectHolder = objectHolder;
+        }
+
+        public class AvailableAction
+        {
+            public string? label;
+            public ICommand? command;
+            public object? commandParameter;
+        }
+
+        internal IEnumerable<AvailableAction> GetAvailableActions()
+        {
+            var availableActions = new List<AvailableAction>();
+            switch (ObjectHolder.GetEntryType())
+            {
+                case Z64Object.EntryType.DList:
+                    availableActions.Add(
+                        new()
+                        {
+                            label = "Open in DList Viewer",
+                            command = _parentVM.OpenDListViewerObjectHolderEntryCommand,
+                            commandParameter = this,
+                        }
+                    );
+                    break;
+
+                case Z64Object.EntryType.SkeletonHeader:
+                case Z64Object.EntryType.FlexSkeletonHeader:
+                    availableActions.Add(
+                        new()
+                        {
+                            label = "Open in Skeleton Viewer",
+                            command = _parentVM.OpenSkeletonViewerObjectHolderEntryCommand,
+                            commandParameter = this,
+                        }
+                    );
+                    break;
+
+                case Z64Object.EntryType.CollisionHeader:
+                    availableActions.Add(
+                        new()
+                        {
+                            label = "Open in Collision Viewer",
+                            command = _parentVM.OpenCollisionViewerObjectHolderEntryCommand,
+                            commandParameter = this,
+                        }
+                    );
+                    break;
+            }
+            availableActions.Add(new() { label = "(TODO)" });
+            return availableActions;
         }
     }
 
@@ -279,6 +332,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
             {
                 newObjectHolderEntries.Add(
                     new ObjectHolderEntry(
+                        this,
                         offset: addrStr,
                         name: entry.Name,
                         type: entryTypeStr,
@@ -468,7 +522,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     {
         Utils.Assert(ohe != null);
         Utils.Assert(OpenSkeletonViewer != null);
-        var skelvVM = OpenSkeletonViewer();
+        var skelvVM = new SkeletonViewerWindowViewModel();
+        OpenSkeletonViewer(skelvVM);
         Utils.Assert(_game != null);
         skelvVM.Renderer = new F3DZEX.Render.Renderer(_game, new F3DZEX.Render.Renderer.Config());
         // TODO
@@ -492,7 +547,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     {
         Utils.Assert(ohe != null);
         Utils.Assert(OpenCollisionViewer != null);
-        var collisionvVM = OpenCollisionViewer();
+        var collisionvVM = new CollisionViewerWindowViewModel();
+        OpenCollisionViewer(collisionvVM);
         Utils.Assert(ohe.ObjectHolder is Z64Object.ColHeaderHolder);
         var collisionHeaderHolder = (Z64Object.ColHeaderHolder)ohe.ObjectHolder;
         collisionvVM.SetCollisionHeader(collisionHeaderHolder);

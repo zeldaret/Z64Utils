@@ -7,12 +7,8 @@ public partial class PickSegmentIDWindow : Window
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public PickSegmentIDWindowViewModel ViewModel;
-
     public PickSegmentIDWindow()
     {
-        ViewModel = new PickSegmentIDWindowViewModel();
-        DataContext = ViewModel;
         InitializeComponent();
 
         // Focus the segment id text box (and the dialog)
@@ -32,6 +28,7 @@ public partial class PickSegmentIDWindow : Window
 
     public void OnOKButtonClick(object? sender, RoutedEventArgs args)
     {
-        Close(ViewModel.SegmentID);
+        var vm = (PickSegmentIDWindowViewModel?)DataContext;
+        Close(vm?.SegmentID);
     }
 }
