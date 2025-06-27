@@ -52,7 +52,9 @@
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <TextBlock DockPanel.Dock="Top">Limbs</TextBlock>
-                    <TreeView ItemsSource="{Binding SkeletonRootLimbNode}">
+                    <TreeView ItemsSource="{Binding SkeletonRootLimbNode}"
+                        SelectedItems="{Binding SelectedLimbNodes}"
+                        SelectionMode="Multiple">
                         <TreeView.ItemTemplate>
                             <TreeDataTemplate x:DataType="vm:SkeletonViewerLimbNode"
                                 ItemsSource="{Binding ChildrenLimbs}">

@@ -42,6 +42,9 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<SkeletonViewerLimbNode> _skeletonRootLimbNode = new();
 
+    [ObservableProperty]
+    private ObservableCollection<SkeletonViewerLimbNode> _selectedLimbNodes = new();
+
     public class AnimationEntry
     {
         private SkeletonViewerWindowViewModel _parentVM;
@@ -102,6 +105,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         };
         PropertyChanged += (sender, e) =>
         {
+            Logger.Debug("PropertyChanged {PropertyName}", e.PropertyName);
             switch (e.PropertyName)
             {
                 case nameof(Renderer):
@@ -149,6 +153,11 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     _playAnimTimer.Interval = TimeSpan.FromMilliseconds(PlayAnimTickPeriodMs);
                     break;
             }
+        };
+        SelectedLimbNodes.CollectionChanged += (sender, e) =>
+        {
+            Logger.Debug("SelectedLimbNodes.CollectionChanged");
+            UpdateDisplayElements();
         };
         _playAnimTimer.Tick += OnPlayAnimTimerTick;
         PlayAnimTickPeriodMs = 1000 / 20;
@@ -212,7 +221,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         {
             Utils.Assert(Skel != null);
             var limbHolder = Skel.Limbs[treeLimb.Index];
-            var node = new SkeletonViewerLimbNode(limbHolder.Name);
+            var node = new SkeletonViewerLimbNode(treeLimb.Index, limbHolder.Name);
             parent.ChildrenLimbs.Add(node);
 
             if (treeLimb.Sibling != null)
@@ -221,7 +230,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                 VisitLimb(node, treeLimb.Child);
         }
 
-        var skeletonRootLimbNode = new SkeletonViewerLimbNode(Skel.Limbs[0].Name);
+        var skeletonRootLimbNode = new SkeletonViewerLimbNode(0, Skel.Limbs[0].Name);
         if (Skel.Root.Child != null)
             VisitLimb(skeletonRootLimbNode, Skel.Root.Child);
         Utils.Assert(Skel.Root.Sibling == null);
@@ -341,7 +350,11 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
             var dl = LimbsDLists[index];
             if (dl != null)
                 DisplayElements.Add(
-                    new DLViewerControlDlistWithMatrixDisplayElement(dl, CurPose[index])
+                    new DLViewerControlDlistWithMatrixDisplayElement(
+                        dl,
+                        SelectedLimbNodes.Any(n => n.LimbIndex == index),
+                        CurPose[index]
+                    )
                 );
         });
     }
@@ -392,14 +405,17 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
 public class SkeletonViewerLimbNode
 {
+    public int LimbIndex { get; }
     public string Name { get; }
     public ObservableCollection<SkeletonViewerLimbNode> ChildrenLimbs { get; }
 
     public SkeletonViewerLimbNode(
+        int limbIndex,
         string name,
         IEnumerable<SkeletonViewerLimbNode>? childrenLimbs = null
     )
     {
+        LimbIndex = limbIndex;
         Name = name;
         ChildrenLimbs = childrenLimbs == null ? new() : new(childrenLimbs);
     }

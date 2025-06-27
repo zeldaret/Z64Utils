@@ -3,26 +3,33 @@ using OpenTK.Mathematics;
 
 namespace Z64Utils_Avalonia;
 
-public interface IDLViewerControlDisplayElement { }
+public interface IDLViewerControlDisplayElement
+{
+    Dlist DL { get; }
+    bool Highlighted { get; }
+}
 
 public class DLViewerControlDListDisplayElement : IDLViewerControlDisplayElement
 {
-    public Dlist dList;
+    public Dlist DL { get; }
+    public bool Highlighted { get; } = false;
 
     public DLViewerControlDListDisplayElement(Dlist dList)
     {
-        this.dList = dList;
+        DL = dList;
     }
 }
 
 public class DLViewerControlDlistWithMatrixDisplayElement : IDLViewerControlDisplayElement
 {
-    public Dlist dList;
-    public Matrix4 mtx;
+    public Dlist DL { get; }
+    public bool Highlighted { get; }
+    public Matrix4 Mtx { get; }
 
-    public DLViewerControlDlistWithMatrixDisplayElement(Dlist dList, Matrix4 mtx)
+    public DLViewerControlDlistWithMatrixDisplayElement(Dlist dList, bool highlighted, Matrix4 mtx)
     {
-        this.dList = dList;
-        this.mtx = mtx;
+        DL = dList;
+        Highlighted = highlighted;
+        Mtx = mtx;
     }
 }

@@ -117,17 +117,16 @@ public class DLViewerControl : OpenTKControlBaseWithCamera
                 if (Renderer.RenderFailed())
                     break;
 
-                Dlist dList;
+                Dlist dList = de.DL;
                 Matrix4? mtx = null;
 
                 if (de is DLViewerControlDListDisplayElement deDL)
                 {
-                    dList = deDL.dList;
+                    //
                 }
                 else if (de is DLViewerControlDlistWithMatrixDisplayElement deDLwithMtx)
                 {
-                    dList = deDLwithMtx.dList;
-                    mtx = deDLwithMtx.mtx;
+                    mtx = deDLwithMtx.Mtx;
                 }
                 else
                 {
@@ -141,6 +140,7 @@ public class DLViewerControl : OpenTKControlBaseWithCamera
                     Renderer.RdpMtxStack.Load((Matrix4)mtx);
                 }
 
+                Renderer.SetHightlightEnabled(de.Highlighted);
                 Logger.Trace("Name={Name} RenderDList({dList})", Name, dList);
                 Renderer.RenderDList(dList);
                 Logger.Trace("Name={Name} RenderDList OK", Name);
