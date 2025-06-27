@@ -178,7 +178,10 @@ public partial class DListViewerWindowViewModel : ObservableObject
         return Renderer != null;
     }
 
-    public void OpenDisassemblyCommand() { }
+    public void OpenDisassemblyCommand()
+    {
+        // TODO
+    }
 
     public void OpenSegmentsConfigCommand()
     {

@@ -16,16 +16,24 @@
             <MenuItem Header="Segments" />
         </Menu>
         <StackPanel DockPanel.Dock="Top">
-            <TextBlock>Decode error:</TextBlock>
-            <TextBlock Text="{Binding DecodeError}" />
-            <TextBlock>Render error:</TextBlock>
-            <TextBlock Text="{Binding RenderError}" />
+            <StackPanel
+                IsVisible="{Binding DecodeError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock>Decode error:</TextBlock>
+                <TextBlock Text="{Binding DecodeError}" />
+            </StackPanel>
+            <StackPanel
+                IsVisible="{Binding RenderError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock>Render error:</TextBlock>
+                <TextBlock Text="{Binding RenderError}" />
+            </StackPanel>
         </StackPanel>
         <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Center">
             <Button DockPanel.Dock="Left" Command="{Binding PlayAnimBackwardsCommand}">backwards</Button>
             <Button DockPanel.Dock="Left" Command="{Binding PlayAnimForwardsCommand}">play</Button>
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-                <NumericUpDown Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}" FormatString="0" MinWidth="120" />
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center"
+                Margin="10,0,10,0">
+                <NumericUpDown Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}"
+                    FormatString="0" MinWidth="120" />
                 <TextBlock VerticalAlignment="Center">/</TextBlock>
                 <TextBlock Text="{Binding MaxFrame}" VerticalAlignment="Center" />
             </StackPanel>
@@ -33,7 +41,8 @@
                 <TextBlock DockPanel.Dock="Top">Playback speed:</TextBlock>
                 <NumericUpDown Value="{Binding PlayAnimTickPeriodMs}" />
             </DockPanel>
-            <Slider Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}" Margin="10,0,10,0" />
+            <Slider Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}"
+                Margin="10,0,10,0" />
         </DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
