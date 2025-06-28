@@ -146,9 +146,15 @@ public partial class MainWindowViewModel : ObservableObject
         return _game != null;
     }
 
-    public void ImportFileNameListCommand()
+    public async void ImportFileNameListCommand()
     {
-        // TODO
+        Utils.Assert(GetOpenFile != null);
+        Utils.Assert(_game != null);
+        var f = await GetOpenFile();
+        if (f == null)
+            return;
+        Z64Version.ImportFileList(_game, f.Path.LocalPath);
+        UpdateRomFiles();
     }
 
     public bool CanImportFileNameListCommand(object arg)
@@ -156,9 +162,14 @@ public partial class MainWindowViewModel : ObservableObject
         return _game != null;
     }
 
-    public void ExportFileNameListCommand()
+    public async void ExportFileNameListCommand()
     {
-        // TODO
+        Utils.Assert(GetOpenFileForSave != null);
+        Utils.Assert(_game != null);
+        var f = await GetOpenFileForSave();
+        if (f == null)
+            return;
+        Z64Version.ExportFileList(_game, f.Path.LocalPath);
     }
 
     public bool CanExportFileNameListCommand(object arg)
