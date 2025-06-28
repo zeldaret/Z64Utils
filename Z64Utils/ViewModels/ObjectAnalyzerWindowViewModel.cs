@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -87,8 +88,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     public void FindDListsCommand()
     {
         Utils.Assert(HasFile());
-        Utils.Assert(_object != null);
-        Utils.Assert(_file != null);
         Utils.Assert(_file.Valid());
 
         var config = new Z64ObjectAnalyzer.Config(); // TODO
@@ -104,8 +103,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     public void AnalyzeDListsCommand()
     {
         Utils.Assert(HasFile());
-        Utils.Assert(_object != null);
-        Utils.Assert(_file != null);
         Utils.Assert(_file.Valid());
 
         Z64ObjectAnalyzer.AnalyzeDlists(_object, _file.Data, _segment);
@@ -124,8 +121,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     public void ResetCommand()
     {
         Utils.Assert(HasFile());
-        Utils.Assert(_object != null);
-        Utils.Assert(_file != null);
         Utils.Assert(_file.Valid());
 
         _object.Entries.Clear();
@@ -262,6 +257,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         _object = null;
     }
 
+    [MemberNotNullWhen(true, nameof(_file), nameof(_object))]
     public bool HasFile()
     {
         if (_file == null)
