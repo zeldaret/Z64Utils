@@ -84,6 +84,8 @@
                                             Command="{Binding OpenObjectAnalyzerCommand}" />
                                         <MenuItem Header="Inject"
                                             Command="{Binding InjectFileCommand}" />
+                                        <MenuItem Header="Save"
+                                            Command="{Binding SaveFileCommand}" />
                                     </ContextMenu>
                                 </Setter>
                             </Style>

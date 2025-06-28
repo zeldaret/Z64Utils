@@ -22,6 +22,7 @@ public partial class MainWindow : Window
             vm.GetOpenFile = ShowDialogOpenFileAsync;
             vm.GetOpenFolderForExportFS = ShowDialogOpenFolderForExportFSAsync;
             vm.GetOpenROMForSave = ShowDialogOpenROMForSaveAsync;
+            vm.GetOpenFileForSave = ShowDialogOpenFileForSaveAsync;
             vm.PickSegmentID = OpenPickSegmentID;
             vm.OpenObjectAnalyzer = OpenObjectAnalyzer;
             vm.OpenDListViewer = OpenDListViewer;
@@ -115,6 +116,12 @@ public partial class MainWindow : Window
         return await StorageProvider.SaveFilePickerAsync(
             new() { Title = "Save ROM", DefaultExtension = ".z64" }
         );
+    }
+
+    private async Task<IStorageFile?> ShowDialogOpenFileForSaveAsync()
+    {
+        Utils.Assert(StorageProvider.CanSave);
+        return await StorageProvider.SaveFilePickerAsync(new() { Title = "Save File" });
     }
 
     private async Task<int?> OpenPickSegmentID(PickSegmentIDWindowViewModel vm)

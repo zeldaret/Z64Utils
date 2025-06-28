@@ -26,6 +26,7 @@ public partial class MainWindowViewModel : ObservableObject
     public Func<Task<IStorageFile?>>? GetOpenFile;
     public Func<Task<IStorageFolder?>>? GetOpenFolderForExportFS;
     public Func<Task<IStorageFile?>>? GetOpenROMForSave;
+    public Func<Task<IStorageFile?>>? GetOpenFileForSave;
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
@@ -343,5 +344,23 @@ public class MainWindowViewModelRomFile
             File.VRomStart,
             System.IO.File.ReadAllBytes(newFile.Path.LocalPath)
         );
+        _parentVM.UpdateRomFiles();
+    }
+
+    public async void SaveFileCommand()
+    {
+        Utils.Assert(_parentVM.GetOpenFileForSave != null);
+        Utils.Assert(File.Valid());
+        Utils.Assert(!File.Deleted);
+        var saveToFile = await _parentVM.GetOpenFileForSave();
+        if (saveToFile == null)
+            return;
+
+        System.IO.File.WriteAllBytes(saveToFile.Path.LocalPath, File.Data);
+    }
+
+    public bool CanSaveFileCommand(object arg)
+    {
+        return File.Valid() && !File.Deleted;
     }
 }
