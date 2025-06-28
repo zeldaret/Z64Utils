@@ -24,6 +24,7 @@ public partial class MainWindow : Window
             vm.GetOpenROMForSave = ShowDialogOpenROMForSaveAsync;
             vm.GetOpenFileForSave = ShowDialogOpenFileForSaveAsync;
             vm.PickSegmentID = OpenPickSegmentID;
+            vm.GetRenamedFileName = GetRenamedFileName;
             vm.OpenObjectAnalyzer = OpenObjectAnalyzer;
             vm.OpenDListViewer = OpenDListViewer;
             vm.OpenF3DZEXDisassembler = OpenF3DZEXDisassembler;
@@ -130,6 +131,12 @@ public partial class MainWindow : Window
         var dialogResultTask = pickSegmentIDWin.ShowDialog<int?>(this);
         int? segmentID = await dialogResultTask;
         return segmentID;
+    }
+
+    private async Task<string?> GetRenamedFileName(RenameFileWindowViewModel vm)
+    {
+        var win = new RenameFileWindow() { DataContext = vm };
+        return await win.ShowDialog<string?>(this);
     }
 
     private void OpenObjectAnalyzer(ObjectAnalyzerWindowViewModel vm)

@@ -27,6 +27,7 @@ public partial class MainWindowViewModel : ObservableObject
     public Func<Task<IStorageFolder?>>? GetOpenFolderForExportFS;
     public Func<Task<IStorageFile?>>? GetOpenROMForSave;
     public Func<Task<IStorageFile?>>? GetOpenFileForSave;
+    public Func<RenameFileWindowViewModel, Task<string?>>? GetRenamedFileName;
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
@@ -362,5 +363,16 @@ public class MainWindowViewModelRomFile
     public bool CanSaveFileCommand(object arg)
     {
         return File.Valid() && !File.Deleted;
+    }
+
+    public async void RenameFileCommand()
+    {
+        Utils.Assert(_parentVM.GetRenamedFileName != null);
+        Utils.Assert(_parentVM.Game != null);
+        var newName = await _parentVM.GetRenamedFileName(new() { Name = Name });
+        if (newName == null)
+            return;
+        _parentVM.Game.Version.RenameFile(File.VRomStart, newName);
+        _parentVM.UpdateRomFiles();
     }
 }

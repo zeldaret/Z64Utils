@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.RenameFileWindow"
+    x:DataType="vm:RenameFileWindowViewModel"
+    Title="Rename File"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel>
+        <TextBlock Margin="5">New file name:</TextBlock>
+        <TextBox Margin="5" Width="400" Name="NameTextBox" Text="{Binding Name}" />
+        <Button DockPanel.Dock="Right" Margin="5"
+            Click="OnOKButtonClick" IsDefault="True"
+            IsEnabled="{Binding Name, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            OK
+        </Button>
+    </StackPanel>
+</Window>
