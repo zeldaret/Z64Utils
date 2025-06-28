@@ -21,6 +21,7 @@ public partial class MainWindow : Window
             vm.GetOpenROM = ShowDialogOpenROMAsync;
             vm.GetOpenFile = ShowDialogOpenFileAsync;
             vm.GetOpenFolderForExportFS = ShowDialogOpenFolderForExportFSAsync;
+            vm.GetOpenROMForSave = ShowDialogOpenROMForSaveAsync;
             vm.PickSegmentID = OpenPickSegmentID;
             vm.OpenObjectAnalyzer = OpenObjectAnalyzer;
             vm.OpenDListViewer = OpenDListViewer;
@@ -106,6 +107,14 @@ public partial class MainWindow : Window
             Utils.Assert(folders.Count == 1);
             return folders[0];
         }
+    }
+
+    private async Task<IStorageFile?> ShowDialogOpenROMForSaveAsync()
+    {
+        Utils.Assert(StorageProvider.CanSave);
+        return await StorageProvider.SaveFilePickerAsync(
+            new() { Title = "Save ROM", DefaultExtension = ".z64" }
+        );
     }
 
     private async Task<int?> OpenPickSegmentID(PickSegmentIDWindowViewModel vm)

@@ -24,6 +24,7 @@ public partial class MainWindowViewModel : ObservableObject
     public Func<Task<IStorageFile?>>? GetOpenROM;
     public Func<Task<IStorageFile?>>? GetOpenFile;
     public Func<Task<IStorageFolder?>>? GetOpenFolderForExportFS;
+    public Func<Task<IStorageFile?>>? GetOpenROMForSave;
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
@@ -125,9 +126,16 @@ public partial class MainWindowViewModel : ObservableObject
         return _game != null;
     }
 
-    public void SaveAsCommand()
+    public async Task SaveAsCommand()
     {
-        // TODO
+        Utils.Assert(GetOpenROMForSave != null);
+        Utils.Assert(_game != null);
+        var file = await GetOpenROMForSave();
+        if (file == null)
+            return;
+
+        _game.FixRom();
+        File.WriteAllBytes(file.Path.LocalPath, _game.Rom.RawRom);
     }
 
     public bool CanSaveAsCommand(object arg)
