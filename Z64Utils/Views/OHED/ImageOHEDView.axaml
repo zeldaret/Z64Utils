@@ -1,13 +1,12 @@
 <UserControl xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:Z64Utils_Avalonia"
-    xmlns:v="using:Z64Utils_Avalonia"
+    xmlns:vm.OHED="using:Z64Utils.ViewModels.OHED"
     xmlns:c="using:Z64Utils_Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-    x:Class="Z64Utils_Avalonia.ImageOHEDView"
-    x:DataType="vm:ImageOHEDViewModel"
+    x:Class="Z64Utils.Views.OHED.ImageOHEDView"
+    x:DataType="vm.OHED:ImageOHEDViewModel"
 >
     <DockPanel>
         <TextBlock DockPanel.Dock="Top" Text="{Binding InfoText}" />

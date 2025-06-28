@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using F3DZEX.Command;
 using RDP;
 using Z64;
+using Z64Utils.ViewModels.OHED;
 
 namespace Z64Utils_Avalonia;
 

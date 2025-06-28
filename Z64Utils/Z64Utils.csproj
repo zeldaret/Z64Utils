@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Z64</RootNamespace>
+    <RootNamespace>Z64Utils</RootNamespace>
     <AssemblyName>Z64Utils</AssemblyName>
 
     <!--

@@ -2,8 +2,9 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Common;
+using Z64Utils.ViewModels.OHED;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.OHED;
 
 public class OHEDViewLocator : IDataTemplate
 {

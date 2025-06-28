@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.OHED;
 
 public partial class ImageOHEDView : UserControl
 {

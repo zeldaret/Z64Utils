@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Common;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.OHED;
 
 public partial class HexViewerControl : UserControl
 {
