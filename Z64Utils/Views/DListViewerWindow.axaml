@@ -1,11 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:Z64Utils.ViewModels"
-    xmlns:v="using:Z64Utils_Avalonia"
+    xmlns:v.DListViewerBuildingBlocks="using:Z64Utils.Views.DListViewerBuildingBlocks"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-    x:Class="Z64Utils_Avalonia.DListViewerWindow"
+    x:Class="Z64Utils.Views.DListViewerWindow"
     x:DataType="vm:DListViewerWindowViewModel"
     Title="DList Viewer"
 >
@@ -26,7 +26,7 @@
             <TextBlock Text="{Binding RenderError}" />
         </StackPanel>
         <Grid>
-            <v:DLViewerControl Name="DLViewerGL" Renderer="{Binding Renderer}"
+            <v.DListViewerBuildingBlocks:DLViewerControl Name="DLViewerGL" Renderer="{Binding Renderer}"
                 DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
             <TextBlock Text="{Binding GLInfoText}" />
         </Grid>

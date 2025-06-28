@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig.SCPSCC;
 
 public partial class AddressSCPSCCView : UserControl
 {

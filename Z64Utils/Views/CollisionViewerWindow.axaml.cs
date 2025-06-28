@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Z64Utils.ViewModels;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views;
 
 public partial class CollisionViewerWindow : Window
 {

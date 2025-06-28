@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Common;
-using Z64;
 using Z64Utils.ViewModels;
+using Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views;
 
 public partial class SkeletonViewerWindow : Window
 {

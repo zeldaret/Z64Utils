@@ -3,8 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Common;
 using Z64Utils.ViewModels;
+using Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig.SCPSCC;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig;
 
 public class SCPSCCViewLocator : IDataTemplate
 {

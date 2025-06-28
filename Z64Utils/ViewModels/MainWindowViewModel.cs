@@ -81,7 +81,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             // FIXME this isn't MVVM
             Logger.Error(e, "An error occured opening the ROM");
-            var ewin = new Z64Utils_Avalonia.ErrorWindow();
+            var ewin = new Z64Utils.Views.ErrorWindow();
             ewin.SetMessage("An error occured opening the ROM", e.ToString());
             ewin.Show();
             throw;

@@ -8,7 +8,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using static Avalonia.OpenGL.GlConsts;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.DListViewerBuildingBlocks;
 
 public abstract class OpenTKControlBase : OpenGlControlBase
 {

@@ -6,7 +6,7 @@ using Avalonia.Input;
 using Avalonia.Rendering;
 using OpenTK.Mathematics;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.DListViewerBuildingBlocks;
 
 public abstract class OpenTKControlBaseWithCamera : OpenTKControlBase, ICustomHitTest
 {

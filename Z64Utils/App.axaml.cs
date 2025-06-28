@@ -4,9 +4,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Z64Utils.ViewModels;
-using Z64Utils_Avalonia;
+using Z64Utils.Views;
 
-namespace Z64;
+namespace Z64Utils;
 
 public partial class App : Application
 {

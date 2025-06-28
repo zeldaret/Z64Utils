@@ -8,7 +8,7 @@ using F3DZEX.Render;
 using OpenTK.Mathematics;
 using Z64Utils.ViewModels;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.DListViewerBuildingBlocks;
 
 public class DLViewerControl : OpenTKControlBaseWithCamera
 {

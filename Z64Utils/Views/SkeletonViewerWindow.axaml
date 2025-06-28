@@ -1,11 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:Z64Utils.ViewModels"
-    xmlns:v="using:Z64Utils_Avalonia"
+    xmlns:v.DListViewerBuildingBlocks="using:Z64Utils.Views.DListViewerBuildingBlocks"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-    x:Class="Z64Utils_Avalonia.SkeletonViewerWindow"
+    x:Class="Z64Utils.Views.SkeletonViewerWindow"
     x:DataType="vm:SkeletonViewerWindowViewModel"
     Title="Skeleton Viewer"
 >
@@ -77,7 +77,7 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto" MinWidth="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <v:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL" Renderer="{Binding Renderer}"
+            <v.DListViewerBuildingBlocks:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL" Renderer="{Binding Renderer}"
                 DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
             <Grid Grid.Column="2">

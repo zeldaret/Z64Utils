@@ -1,8 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Z64Utils.ViewModels;
+using Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views;
 
 public partial class DListViewerWindow : Window
 {

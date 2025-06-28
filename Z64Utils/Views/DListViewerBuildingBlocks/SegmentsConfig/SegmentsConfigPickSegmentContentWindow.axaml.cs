@@ -6,7 +6,7 @@ using Avalonia.Platform.Storage;
 using Common;
 using Z64Utils.ViewModels;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig;
 
 public partial class SegmentsConfigPickSegmentContentWindow : Window
 {
