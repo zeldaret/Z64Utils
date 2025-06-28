@@ -7,6 +7,7 @@ using Common;
 using F3DZEX.Render;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using Z64Utils.ViewModels;
 
 namespace Z64Utils_Avalonia;
 

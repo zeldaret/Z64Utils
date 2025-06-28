@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:vm="using:Z64Utils.ViewModels"
     xmlns:v="using:Z64Utils_Avalonia"
     xmlns:c="using:Z64Utils.Controls"
     xmlns:c.HexTextBox="using:Z64Utils.Controls.HexTextBox"

@@ -5,7 +5,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Z64;
-using Z64Utils_Avalonia;
+using Z64Utils.ViewModels;
 
 namespace F3DZEX.Render
 {

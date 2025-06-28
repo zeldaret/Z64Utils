@@ -1,7 +1,7 @@
 using F3DZEX.Command;
 using OpenTK.Mathematics;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public interface IDLViewerControlDisplayElement
 {

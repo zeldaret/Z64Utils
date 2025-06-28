@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Z64Utils.ViewModels;
 using Z64Utils_Avalonia;
 
 namespace Z64;

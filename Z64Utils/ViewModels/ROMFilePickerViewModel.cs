@@ -3,7 +3,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Z64;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class ROMFilePickerViewModel : ObservableObject
 {

@@ -16,7 +16,7 @@ using RDP;
 using Syroot.BinaryData;
 using Z64;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class SkeletonViewerWindowViewModel : ObservableObject
 {

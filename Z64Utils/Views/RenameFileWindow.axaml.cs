@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Z64Utils.ViewModels;
 
 namespace Z64Utils_Avalonia;
 

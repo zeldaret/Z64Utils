@@ -2,7 +2,7 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using F3DZEX.Render;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class DListViewerRenderSettingsViewModel : ObservableObject
 {

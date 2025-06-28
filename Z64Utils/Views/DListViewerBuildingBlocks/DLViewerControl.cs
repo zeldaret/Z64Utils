@@ -6,6 +6,7 @@ using Common;
 using F3DZEX.Command;
 using F3DZEX.Render;
 using OpenTK.Mathematics;
+using Z64Utils.ViewModels;
 
 namespace Z64Utils_Avalonia;
 

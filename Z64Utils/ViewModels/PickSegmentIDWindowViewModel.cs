@@ -1,7 +1,7 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class PickSegmentIDWindowViewModel : ObservableObject
 {

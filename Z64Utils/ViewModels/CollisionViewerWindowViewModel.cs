@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using OpenTK.Mathematics;
 using Z64;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class CollisionViewerWindowViewModel : ObservableObject
 {

@@ -7,7 +7,7 @@ using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Z64;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
@@ -79,8 +79,9 @@ public partial class MainWindowViewModel : ObservableObject
         }
         catch (Exception e)
         {
+            // FIXME this isn't MVVM
             Logger.Error(e, "An error occured opening the ROM");
-            var ewin = new ErrorWindow();
+            var ewin = new Z64Utils_Avalonia.ErrorWindow();
             ewin.SetMessage("An error occured opening the ROM", e.ToString());
             ewin.Show();
             throw;

@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Common;
+using Z64Utils.ViewModels;
 
 namespace Z64Utils_Avalonia;
 

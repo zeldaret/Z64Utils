@@ -4,7 +4,7 @@ using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using F3DZEX.Command;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.ViewModels;
 
 public partial class F3DZEXDisassemblerViewModel : ObservableObject
 {
