@@ -232,14 +232,10 @@ public partial class MainWindowViewModel : ObservableObject
             null,
             file.Name,
             new(File.ReadAllBytes(file.Path.LocalPath), 0, 0, 0, false),
-            (int)segment
+            (int)segment,
+            true
         );
         OpenObjectAnalyzer(vm);
-    }
-
-    public void CheckNewReleasesCommand()
-    {
-        // TODO
     }
 
     public ObjectAnalyzerWindowViewModel OpenObjectAnalyzerByZ64File(Z64File file, int segment)
@@ -248,7 +244,7 @@ public partial class MainWindowViewModel : ObservableObject
         Utils.Assert(OpenObjectAnalyzer != null);
         var objectAnalyzerVM = new ObjectAnalyzerWindowViewModel();
         OpenObjectAnalyzer(objectAnalyzerVM);
-        objectAnalyzerVM.SetFile(_game, _game.GetFileName(file.VRomStart), file, segment);
+        objectAnalyzerVM.SetFile(_game, _game.GetFileName(file.VRomStart), file, segment, true);
         return objectAnalyzerVM;
     }
 

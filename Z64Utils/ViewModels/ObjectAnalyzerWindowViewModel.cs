@@ -88,7 +88,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         Utils.Assert(HasFile());
         Utils.Assert(_file.Valid());
 
-        var config = new Z64ObjectAnalyzer.Config(); // TODO
+        // TODO prompt for config
+        var config = new Z64ObjectAnalyzer.Config();
         Z64ObjectAnalyzer.FindDlists(_object, _file.Data, _segment, config);
         UpdateMap();
     }
@@ -274,7 +275,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         }
     }
 
-    public void SetFile(Z64Game? game, string fileName, Z64File file, int segment)
+    public void SetFile(Z64Game? game, string fileName, Z64File file, int segment, bool analyze)
     {
         ClearFile();
 
@@ -288,6 +289,14 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
 
             Utils.Assert(file.Valid()); // TODO
             _object = new Z64Object(game, file.Data, fileName);
+
+            if (analyze)
+            {
+                var config = new Z64ObjectAnalyzer.Config();
+                Z64ObjectAnalyzer.FindDlists(_object, file.Data, segment, config);
+
+                Z64ObjectAnalyzer.AnalyzeDlists(_object, file.Data, segment);
+            }
 
             UpdateMap();
         }
@@ -429,7 +438,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
                 );
                 break;
 
-            // pretty much verbatim from ObjectAnalyzerForm.listView_map_SelectedIndexChanged
             case Z64Object.EntryType.AnimationHeader:
                 {
                     var anim = (Z64Object.AnimationHolder)ohe.ObjectHolder;
