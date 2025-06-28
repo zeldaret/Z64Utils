@@ -42,10 +42,20 @@
         </StackPanel>
         <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Center">
             <Button DockPanel.Dock="Left" Command="{Binding PlayAnimBackwardsCommand}">
-                <Image Height="40" Source="avares://Z64Utils/Assets/Icons/play_backwards.png" />
+                <Grid>
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/play_backwards.png"
+                        IsVisible="{Binding !IsPlayingBackwards}" />
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/pause.png"
+                        IsVisible="{Binding IsPlayingBackwards}" />
+                </Grid>
             </Button>
             <Button DockPanel.Dock="Left" Command="{Binding PlayAnimForwardsCommand}">
-                <Image Height="40" Source="avares://Z64Utils/Assets/Icons/play.png" />
+                <Grid>
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/play.png"
+                        IsVisible="{Binding !IsPlayingForwards}" />
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/pause.png"
+                        IsVisible="{Binding IsPlayingForwards}" />
+                </Grid>
             </Button>
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center"
                 Margin="10,0,10,0">

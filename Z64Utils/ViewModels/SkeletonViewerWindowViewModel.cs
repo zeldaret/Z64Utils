@@ -149,7 +149,12 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     [ObservableProperty]
     private double _playAnimTickPeriodMs;
     private DispatcherTimer _playAnimTimer = new();
-    private bool _playAnimForwards;
+
+    [ObservableProperty]
+    private bool _isPlayingBackwards;
+
+    [ObservableProperty]
+    private bool _isPlayingForwards;
 
     [ObservableProperty]
     Z64Skeleton? _skel;
@@ -627,33 +632,21 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
     public void PlayAnimBackwardsCommand()
     {
-        if (!_playAnimForwards)
-        {
-            _playAnimTimer.IsEnabled = !_playAnimTimer.IsEnabled;
-        }
-        else
-        {
-            _playAnimForwards = false;
-            _playAnimTimer.IsEnabled = true;
-        }
+        IsPlayingBackwards = !IsPlayingBackwards;
+        IsPlayingForwards = false;
+        _playAnimTimer.IsEnabled = IsPlayingBackwards;
     }
 
     public void PlayAnimForwardsCommand()
     {
-        if (_playAnimForwards)
-        {
-            _playAnimTimer.IsEnabled = !_playAnimTimer.IsEnabled;
-        }
-        else
-        {
-            _playAnimForwards = true;
-            _playAnimTimer.IsEnabled = true;
-        }
+        IsPlayingBackwards = false;
+        IsPlayingForwards = !IsPlayingForwards;
+        _playAnimTimer.IsEnabled = IsPlayingForwards;
     }
 
     private void OnPlayAnimTimerTick(object? sender, EventArgs e)
     {
-        CurFrame = (CurFrame + (_playAnimForwards ? 1 : ((MaxFrame + 1) - 1))) % (MaxFrame + 1);
+        CurFrame = (CurFrame + (IsPlayingForwards ? 1 : ((MaxFrame + 1) - 1))) % (MaxFrame + 1);
     }
 
     public void OnAnimationEntrySelected(IAnimationEntry animationEntry)
