@@ -83,8 +83,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         };
     }
 
-    // TODO: vvv
-
     public void FindDListsCommand()
     {
         Utils.Assert(HasFile());
@@ -114,9 +112,15 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         return HasFile();
     }
 
-    public void ImportJSONCommand() { }
+    public void ImportJSONCommand()
+    {
+        // TODO
+    }
 
-    public void ExportJSONCommand() { }
+    public void ExportJSONCommand()
+    {
+        // TODO
+    }
 
     public void ResetCommand()
     {
@@ -151,8 +155,6 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
             F3DZEXDisasConfig = vm.DisasConfig;
         };
     }
-
-    //
 
     [ObservableProperty]
     private string _filterText = "";

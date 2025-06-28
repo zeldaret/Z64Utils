@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils_Avalonia"
+    xmlns:c="using:Z64Utils_Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils_Avalonia.CollisionViewerRenderSettingsWindow"
+    x:DataType="vm:CollisionRenderSettings"
+    Title="Collision Render Settings"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label Target="BackgroundColorPicker">Background Color</Label>
+            <ColorPicker Name="BackgroundColorPicker" Color="{Binding BackgroundColor}" />
+        </StackPanel>
+        <c:EnumComboBox EnumType="vm:CollisionRenderMode" SelectedItem="{Binding RenderMode}" />
+    </StackPanel>
+</Window>

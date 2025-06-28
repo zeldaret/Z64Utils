@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -33,9 +34,9 @@ namespace F3DZEX.Render
             _shader.Send("u_Color", color);
         }
 
-        public void SetDataTriangles(CollisionPolygon[] polys, BufferUsageHint hint)
+        public void SetDataTriangles(List<CollisionPolygon> polys, BufferUsageHint hint)
         {
-            float[] data = new float[3 * (3 + 3) * polys.Length];
+            float[] data = new float[3 * (3 + 3) * polys.Count];
             int i = 0;
             foreach (var poly in polys)
             {
@@ -52,9 +53,9 @@ namespace F3DZEX.Render
             SetVertexData(data, sizeof(float) * data.Length, hint);
         }
 
-        public void SetDataLines(CollisionPolygon[] polys, BufferUsageHint hint)
+        public void SetDataLines(List<CollisionPolygon> polys, BufferUsageHint hint)
         {
-            float[] data = new float[3 * 2 * (3 + 3) * polys.Length];
+            float[] data = new float[3 * 2 * (3 + 3) * polys.Count];
             int i = 0;
             foreach (var poly in polys)
             {

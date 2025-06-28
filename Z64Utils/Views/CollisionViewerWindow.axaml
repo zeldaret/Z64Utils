@@ -11,8 +11,9 @@
 >
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Settings... (todo)" />
+            <MenuItem Header="Settings" Command="{Binding OpenCollisionRenderSettingsCommand}" />
         </Menu>
-        <v:CollisionViewerControl Name="CollisionViewerGL" Polygons="{Binding Polygons}" />
+        <v:CollisionViewerControl Name="CollisionViewerGL" RenderSettings="{Binding RenderSettings}"
+            Polygons="{Binding Polygons}" />
     </DockPanel>
 </Window>

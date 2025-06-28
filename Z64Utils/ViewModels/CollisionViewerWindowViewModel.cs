@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Avalonia.Media;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OpenTK.Mathematics;
@@ -11,12 +13,13 @@ public partial class CollisionViewerWindowViewModel : ObservableObject
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     [ObservableProperty]
-    private List<CollisionPolygon> _polygons;
+    private List<CollisionPolygon> _polygons = new();
 
-    public CollisionViewerWindowViewModel()
-    {
-        Polygons = new();
-    }
+    [ObservableProperty]
+    private CollisionRenderSettings _renderSettings = new();
+
+    // Provided by the view
+    public Action<CollisionRenderSettings>? OpenCollisionRenderSettings;
 
     public void SetCollisionHeader(Z64Object.ColHeaderHolder collisionHeaderHolder)
     {
@@ -44,10 +47,31 @@ public partial class CollisionViewerWindowViewModel : ObservableObject
         }
         Polygons = polygons;
     }
+
+    public void OpenCollisionRenderSettingsCommand()
+    {
+        Utils.Assert(OpenCollisionRenderSettings != null);
+        OpenCollisionRenderSettings(RenderSettings);
+    }
 }
 
 public struct CollisionPolygon
 {
     public Vector3[] verts;
     public Vec3s normal;
+}
+
+public enum CollisionRenderMode
+{
+    Wireframe,
+    Solid,
+}
+
+public partial class CollisionRenderSettings : ObservableObject
+{
+    [ObservableProperty]
+    private Color _backgroundColor = Color.FromRgb(30, 144, 255);
+
+    [ObservableProperty]
+    private CollisionRenderMode _renderMode = CollisionRenderMode.Solid;
 }

@@ -133,12 +133,12 @@ public partial class DListViewerRenderSettingsViewModel : ObservableObject
         };
     }
 
-    public System.Drawing.Color AvaloniaToBuiltinColor(Avalonia.Media.Color c)
+    public static System.Drawing.Color AvaloniaToBuiltinColor(Avalonia.Media.Color c)
     {
         return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
     }
 
-    public Avalonia.Media.Color BuiltinToAvaloniaColor(System.Drawing.Color c)
+    public static Avalonia.Media.Color BuiltinToAvaloniaColor(System.Drawing.Color c)
     {
         return Avalonia.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
     }

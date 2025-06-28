@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Avalonia;
+using Common;
 using F3DZEX.Render;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -10,6 +13,17 @@ namespace Z64Utils_Avalonia;
 public class CollisionViewerControl : OpenTKControlBaseWithCamera
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+    public static readonly StyledProperty<CollisionRenderSettings?> RenderSettingsProperty =
+        AvaloniaProperty.Register<CollisionViewerControl, CollisionRenderSettings?>(
+            nameof(RenderSettings),
+            defaultValue: null
+        );
+    public CollisionRenderSettings? RenderSettings
+    {
+        get => GetValue(RenderSettingsProperty);
+        set => SetValue(RenderSettingsProperty, value);
+    }
 
     public static readonly StyledProperty<List<CollisionPolygon>?> PolygonsProperty =
         AvaloniaProperty.Register<CollisionViewerControl, List<CollisionPolygon>?>(
@@ -22,7 +36,7 @@ public class CollisionViewerControl : OpenTKControlBaseWithCamera
         set => SetValue(PolygonsProperty, value);
     }
 
-    public CollisionVertexDrawer? collisionVertexDrawer;
+    private CollisionVertexDrawer? _collisionVertexDrawer;
 
     public CollisionViewerControl()
         : base(
@@ -36,68 +50,107 @@ public class CollisionViewerControl : OpenTKControlBaseWithCamera
 
         PropertyChanged += (sender, e) =>
         {
-            if (e.Property == PolygonsProperty)
+            if (e.Property == PolygonsProperty || e.Property == RenderSettingsProperty)
             {
-                // TODO build data
-                collisionVertexDrawer = null; // TODO hack for now
-                RequestNextFrameRenderingIfInitialized();
+                if (_collisionVertexDrawer != null && RenderSettings != null && Polygons != null)
+                {
+                    SetDrawerData();
+                    RequestNextFrameRenderingIfInitialized();
+                }
+            }
+            if (e.Property == RenderSettingsProperty)
+            {
+                if (e.OldValue != null)
+                {
+                    var prev = (CollisionRenderSettings)e.OldValue;
+                    prev.PropertyChanged -= OnRenderSettingsChanged;
+                }
+                if (RenderSettings != null)
+                    RenderSettings.PropertyChanged += OnRenderSettingsChanged;
             }
         };
     }
 
-    protected override void OnOpenTKInit() { }
+    private void OnRenderSettingsChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        Utils.Assert(RenderSettings != null);
+        if (_collisionVertexDrawer != null && Polygons != null)
+        {
+            SetDrawerData();
+            RequestNextFrameRenderingIfInitialized();
+        }
+    }
+
+    public void SetDrawerData()
+    {
+        Utils.Assert(RenderSettings != null);
+        Utils.Assert(Polygons != null);
+        Utils.Assert(_collisionVertexDrawer != null);
+
+        switch (RenderSettings.RenderMode)
+        {
+            case CollisionRenderMode.Wireframe:
+                _collisionVertexDrawer.SetDataLines(Polygons, BufferUsageHint.StaticDraw);
+                break;
+
+            case CollisionRenderMode.Solid:
+                _collisionVertexDrawer.SetDataTriangles(Polygons, BufferUsageHint.StaticDraw);
+                break;
+
+            default:
+                throw new NotImplementedException($"{RenderSettings.RenderMode}");
+        }
+    }
+
+    protected override void OnOpenTKInit()
+    {
+        _collisionVertexDrawer = new();
+
+        if (RenderSettings != null && Polygons != null)
+        {
+            SetDrawerData();
+        }
+    }
 
     protected override void OnOpenTKRender()
     {
         Logger.Trace("Name={Name} in", Name);
+
+        if (RenderSettings == null)
+            return;
+
         SetFullViewport();
 
-        // TODO understand lol
-
-        GL.ClearColor(0.5f, 0.5f, 0.0f, 1.0f);
+        GL.ClearColor(
+            RenderSettings.BackgroundColor.R / 255.0f,
+            RenderSettings.BackgroundColor.G / 255.0f,
+            RenderSettings.BackgroundColor.B / 255.0f,
+            1.0f
+        );
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-        bool drawWireframe = true;
-
-        if (collisionVertexDrawer == null)
-        {
-            collisionVertexDrawer = new();
-
-            if (Polygons != null)
-            {
-                if (drawWireframe)
-                {
-                    collisionVertexDrawer.SetDataLines(
-                        Polygons.ToArray(), // TODO avoid ToArray()
-                        BufferUsageHint.StaticDraw
-                    );
-                }
-                else
-                {
-                    collisionVertexDrawer.SetDataTriangles(
-                        Polygons.ToArray(),
-                        BufferUsageHint.StaticDraw
-                    );
-                }
-            }
-        }
+        Utils.Assert(_collisionVertexDrawer != null);
 
         Matrix4 proj = Proj,
             view = View;
-        //Matrix4 proj = Matrix4.Identity, view = Matrix4.Identity;
-        collisionVertexDrawer.SendProjViewMatrices(ref proj, ref view);
-        collisionVertexDrawer.SendModelMatrix(Matrix4.Identity);
-        collisionVertexDrawer.SendColor(Color.DarkCyan);
+        _collisionVertexDrawer.SendProjViewMatrices(ref proj, ref view);
+        _collisionVertexDrawer.SendModelMatrix(Matrix4.Identity);
+        _collisionVertexDrawer.SendColor(Color.LightGray);
 
-        if (drawWireframe)
+        switch (RenderSettings.RenderMode)
         {
-            GL.LineWidth(10);
-            collisionVertexDrawer.Draw(PrimitiveType.Lines);
-        }
-        else
-        {
-            GL.Enable(EnableCap.CullFace);
-            collisionVertexDrawer.Draw(PrimitiveType.Triangles);
+            case CollisionRenderMode.Wireframe:
+                GL.LineWidth(3);
+                _collisionVertexDrawer.Draw(PrimitiveType.Lines);
+                break;
+
+            case CollisionRenderMode.Solid:
+                GL.Enable(EnableCap.CullFace);
+                _collisionVertexDrawer.Draw(PrimitiveType.Triangles);
+                break;
+
+            default:
+                throw new NotImplementedException($"{RenderSettings.RenderMode}");
         }
 
         Logger.Trace("Name={Name} out", Name);
