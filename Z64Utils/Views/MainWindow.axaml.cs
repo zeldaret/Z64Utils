@@ -20,6 +20,7 @@ public partial class MainWindow : Window
             var vm = (MainWindowViewModel)DataContext;
             vm.GetOpenROM = ShowDialogOpenROMAsync;
             vm.GetOpenFile = ShowDialogOpenFileAsync;
+            vm.GetOpenFolderForExportFS = ShowDialogOpenFolderForExportFSAsync;
             vm.PickSegmentID = OpenPickSegmentID;
             vm.OpenObjectAnalyzer = OpenObjectAnalyzer;
             vm.OpenDListViewer = OpenDListViewer;
@@ -82,6 +83,28 @@ public partial class MainWindow : Window
         {
             Utils.Assert(files.Count == 1);
             return files[0];
+        }
+    }
+
+    private async Task<IStorageFolder?> ShowDialogOpenFolderForExportFSAsync()
+    {
+        Utils.Assert(StorageProvider.CanPickFolder);
+        var folders = await StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions()
+            {
+                Title = "Choose folder to export into",
+                AllowMultiple = false,
+            }
+        );
+
+        if (folders.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            Utils.Assert(folders.Count == 1);
+            return folders[0];
         }
     }
 

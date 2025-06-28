@@ -23,6 +23,7 @@ public partial class MainWindowViewModel : ObservableObject
     // Provided by the view
     public Func<Task<IStorageFile?>>? GetOpenROM;
     public Func<Task<IStorageFile?>>? GetOpenFile;
+    public Func<Task<IStorageFolder?>>? GetOpenFolderForExportFS;
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     public Action<ObjectAnalyzerWindowViewModel>? OpenObjectAnalyzer;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
@@ -99,34 +100,59 @@ public partial class MainWindowViewModel : ObservableObject
         UpdateRomFiles();
     }
 
-    // TODO: vvv
+    public async void ExportFSCommand()
+    {
+        Utils.Assert(GetOpenFolderForExportFS != null);
+        Utils.Assert(_game != null);
+        var folder = await GetOpenFolderForExportFS();
+        if (folder == null)
+            return;
 
-    public void ExportFSCommand() { }
+        for (int i = 0; i < _game.GetFileCount(); i++)
+        {
+            var file = _game.GetFileFromIndex(i);
+            if (!file.Valid())
+                continue;
+            string name = _game.GetFileName(file.VRomStart);
+            if (string.IsNullOrEmpty(name) || !Utils.IsValidFileName(name))
+                name = $"{file.VRomStart:X8}-{file.VRomEnd:X8}";
+            File.WriteAllBytes($"{folder.Path.LocalPath}/{name}.bin", file.Data);
+        }
+    }
 
     public bool CanExportFSCommand(object arg)
     {
-        return false;
+        return _game != null;
     }
 
-    public void SaveAsCommand() { }
+    public void SaveAsCommand()
+    {
+        // TODO
+    }
 
     public bool CanSaveAsCommand(object arg)
     {
-        return false;
+        return _game != null;
     }
 
-    public void ImportFileNameListCommand() { }
+    public void ImportFileNameListCommand()
+    {
+        // TODO
+    }
 
     public bool CanImportFileNameListCommand(object arg)
     {
-        return false;
+        return _game != null;
     }
 
-    public void ExportFileNameListCommand() { }
+    public void ExportFileNameListCommand()
+    {
+        // TODO
+    }
 
     public bool CanExportFileNameListCommand(object arg)
     {
-        return false;
+        return _game != null;
     }
 
     public void OpenDListViewerCommand()
@@ -189,9 +215,10 @@ public partial class MainWindowViewModel : ObservableObject
         OpenObjectAnalyzer(vm);
     }
 
-    public void CheckNewReleasesCommand() { }
-
-    //
+    public void CheckNewReleasesCommand()
+    {
+        // TODO
+    }
 
     public ObjectAnalyzerWindowViewModel OpenObjectAnalyzerByZ64File(Z64File file, int segment)
     {
