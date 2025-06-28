@@ -2,7 +2,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:Z64Utils_Avalonia"
     xmlns:v="using:Z64Utils_Avalonia"
-    xmlns:c="using:Z64Utils_Avalonia"
+    xmlns:c="using:Z64Utils.Controls"
+    xmlns:c.HexTextBox="using:Z64Utils.Controls.HexTextBox"
     xmlns:n64="using:N64"
     xmlns:z64="using:Z64"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -19,14 +20,14 @@
                 MinWidth="100" Margin="10" />
             <StackPanel Margin="10">
                 <TextBlock>Texture Address</TextBlock>
-                <c:HexTextBox Value="{Binding TextureAddress}"
+                <c.HexTextBox:HexTextBox Value="{Binding TextureAddress}"
                     ScrollAmountBase="{Binding TextureAddressScrollAmountBase}"
                     ReverseScrollDirection="true"
                     MinWidth="150" />
             </StackPanel>
             <StackPanel Margin="10">
                 <TextBlock>TLUT Address</TextBlock>
-                <c:HexTextBox Value="{Binding TLUTAddress}" ReverseScrollDirection="true"
+                <c.HexTextBox:HexTextBox Value="{Binding TLUTAddress}" ReverseScrollDirection="true"
                     MinWidth="150" />
             </StackPanel>
             <StackPanel Margin="10">

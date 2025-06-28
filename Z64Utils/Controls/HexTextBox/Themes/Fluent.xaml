@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:Z64Utils_Avalonia">
+                    xmlns:local="using:Z64Utils.Controls.HexTextBox">
     <!-- Style HexTextBox like TextBox -->
     <ControlTheme x:Key="{x:Type local:HexTextBox}"
                   BasedOn="{StaticResource {x:Type TextBox}}"

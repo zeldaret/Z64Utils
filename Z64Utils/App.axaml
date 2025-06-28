@@ -1,6 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:c="using:Z64Utils_Avalonia"
+    xmlns:c="using:Z64Utils.Controls"
     x:Class="Z64.App"
     RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available

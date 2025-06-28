@@ -7,7 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Common;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Controls;
 
 public class EnumComboBox : ComboBox
 {

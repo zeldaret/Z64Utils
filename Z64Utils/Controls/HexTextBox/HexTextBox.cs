@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Controls.HexTextBox;
 
 // like TextBox but accepts (0[xX])?[ _0-9a-fA-F]+
 // Also supports scrollwheel like NumericUpDown,

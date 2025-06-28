@@ -11,7 +11,7 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Common;
 
-namespace Z64Utils_Avalonia;
+namespace Z64Utils.Controls;
 
 public class CheckPatternControl : Control
 {
