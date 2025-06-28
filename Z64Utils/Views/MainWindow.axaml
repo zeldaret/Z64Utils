@@ -82,6 +82,8 @@
                                     <ContextMenu x:DataType="vm:MainWindowViewModelRomFile">
                                         <MenuItem Header="Open Object Analyzer"
                                             Command="{Binding OpenObjectAnalyzerCommand}" />
+                                        <MenuItem Header="Inject"
+                                            Command="{Binding InjectFileCommand}" />
                                     </ContextMenu>
                                 </Setter>
                             </Style>

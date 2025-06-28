@@ -14,6 +14,7 @@ public partial class MainWindowViewModel : ObservableObject
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     private Z64Game? _game;
+    public Z64Game? Game => _game;
 
     // this may not be needed on Windows, test eventually
     // bug on Linux? idk if this issue is relevant:
@@ -302,10 +303,10 @@ public class MainWindowViewModelRomFile
 
     public Z64File File { get; }
 
-    private MainWindowViewModel Mwvm { get; }
+    private MainWindowViewModel _parentVM;
 
     public MainWindowViewModelRomFile(
-        MainWindowViewModel mwvm,
+        MainWindowViewModel parentVM,
         string name,
         string vrom,
         string rom,
@@ -318,15 +319,29 @@ public class MainWindowViewModelRomFile
         ROM = rom;
         Type = type;
         File = file;
-        Mwvm = mwvm;
+        _parentVM = parentVM;
     }
 
     public async void OpenObjectAnalyzerCommand()
     {
-        Utils.Assert(Mwvm.PickSegmentID != null);
-        int? segmentID = await Mwvm.PickSegmentID(new());
+        Utils.Assert(_parentVM.PickSegmentID != null);
+        int? segmentID = await _parentVM.PickSegmentID(new());
         Logger.Debug("segmentID={segmentID}", segmentID);
         if (segmentID != null)
-            Mwvm.OpenObjectAnalyzerByZ64File(File, (int)segmentID);
+            _parentVM.OpenObjectAnalyzerByZ64File(File, (int)segmentID);
+    }
+
+    public async void InjectFileCommand()
+    {
+        Utils.Assert(_parentVM.GetOpenFile != null);
+        Utils.Assert(_parentVM.Game != null);
+        var newFile = await _parentVM.GetOpenFile();
+        if (newFile == null)
+            return;
+
+        _parentVM.Game.InjectFile(
+            File.VRomStart,
+            System.IO.File.ReadAllBytes(newFile.Path.LocalPath)
+        );
     }
 }
