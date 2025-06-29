@@ -164,11 +164,6 @@ public partial class DListViewerWindowViewModel : ObservableObject
         return Renderer != null;
     }
 
-    public void OpenDisassemblyCommand()
-    {
-        // TODO
-    }
-
     public void OpenSegmentsConfigCommand()
     {
         Utils.Assert(OpenSegmentsConfig != null);

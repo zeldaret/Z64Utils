@@ -12,7 +12,6 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
-            <MenuItem Header="Disassembly" Command="{Binding OpenDisassemblyCommand}" />
             <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
         </Menu>
         <StackPanel DockPanel.Dock="Top"
