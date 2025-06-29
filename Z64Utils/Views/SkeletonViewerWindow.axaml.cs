@@ -25,6 +25,7 @@ public partial class SkeletonViewerWindow : Window
         {
             if (_viewModel != null)
             {
+                _viewModel.StopPlayingAnim();
                 _viewModel.RenderContextChanged -= OnRenderContextChanged;
             }
 
@@ -41,6 +42,14 @@ public partial class SkeletonViewerWindow : Window
 
         SizeChanged += (sender, e) => WorkAroundDataGridSizeBug();
         WorkAroundDataGridSizeBug();
+
+        Closed += (sender, e) =>
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.StopPlayingAnim();
+            }
+        };
     }
 
     private void WorkAroundDataGridSizeBug()

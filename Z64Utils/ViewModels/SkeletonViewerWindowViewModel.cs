@@ -637,6 +637,11 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         CurFrame = (CurFrame + (IsPlayingForwards ? 1 : ((MaxFrame + 1) - 1))) % (MaxFrame + 1);
     }
 
+    public void StopPlayingAnim()
+    {
+        _playAnimTimer.IsEnabled = false;
+    }
+
     public void OnAnimationEntrySelected(IAnimationEntry animationEntry)
     {
         Utils.Assert(Renderer != null);
