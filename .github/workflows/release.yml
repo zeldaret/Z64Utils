@@ -1,0 +1,25 @@
+name: Release
+
+on: [workflow_call]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: bin
+      - name: Release info
+        id: release_info
+        run: |
+            echo 'files<<EOF' >> $GITHUB_OUTPUT
+            find bin -name '*.tar.gz' -o -name '*.zip' >> $GITHUB_OUTPUT
+            echo 'EOF' >> $GITHUB_OUTPUT
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ vars.GITHUB_REF_NAME }}
+          name: Z64Utils ${{ vars.GITHUB_REF_NAME }}
+          files: |
+            ${{ steps.release_info.outputs.files }}

@@ -1,6 +1,11 @@
 name: Build
 
-on: [workflow_call]
+on:
+  workflow_call:
+    inputs:
+      version-suffix:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -14,7 +19,7 @@ jobs:
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       restore_args: --runtime ${{ matrix.target-runtime }}
-      build_args: --no-self-contained --configuration ${{ matrix.configuration }} --version-suffix ${{ github.sha }} --property:IncludeSourceRevisionInInformationalVersion=false
+      build_args: --no-self-contained --configuration ${{ matrix.configuration }} --version-suffix '${{ inputs.version-suffix }}' --property:IncludeSourceRevisionInInformationalVersion=false
       archive_name: Z64Utils-${{ matrix.target-runtime }}-${{ matrix.configuration }}-${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
