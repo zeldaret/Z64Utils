@@ -53,12 +53,17 @@ jobs:
         run: |
           cp -r -t publish_out/ Z64Utils-Config/versions
 
-      # Archive
-      - name: Create archive
+      - name: Create .tar.gz archive
         shell: bash
         run: |
           cd publish_out
           tar -czvf ../${{ env.archive_name }}.tar.gz *
+
+      - name: Create .zip archive
+        shell: bash
+        run: |
+          cd publish_out
+          zip -r ../${{ env.archive_name }}.zip *
 
       - name: Upload archive
         uses: actions/upload-artifact@v4
@@ -66,3 +71,4 @@ jobs:
           name: ${{ env.archive_name }}
           path: |
             ${{ env.archive_name }}.tar.gz
+            ${{ env.archive_name }}.zip

@@ -32,7 +32,7 @@ jobs:
             echo "now=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
             echo "message=$(git -C src log -1 --pretty=%s)" >> $GITHUB_OUTPUT
             echo 'files<<EOF' >> $GITHUB_OUTPUT
-            find bin -name '*.tar.gz' >> $GITHUB_OUTPUT
+            find bin -name '*.tar.gz' -o -name '*.zip' >> $GITHUB_OUTPUT
             echo 'EOF' >> $GITHUB_OUTPUT
       - name: Create nightly release
         uses: softprops/action-gh-release@v2
