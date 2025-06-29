@@ -4,6 +4,7 @@ using System.CommandLine;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Versioning;
 using Avalonia;
 using Common;
 
@@ -17,6 +18,14 @@ namespace Z64Utils
                 .GetExecutingAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
                 ?.InformationalVersion ?? "UnknownVersion";
+
+        [SupportedOSPlatform("windows")]
+        [System.Runtime.InteropServices.DllImport("nvapi64.dll", EntryPoint = "fake")]
+        static extern int LoadNvApi64();
+
+        [SupportedOSPlatform("windows")]
+        [System.Runtime.InteropServices.DllImport("nvapi.dll", EntryPoint = "fake")]
+        static extern int LoadNvApi32();
 
         public const int EXIT_SUCCESS = 0;
 
@@ -39,6 +48,19 @@ namespace Z64Utils
             try
             {
                 Logger.Info("Starting up Z64Utils Version {Version}...", Version);
+
+                if (OperatingSystem.IsWindows())
+                {
+                    // https://stackoverflow.com/questions/17270429/forcing-hardware-accelerated-rendering
+                    try
+                    {
+                        if (Environment.Is64BitProcess)
+                            LoadNvApi64();
+                        else
+                            LoadNvApi32();
+                    }
+                    catch { } // will always fail since 'fake' entry point doesn't exist
+                }
 
                 int code = HandleArgs(args);
                 if (code != EXIT_SUCCESS)
