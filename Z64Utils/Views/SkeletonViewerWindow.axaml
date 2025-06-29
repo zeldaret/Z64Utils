@@ -77,7 +77,8 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto" MinWidth="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <v.DListViewerBuildingBlocks:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL" Renderer="{Binding Renderer}"
+            <v.DListViewerBuildingBlocks:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL"
+                Renderer="{Binding Renderer}"
                 DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
             <Grid Grid.Column="2" Name="LimbsAndAnimationsGrid">

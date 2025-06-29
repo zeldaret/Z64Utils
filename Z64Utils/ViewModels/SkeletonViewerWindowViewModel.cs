@@ -283,22 +283,6 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         }
     }
 
-    public void SetSegment(int index, F3DZEX.Memory.Segment segment)
-    {
-        if (Renderer == null)
-            throw new Exception("Renderer is null");
-
-        if (index >= 0 && index < F3DZEX.Memory.Segment.COUNT)
-        {
-            Renderer.Memory.Segments[index] = segment;
-
-            if (Skel != null)
-            {
-                UpdateLimbsDLists();
-            }
-        }
-    }
-
     public void OpenRenderSettingsCommand()
     {
         Utils.Assert(OpenDListViewerRenderSettings != null);
