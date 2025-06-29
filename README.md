@@ -47,7 +47,7 @@ The general purpose download link for `.NET` is [this](https://dotnet.microsoft.
 
 On Ubuntu, you can install `.NET 6` with `sudo apt install dotnet-runtime-6.0`.
 
-For other Linux distributions, additional details or other installation methods, see (Microsoft's documentation)[https://learn.microsoft.com/en-us/dotnet/core/install/linux].
+For other Linux distributions, additional details or other installation methods, see [Microsoft's documentation](https://learn.microsoft.com/en-us/dotnet/core/install/linux).
 
 # Contributing
 
