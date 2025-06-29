@@ -38,6 +38,20 @@ public partial class SkeletonViewerWindow : Window
             _viewModel.GetOpenFile = ShowDialogOpenFileAsync;
             _viewModel.RenderContextChanged += OnRenderContextChanged;
         };
+
+        SizeChanged += (sender, e) => WorkAroundDataGridSizeBug();
+        WorkAroundDataGridSizeBug();
+    }
+
+    private void WorkAroundDataGridSizeBug()
+    {
+        if (double.IsNaN(Height))
+            return;
+        // Work around a bug where the DataGrid extends over the UI below and beyond the window.
+        // (not sure which control's fault it is)
+        var maxHeight = Height * 0.8;
+        LimbsAndAnimationsGrid.RowDefinitions[2].MaxHeight = maxHeight;
+        LimbsAndAnimationsGrid.Children[2].MaxHeight = maxHeight;
     }
 
     private void OnRenderContextChanged(object? sender, EventArgs e)

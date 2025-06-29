@@ -80,7 +80,7 @@
             <v.DListViewerBuildingBlocks:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL" Renderer="{Binding Renderer}"
                 DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Name="LimbsAndAnimationsGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" MinHeight="100"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
