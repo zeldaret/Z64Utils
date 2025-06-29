@@ -4,8 +4,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -45,6 +47,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     private Dlist? _disasDList = null;
 
     // Provided by the view
+    public Func<Task<IStorageFile?>>? OpenJSONFile;
+    public Func<Task<IStorageFile?>>? OpenJSONFileForSave;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
     public Action<SkeletonViewerWindowViewModel>? OpenSkeletonViewer;
     public Action<CollisionViewerWindowViewModel>? OpenCollisionViewer;
@@ -114,14 +118,50 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         return HasFile();
     }
 
-    public void ImportJSONCommand()
+    public async Task ImportJSONCommand()
     {
-        // TODO
+        Utils.Assert(OpenJSONFile != null);
+        Utils.Assert(HasFile());
+        Utils.Assert(_file.Valid());
+
+        var fJSON = await OpenJSONFile();
+        if (fJSON == null)
+            return;
+
+        var json = File.ReadAllText(fJSON.Path.LocalPath);
+
+        ObjectHolderEntryDetailsViewModel = null;
+        ObjectHolderEntryDataBytes = null;
+        ObjectHolderEntryFirstByteAddress = 0;
+        ObjectHolderEntries.Clear();
+
+        _object = Z64Object.FromJson(json);
+        _object.SetData(_file.Data);
+        UpdateMap();
     }
 
-    public void ExportJSONCommand()
+    public bool CanImportJSONCommand(object? parameter)
     {
-        // TODO
+        return HasFile();
+    }
+
+    public async Task ExportJSONCommand()
+    {
+        Utils.Assert(HasFile());
+        Utils.Assert(OpenJSONFileForSave != null);
+
+        var json = _object.GetJSON();
+
+        var fJSON = await OpenJSONFileForSave();
+        if (fJSON == null)
+            return;
+
+        File.WriteAllText(fJSON.Path.LocalPath, json);
+    }
+
+    public bool CanExportJSONCommand(object? parameter)
+    {
+        return HasFile();
     }
 
     public void ResetCommand()

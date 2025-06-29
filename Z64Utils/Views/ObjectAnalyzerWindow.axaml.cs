@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Common;
 using Z64Utils.ViewModels;
 
@@ -21,11 +24,63 @@ public partial class ObjectAnalyzerWindow : Window
             _viewModel = (ObjectAnalyzerWindowViewModel?)DataContext;
             if (_viewModel == null)
                 return;
+            _viewModel.OpenJSONFile = OpenJSONFile;
+            _viewModel.OpenJSONFileForSave = OpenJSONFileForSave;
             _viewModel.OpenDListViewer = OpenDListViewer;
             _viewModel.OpenSkeletonViewer = OpenSkeletonViewer;
             _viewModel.OpenCollisionViewer = OpenCollisionViewer;
             _viewModel.OpenF3DZEXDisassemblerSettings = OpenF3DZEXDisassemblerSettings;
         };
+    }
+
+    private async Task<IStorageFile?> OpenJSONFile()
+    {
+        Utils.Assert(StorageProvider.CanOpen);
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new()
+            {
+                Title = "Import from JSON",
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>()
+                {
+                    new("JSON file")
+                    {
+                        Patterns = new[] { "*.json" },
+                        MimeTypes = new[] { "application/json" },
+                    },
+                },
+            }
+        );
+
+        if (files.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            Utils.Assert(files.Count == 1);
+            return files[0];
+        }
+    }
+
+    private async Task<IStorageFile?> OpenJSONFileForSave()
+    {
+        Utils.Assert(StorageProvider.CanSave);
+        return await StorageProvider.SaveFilePickerAsync(
+            new()
+            {
+                Title = "Export to JSON",
+                DefaultExtension = ".json",
+                FileTypeChoices = new List<FilePickerFileType>()
+                {
+                    new("JSON file")
+                    {
+                        Patterns = new[] { "*.json" },
+                        MimeTypes = new[] { "application/json" },
+                    },
+                },
+            }
+        );
     }
 
     private void OpenDListViewer(DListViewerWindowViewModel vm)
