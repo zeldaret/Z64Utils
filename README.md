@@ -52,3 +52,11 @@ For other Linux distributions, additional details or other installation methods,
 # Contributing
 
 This repository uses the [CSharpier](https://csharpier.com/) code formatter. Install it with `dotnet tool install csharpier --version 0.30.6` and run it with `dotnet csharpier .`.
+
+# Releasing
+
+To make a new release:
+
+1. Bump the version number in the csproj.
+2. Create a release and associated tag on GitHub.
+3. GitHub actions will automatically build Z64Utils with `--version-suffix ''` and upload the binaries to the release.
