@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
+using CommunityToolkit.Mvvm.ComponentModel;
 using F3DZEX.Command;
 using N64;
 using OpenTK;
@@ -20,7 +21,7 @@ using Z64;
 
 namespace F3DZEX.Render
 {
-    public class Renderer
+    public partial class Renderer : ObservableObject
     {
         public class Config
         {
@@ -258,8 +259,15 @@ namespace F3DZEX.Render
             }
         }
 
-        public uint RenderErrorAddr { get; private set; } = 0xFFFFFFFF;
-        public string? ErrorMsg { get; private set; } = null;
+        [ObservableProperty]
+        private uint _renderErrorAddr = 0xFFFFFFFF;
+
+        [ObservableProperty]
+        private string? _errorMsg = null;
+
+        [ObservableProperty]
+        private bool _hasError = false;
+
         public Config CurrentConfig { get; set; }
         public Memory Memory { get; private set; }
 
@@ -284,9 +292,11 @@ namespace F3DZEX.Render
         RdpVertexDrawer? _rdpVtxDrawer;
         SimpleVertexDrawer? _gridDrawer;
         ColoredVertexDrawer? _axisDrawer;
-        TextDrawer? _textDrawer;
         TextureHandler? _tex0;
         TextureHandler? _tex1;
+
+        [ObservableProperty]
+        string? _GLInfoText;
 
         public bool RenderFailed() => ErrorMsg != null;
 
@@ -317,7 +327,6 @@ namespace F3DZEX.Render
             nameof(_rdpVtxDrawer),
             nameof(_gridDrawer),
             nameof(_axisDrawer),
-            nameof(_textDrawer),
             nameof(_tex0),
             nameof(_tex1)
         )]
@@ -328,12 +337,15 @@ namespace F3DZEX.Render
             Utils.Assert(_rdpVtxDrawer != null);
             Utils.Assert(_gridDrawer != null);
             Utils.Assert(_axisDrawer != null);
-            Utils.Assert(_textDrawer != null);
             Utils.Assert(_tex0 != null);
             Utils.Assert(_tex1 != null);
         }
 
-        public void ClearErrors() => ErrorMsg = null;
+        public void ClearErrors()
+        {
+            ErrorMsg = null;
+            HasError = false;
+        }
 
         private void CheckGLErros()
         {
@@ -377,14 +389,16 @@ namespace F3DZEX.Render
             _rdpVtxDrawer = new RdpVertexDrawer();
             _gridDrawer = new SimpleVertexDrawer();
             _axisDrawer = new ColoredVertexDrawer();
-            _textDrawer = new TextDrawer();
 
+            CheckGLErros();
             float[] vertices = RenderHelper.GenerateGridVertices(CurrentConfig.GridScale, 6, false);
             _gridDrawer.SetData(vertices, BufferUsageHint.StaticDraw);
 
+            CheckGLErros();
             vertices = RenderHelper.GenerateAxisvertices(CurrentConfig.GridScale);
             _axisDrawer.SetData(vertices, BufferUsageHint.StaticDraw);
 
+            CheckGLErros();
             _rdpVtxDrawer.SetData(
                 new byte[32 * (Vertex.SIZE + 4 * 4 * 4)],
                 BufferUsageHint.DynamicDraw
@@ -436,8 +450,6 @@ namespace F3DZEX.Render
             _rdpVtxDrawer.SendProjViewMatrices(ref proj, ref view);
             _rdpVtxDrawer.SendInitialColors(CurrentConfig);
             CheckGLErros();
-            Matrix4 id = Matrix4.Identity;
-            _textDrawer.SendProjViewMatrices(ref id, ref id);
 
             _rdpVtxDrawer.SendModelMatrix(ModelMtxStack.Top());
             _gridDrawer.SendModelMatrix(Matrix4.Identity);
@@ -482,13 +494,17 @@ namespace F3DZEX.Render
 
             if (CurrentConfig.ShowGLInfo)
             {
-                _textDrawer.DrawString(
+                GLInfoText = (
                     //$"Extensions: {GL.GetString(StringName.Extensions)}\n" +
                     $"Shading Language Version: {GL.GetString(StringName.ShadingLanguageVersion)}\n"
-                        + $"Version: {GL.GetString(StringName.Version)}\n"
-                        + $"Renderer: {GL.GetString(StringName.Renderer)}\n"
-                        + $"Vendor: {GL.GetString(StringName.Vendor)}"
+                    + $"Version: {GL.GetString(StringName.Version)}\n"
+                    + $"Renderer: {GL.GetString(StringName.Renderer)}\n"
+                    + $"Vendor: {GL.GetString(StringName.Vendor)}"
                 );
+            }
+            else
+            {
+                GLInfoText = null;
             }
 
             CheckGLErros();
@@ -518,8 +534,11 @@ namespace F3DZEX.Render
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Renderer.RenderDList(): unhandled exception");
+                Debug.WriteLine(ex);
                 RenderErrorAddr = addr;
                 ErrorMsg = ex.Message;
+                HasError = true;
             }
         }
 

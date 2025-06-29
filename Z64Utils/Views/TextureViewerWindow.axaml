@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:c="using:Z64Utils.Controls"
+    xmlns:c.HexTextBox="using:Z64Utils.Controls.HexTextBox"
+    xmlns:n64="using:N64"
+    xmlns:z64="using:Z64"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.TextureViewerWindow"
+    x:DataType="vm:TextureViewerWindowViewModel"
+    Title="Texture Viewer"
+    Width="900" Height="700"
+>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <c:EnumComboBox EnumType="z64:AddressType" SelectedItem="{Binding TextureAddressType}"
+                MinWidth="100" Margin="10" />
+            <StackPanel Margin="10">
+                <TextBlock>Texture Address</TextBlock>
+                <c.HexTextBox:HexTextBox Value="{Binding TextureAddress}"
+                    ScrollAmountBase="{Binding TextureAddressScrollAmountBase}"
+                    ReverseScrollDirection="true"
+                    MinWidth="150" />
+            </StackPanel>
+            <StackPanel Margin="10">
+                <TextBlock>TLUT Address</TextBlock>
+                <c.HexTextBox:HexTextBox Value="{Binding TLUTAddress}" ReverseScrollDirection="true"
+                    MinWidth="150" />
+            </StackPanel>
+            <StackPanel Margin="10">
+                <TextBlock>Format</TextBlock>
+                <c:EnumComboBox EnumType="n64:N64TexFormat" SelectedItem="{Binding Format}"
+                    MinWidth="100" />
+            </StackPanel>
+            <StackPanel Margin="10">
+                <TextBlock>Size</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown Minimum="1" Value="{Binding Width}" FormatString="0" />
+                    <NumericUpDown Minimum="1" Value="{Binding Height}" FormatString="0" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <Panel Margin="10">
+            <c:CheckPatternControl CheckerSize="10" />
+            <Panel>
+                <Image Name="Image" Source="{Binding Image}"
+                    RenderOptions.BitmapInterpolationMode="None" />
+            </Panel>
+        </Panel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,106 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.MainWindow"
+    x:DataType="vm:MainWindowViewModel"
+    Title="Z64Utils"
+    Icon="/Assets/kaeton.ico"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="ROM">
+                <MenuItem.Icon>
+                    <Image Source="avares://Z64Utils/Assets/Icons/file.png" />
+                </MenuItem.Icon>
+
+                <MenuItem Header="Open" Command="{Binding OpenROMCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/open.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Export FS" Command="{Binding ExportFSCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/multiple_files.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/save.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Import File Name List"
+                    Command="{Binding ImportFileNameListCommand}" />
+                <MenuItem Header="Export File Name List"
+                    Command="{Binding ExportFileNameListCommand}" />
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Open DList Viewer" Command="{Binding OpenDListViewerCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/cube.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="F3DZEX Disassembler" Command="{Binding F3DZEXDisassemblerCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/code.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="ROM/RAM Conversions" Command="{Binding ROMRAMConversionsCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/conversion.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Texture Viewer" Command="{Binding TextureViewerCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="avares://Z64Utils/Assets/Icons/texture.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Object Analyzer" Command="{Binding ObjectAnalyzerCommand}" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="Check New Releases" Click="OnCheckNewReleasesMenuItemClick" />
+                <MenuItem Header="About" Click="OnAboutMenuItemClick" />
+            </MenuItem>
+        </Menu>
+        <ProgressBar DockPanel.Dock="Bottom" />
+        <TextBox DockPanel.Dock="Bottom" Text="{Binding ProgressText}" />
+        <TabControl>
+            <TabItem Header="FS">
+                <DockPanel>
+                    <Label DockPanel.Dock="Top" Target="FilterTextBox">Filter:</Label>
+                    <TextBox DockPanel.Dock="Top" Name="FilterTextBox" Text="{Binding FilterText}" />
+                    <DataGrid ItemsSource="{Binding RomFiles}"
+                        IsReadOnly="True"
+                        CanUserResizeColumns="True"
+                        GridLinesVisibility="All"
+                    >
+                        <DataGrid.Styles>
+                            <Style Selector="DataGridRow">
+                                <Setter Property="ContextMenu">
+                                    <ContextMenu x:DataType="vm:MainWindowViewModelRomFile">
+                                        <MenuItem Header="Open Object Analyzer"
+                                            Command="{Binding OpenObjectAnalyzerCommand}" />
+                                        <MenuItem Header="Inject"
+                                            Command="{Binding InjectFileCommand}" />
+                                        <MenuItem Header="Save"
+                                            Command="{Binding SaveFileCommand}" />
+                                        <MenuItem Header="Rename"
+                                            Command="{Binding RenameFileCommand}" />
+                                    </ContextMenu>
+                                </Setter>
+                            </Style>
+                        </DataGrid.Styles>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="VROM" Binding="{Binding VROM}" />
+                            <DataGridTextColumn Header="ROM" Binding="{Binding ROM}" />
+                            <DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

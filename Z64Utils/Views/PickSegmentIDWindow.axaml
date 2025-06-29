@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.PickSegmentIDWindow"
+    x:DataType="vm:PickSegmentIDWindowViewModel"
+    Title="Pick Segment ID"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel Orientation="Vertical">
+        <TextBlock Margin="5">Please enter a segment id.</TextBlock>
+        <DockPanel>
+            <Button DockPanel.Dock="Right" Margin="5"
+                Click="OnOKButtonClick" IsDefault="True"
+                IsEnabled="{Binding !InvalidSegmentID}">OK</Button>
+            <TextBox Margin="5" Name="SegmentIDStrTextBox"
+                Text="{Binding SegmentIDStr}" />
+        </DockPanel>
+        <TextBlock Margin="5" IsVisible="{Binding InvalidSegmentID}"
+            TextWrapping="Wrap">
+            Segment ID must be a value between 0 and 15.
+        </TextBlock>
+    </StackPanel>
+</Window>

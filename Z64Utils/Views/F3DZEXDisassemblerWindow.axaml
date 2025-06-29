@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.F3DZEXDisassemblerWindow"
+    x:DataType="vm:F3DZEXDisassemblerViewModel"
+    Title="Disassembly"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Disassembly Settings"
+                Command="{Binding OpenDisassemblySettingsCommand}" />
+        </Menu>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="50"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*" MinHeight="50"></RowDefinition>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <TextBlock DockPanel.Dock="Top" IsVisible="{Binding InputIsValid}"
+                    Foreground="Green">Hex</TextBlock>
+                <TextBlock DockPanel.Dock="Top" IsVisible="{Binding !InputIsValid}"
+                    Foreground="Red">Hex</TextBlock>
+                <TextBox AcceptsReturn="True" FontFamily="{StaticResource MonospacedFont}"
+                    Text="{Binding InputHex}" />
+            </DockPanel>
+            <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+            <DockPanel Grid.Row="2">
+                <TextBlock DockPanel.Dock="Top">Disassembly</TextBlock>
+                <TextBox AcceptsReturn="True" IsReadOnly="True" FontFamily="{StaticResource MonospacedFont}"
+                    Text="{Binding OutputDisas}" />
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>

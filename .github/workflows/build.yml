@@ -4,17 +4,18 @@ on: [workflow_call]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
+        target-runtime: [linux-x64, win-x64]
         configuration: [Debug, Release]
 
-    name: Z64Utils-${{ matrix.configuration }}
+    name: Z64Utils-${{ matrix.target-runtime }}-${{ matrix.configuration }}
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: true
-      restore_args: ''
+      restore_args: --runtime ${{ matrix.target-runtime }}
       build_args: --no-self-contained --configuration ${{ matrix.configuration }} --version-suffix ${{ github.sha }} --property:IncludeSourceRevisionInInformationalVersion=false
-      archive_name: Z64Utils-${{ matrix.configuration }}-${{ github.sha }}
+      archive_name: Z64Utils-${{ matrix.target-runtime }}-${{ matrix.configuration }}-${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,17 +29,17 @@ jobs:
       - name: dotnet restore
         shell: bash
         run: |
-          dotnet restore ${{ env.restore_args }}
+          dotnet restore Z64Utils/Z64Utils.csproj ${{ env.restore_args }}
 
       - name: dotnet build
         shell: bash
         run: |
-          dotnet build ${{ env.restore_args }} ${{ env.build_args }}
+          dotnet build Z64Utils/Z64Utils.csproj ${{ env.restore_args }} ${{ env.build_args }}
 
       - name: dotnet publish
         shell: bash
         run: |
-          dotnet publish --output publish_out/ ${{ env.restore_args }} ${{ env.build_args }}
+          dotnet publish Z64Utils/Z64Utils.csproj --output publish_out/ ${{ env.restore_args }} ${{ env.build_args }}
 
       - uses: actions/checkout@v4
         with:

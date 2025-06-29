@@ -1,0 +1,122 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:v.DListViewerBuildingBlocks="using:Z64Utils.Views.DListViewerBuildingBlocks"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.SkeletonViewerWindow"
+    x:DataType="vm:SkeletonViewerWindowViewModel"
+    Title="Skeleton Viewer"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
+            <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
+            <MenuItem Header="External Anims">
+                <MenuItem Header="Load From ROM File"
+                    Command="{Binding LoadROMFileAnimationsCommand}" />
+                <MenuItem Header="Load From External File"
+                    Command="{Binding LoadExternalFileAnimationsCommand}" />
+                <MenuItem Header="Load Player Animations"
+                    Command="{Binding LoadPlayerAnimationsCommand}" />
+            </MenuItem>
+        </Menu>
+        <StackPanel DockPanel.Dock="Top">
+            <StackPanel
+                IsVisible="{Binding DecodeError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock>Decode error:</TextBlock>
+                <TextBlock Text="{Binding DecodeError}" />
+            </StackPanel>
+            <StackPanel
+                IsVisible="{Binding RenderError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock>Render error:</TextBlock>
+                <TextBlock Text="{Binding RenderError}" />
+            </StackPanel>
+            <StackPanel
+                IsVisible="{Binding AnimationError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock>Animation error:</TextBlock>
+                <TextBlock Text="{Binding AnimationError}" />
+            </StackPanel>
+        </StackPanel>
+        <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Center">
+            <Button DockPanel.Dock="Left" Command="{Binding PlayAnimBackwardsCommand}">
+                <Grid>
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/play_backwards.png"
+                        IsVisible="{Binding !IsPlayingBackwards}" />
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/pause.png"
+                        IsVisible="{Binding IsPlayingBackwards}" />
+                </Grid>
+            </Button>
+            <Button DockPanel.Dock="Left" Command="{Binding PlayAnimForwardsCommand}">
+                <Grid>
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/play.png"
+                        IsVisible="{Binding !IsPlayingForwards}" />
+                    <Image Height="40" Source="avares://Z64Utils/Assets/Icons/pause.png"
+                        IsVisible="{Binding IsPlayingForwards}" />
+                </Grid>
+            </Button>
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center"
+                Margin="10,0,10,0">
+                <NumericUpDown Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}"
+                    FormatString="0" MinWidth="120" />
+                <TextBlock VerticalAlignment="Center">/</TextBlock>
+                <TextBlock Text="{Binding MaxFrame}" VerticalAlignment="Center" />
+            </StackPanel>
+            <DockPanel DockPanel.Dock="Right">
+                <TextBlock DockPanel.Dock="Top">Playback speed:</TextBlock>
+                <NumericUpDown Value="{Binding PlayAnimTickPeriodMs}" />
+            </DockPanel>
+            <Slider Minimum="0" Maximum="{Binding MaxFrame}" Value="{Binding CurFrame}"
+                Margin="10,0,10,0" />
+        </DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="100"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto" MinWidth="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <v.DListViewerBuildingBlocks:DLViewerControl Grid.Column="0" Name="SkeletonViewerGL"
+                Renderer="{Binding Renderer}"
+                DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+            <Grid Grid.Column="2" Name="LimbsAndAnimationsGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="100"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto" MinHeight="100"></RowDefinition>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <TextBlock DockPanel.Dock="Top">Limbs</TextBlock>
+                    <TreeView ItemsSource="{Binding SkeletonRootLimbNode}"
+                        SelectedItems="{Binding SelectedLimbNodes}"
+                        SelectionMode="Multiple">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate x:DataType="vm:SkeletonViewerLimbNode"
+                                ItemsSource="{Binding ChildrenLimbs}">
+                                <TextBlock Text="{Binding Name}" />
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+                <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+                <DockPanel Grid.Row="2">
+                    <TextBlock DockPanel.Dock="Top">Animations</TextBlock>
+                    <DataGrid
+                        Name="AnimationEntriesDataGrid"
+                        ItemsSource="{Binding AnimationEntries}"
+                        IsReadOnly="True"
+                        CanUserResizeColumns="True"
+                        GridLinesVisibility="All"
+                        SelectionMode="Single"
+                        SelectionChanged="OnAnimationEntriesDataGridSelectionChanged"
+                    >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>

@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Common;
 using N64;
 using Syroot.BinaryData;
@@ -373,5 +372,12 @@ namespace Z64
 
             progressCalback?.Invoke(1, $"Done processing {filecount} files.");
         }
+    }
+
+    public enum AddressType
+    {
+        ROM,
+        VROM,
+        VRAM,
     }
 }

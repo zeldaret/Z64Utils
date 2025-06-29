@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:c="using:Z64Utils.Controls"
+    xmlns:F3DZEX.Render="using:F3DZEX.Render"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.DListViewerRenderSettingsWindow"
+    x:DataType="vm:DListViewerRenderSettingsViewModel"
+    Title="Render Settings"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label Target="GridScaleNumericUpDown">GridScale</Label>
+            <NumericUpDown Name="GridScaleNumericUpDown" Value="{Binding GridScale}" />
+        </StackPanel>
+        <CheckBox IsChecked="{Binding ShowGrid}">ShowGrid</CheckBox>
+        <CheckBox IsChecked="{Binding ShowAxis}">ShowAxis</CheckBox>
+        <CheckBox IsChecked="{Binding ShowGLInfo}">ShowGLInfo</CheckBox>
+        <StackPanel Orientation="Horizontal">
+            <Label Target="RenderModeComboBox">RenderMode</Label>
+            <c:EnumComboBox EnumType="F3DZEX.Render:RdpVertexDrawer+ModelRenderMode"
+                SelectedItem="{Binding RenderMode}" />
+        </StackPanel>
+        <CheckBox IsChecked="{Binding EnabledLighting}">EnabledLighting</CheckBox>
+        <CheckBox IsChecked="{Binding DrawNormals}">DrawNormals</CheckBox>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="NormalColor" Color="{Binding NormalColor}" />
+            <Label Target="NormalColor">NormalColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="HighlightColor" Color="{Binding HighlightColor}" />
+            <Label Target="HighlightColor">HighlightColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="WireframeColor" Color="{Binding WireframeColor}" />
+            <Label Target="WireframeColor">WireframeColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="BackColor" Color="{Binding BackColor}" />
+            <Label Target="BackColor">BackColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="InitialPrimColor" Color="{Binding InitialPrimColor}" />
+            <Label Target="InitialPrimColor">InitialPrimColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="InitialEnvColor" Color="{Binding InitialEnvColor}" />
+            <Label Target="InitialEnvColor">InitialEnvColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="InitialFogColor" Color="{Binding InitialFogColor}" />
+            <Label Target="InitialFogColor">InitialFogColor</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ColorPicker Name="InitialBlendColor" Color="{Binding InitialBlendColor}" />
+            <Label Target="InitialBlendColor">InitialBlendColor</Label>
+        </StackPanel>
+    </StackPanel>
+</Window>

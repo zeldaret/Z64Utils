@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:v.DListViewerBuildingBlocks.SegmentsConfig="using:Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig.SegmentsConfigWindow"
+    x:DataType="vm:SegmentsConfigWindowViewModel"
+    Title="Segments"
+    SizeToContent="WidthAndHeight"
+>
+    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto, Auto,Auto,Auto,Auto">
+        <ContentControl Grid.Row="0" Grid.Column="0" DataContext="{Binding Segments[0]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="1" Grid.Column="0" DataContext="{Binding Segments[1]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="2" Grid.Column="0" DataContext="{Binding Segments[2]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="3" Grid.Column="0" DataContext="{Binding Segments[3]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="4" Grid.Column="0" DataContext="{Binding Segments[4]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="5" Grid.Column="0" DataContext="{Binding Segments[5]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="6" Grid.Column="0" DataContext="{Binding Segments[6]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="7" Grid.Column="0" DataContext="{Binding Segments[7]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+
+        <ContentControl Grid.Row="0" Grid.Column="1" DataContext="{Binding Segments[8]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="1" Grid.Column="1" DataContext="{Binding Segments[9]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="2" Grid.Column="1" DataContext="{Binding Segments[10]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="3" Grid.Column="1" DataContext="{Binding Segments[11]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="4" Grid.Column="1" DataContext="{Binding Segments[12]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="5" Grid.Column="1" DataContext="{Binding Segments[13]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="6" Grid.Column="1" DataContext="{Binding Segments[14]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+        <ContentControl Grid.Row="7" Grid.Column="1" DataContext="{Binding Segments[15]}">
+            <v.DListViewerBuildingBlocks.SegmentsConfig:SegmentConfigControl />
+        </ContentControl>
+    </Grid>
+</Window>

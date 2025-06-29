@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:v.DListViewerBuildingBlocks.SegmentsConfig="using:Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig"
+    xmlns:c="using:Z64Utils.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.DListViewerBuildingBlocks.SegmentsConfig.SegmentsConfigPickSegmentContentWindow"
+    x:DataType="vm:SegmentsConfigPickSegmentContentWindowViewModel"
+    Title="Pick Segment Content"
+    Width="300"
+    Height="400"
+>
+    <StackPanel Orientation="Vertical">
+        <c:EnumComboBox EnumType="vm:SegmentsConfigPickSegmentContentType"
+            SelectedItem="{Binding SegmentType}"
+            EnumUINameMap="{StaticResource SegmentTypeEnumUINameMap}"
+            MinWidth="100" Margin="10" />
+        <ContentControl Content="{Binding SegmentConfigPickSegmentContentConfigViewModel}"
+            Margin="20">
+            <ContentControl.DataTemplates>
+                <v.DListViewerBuildingBlocks.SegmentsConfig:SCPSCCViewLocator />
+            </ContentControl.DataTemplates>
+        </ContentControl>
+        <Button Click="OnOKButtonClick" IsEnabled="{Binding IsSegmentPickComplete}" Margin="10">OK</Button>
+    </StackPanel>
+</Window>

@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:v="using:Z64Utils.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.UpdateWindow"
+    x:DataType="v:UpdateWindowViewModel"
+    Title="Update"
+    SizeToContent="WidthAndHeight"
+>
+    <StackPanel Margin="10">
+        <SelectableTextBlock>
+            <Run>Current version:</Run>
+            <Run Text="{Binding CurrentReleaseTagName}"></Run>
+            <LineBreak />
+            <Run>Latest released version:</Run>
+            <Run Text="{Binding LatestReleaseTagName}"></Run>
+        </SelectableTextBlock>
+        <SelectableTextBlock IsVisible="{Binding IsUpToDate}">
+            <Run>Z64Utils is up-to-date</Run>
+        </SelectableTextBlock>
+        <SelectableTextBlock IsVisible="{Binding !IsUpToDate}">
+            <Run>A new release is available on GitHub:</Run>
+            <LineBreak />
+            <Run>https://github.com/zeldaret/Z64Utils/releases</Run>
+        </SelectableTextBlock>
+    </StackPanel>
+</Window>

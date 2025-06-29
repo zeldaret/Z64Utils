@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:v.DListViewerBuildingBlocks="using:Z64Utils.Views.DListViewerBuildingBlocks"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.CollisionViewerWindow"
+    x:DataType="vm:CollisionViewerWindowViewModel"
+    Title="Collision Viewer"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Settings" Command="{Binding OpenCollisionRenderSettingsCommand}" />
+        </Menu>
+        <v.DListViewerBuildingBlocks:CollisionViewerControl Name="CollisionViewerGL"
+            RenderSettings="{Binding RenderSettings}"
+            Polygons="{Binding Polygons}" />
+    </DockPanel>
+</Window>

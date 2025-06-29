@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Common;
 using F3DZEX.Command;
-using Syroot.BinaryData;
 
 namespace N64
 {
@@ -42,6 +36,45 @@ namespace N64
         I4,
         CI8,
         CI4,
+    }
+
+    public class ImageRGBA32
+    {
+        public int Width;
+        public int Height;
+        public byte[] Buffer;
+
+        public ImageRGBA32(int width, int height, byte[] buffer)
+        {
+            if (width * height * 4 != buffer.Length)
+                throw new Exception(
+                    $"buffer has length {buffer.Length}, which does not match dimensions {width}x{height}"
+                );
+            Width = width;
+            Height = height;
+            Buffer = buffer;
+        }
+
+        public Bitmap ToAvaloniaBitmap()
+        {
+            // https://github.com/AvaloniaUI/Avalonia/discussions/19127
+            Bitmap bitmap;
+            unsafe
+            {
+                fixed (byte* p = Buffer)
+                {
+                    bitmap = new Bitmap(
+                        PixelFormats.Rgba8888,
+                        AlphaFormat.Unpremul,
+                        (IntPtr)p,
+                        new PixelSize(Width, Height),
+                        new Vector(96, 96),
+                        Width * 4
+                    );
+                }
+            }
+            return bitmap;
+        }
     }
 
     public static class N64Texture
@@ -177,7 +210,7 @@ namespace N64
             return GetTexSize(texels, a.Item2);
         }
 
-        public static Bitmap DecodeBitmap(
+        public static ImageRGBA32 DecodeBitmap(
             int w,
             int h,
             N64TexFormat format,
@@ -189,7 +222,7 @@ namespace N64
             return DecodeBitmap(w, h, a.Item1, a.Item2, buff, tlut);
         }
 
-        public static unsafe Bitmap DecodeBitmap(
+        public static unsafe ImageRGBA32 DecodeBitmap(
             int w,
             int h,
             G_IM_FMT fmt,
@@ -198,25 +231,8 @@ namespace N64
             byte[]? tlut = null
         )
         {
-            Bitmap bmp = new Bitmap(w, h);
-            var bmpData = bmp.LockBits(
-                new Rectangle(0, 0, w, h),
-                ImageLockMode.WriteOnly,
-                PixelFormat.Format32bppArgb
-            );
-
-            byte* argb = (byte*)bmpData.Scan0;
             byte[] rgba = Decode(w * h, fmt, siz, buff, tlut);
-            for (int i = 0; i < w * h; i++)
-            {
-                argb[4 * i + 3] = rgba[4 * i + 3]; //A
-                argb[4 * i + 2] = rgba[4 * i + 0]; //R
-                argb[4 * i + 1] = rgba[4 * i + 1]; //G
-                argb[4 * i + 0] = rgba[4 * i + 2]; //B
-            }
-
-            bmp.UnlockBits(bmpData);
-            return bmp;
+            return new ImageRGBA32(w, h, rgba);
         }
 
         public static byte[] Decode(
@@ -287,31 +303,15 @@ namespace N64
             }
         }
 
-        public static unsafe byte[] EncodeBitmap(Bitmap bmp, N64TexFormat format)
+        public static unsafe byte[] EncodeBitmap(ImageRGBA32 bmp, N64TexFormat format)
         {
             var a = ConvertFormat(format);
             return EncodeBitmap(bmp, a.Item1, a.Item2);
         }
 
-        public static unsafe byte[] EncodeBitmap(Bitmap bmp, G_IM_FMT fmt, G_IM_SIZ siz)
+        public static unsafe byte[] EncodeBitmap(ImageRGBA32 bmp, G_IM_FMT fmt, G_IM_SIZ siz)
         {
-            var bmpData = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height),
-                ImageLockMode.ReadOnly,
-                PixelFormat.Format32bppArgb
-            );
-
-            byte* argb = (byte*)bmpData.Scan0;
-            byte[] rgba = new byte[bmp.Width * bmp.Height * 4];
-            for (int i = 0; i < bmp.Width * bmp.Height; i++)
-            {
-                rgba[4 * i + 0] = argb[4 * i + 2]; //R
-                rgba[4 * i + 1] = argb[4 * i + 1]; //G
-                rgba[4 * i + 2] = argb[4 * i + 0]; //B
-                rgba[4 * i + 3] = argb[4 * i + 3]; //A
-            }
-
-            bmp.UnlockBits(bmpData);
+            byte[] rgba = bmp.Buffer;
             return Encode(rgba, fmt, siz);
         }
 

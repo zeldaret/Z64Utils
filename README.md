@@ -39,20 +39,15 @@ You can find these configuration files as well as some additional information ab
 
 Currently, the only requirement is `.NET 6` (Not to be confused with `.NET Core` or `.NET Framework`).
 
+## Windows
+
 The general purpose download link for `.NET` is [this](https://dotnet.microsoft.com/download), and the direct download is [here](https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/6.0.36/windowsdesktop-runtime-6.0.36-win-x64.exe).
 
-## Wine / Linux
+## Linux
 
-Z64Utils v2.0.1 is wine-compatible (this may change in the future).
+On Ubuntu, you can install `.NET 6` with `sudo apt install dotnet-runtime-6.0`.
 
-To run it, first you need to install `.NET 6` using the installer (see [Dependencies](#dependencies) for the download link).
-
-Please keep in mind you need to use `wine64` instead of `wine` because this is a 64bits-only app.
-
-```bash
-wine64 windowsdesktop-runtime-6.0.36-win-x64.exe
-wine64 Z64Utils.exe
-```
+For other Linux distributions, additional details or other installation methods, see (Microsoft's documentation)[https://learn.microsoft.com/en-us/dotnet/core/install/linux].
 
 # Contributing
 

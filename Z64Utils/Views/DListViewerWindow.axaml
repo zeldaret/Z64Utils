@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Z64Utils.ViewModels"
+    xmlns:v.DListViewerBuildingBlocks="using:Z64Utils.Views.DListViewerBuildingBlocks"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Z64Utils.Views.DListViewerWindow"
+    x:DataType="vm:DListViewerWindowViewModel"
+    Title="DList Viewer"
+>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Render Settings" Command="{Binding OpenRenderSettingsCommand}" />
+            <MenuItem Header="Segments" Command="{Binding OpenSegmentsConfigCommand}" />
+        </Menu>
+        <StackPanel DockPanel.Dock="Top"
+            IsVisible="{Binding DecodeError, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock>Decode error:</TextBlock>
+            <TextBlock Text="{Binding DecodeError}" />
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top"
+            IsVisible="{Binding RenderError, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock>Render error:</TextBlock>
+            <TextBlock Text="{Binding RenderError}" />
+        </StackPanel>
+        <Grid>
+            <v.DListViewerBuildingBlocks:DLViewerControl Name="DLViewerGL" Renderer="{Binding Renderer}"
+                DisplayElements="{Binding DisplayElements}" RenderError="{Binding RenderError}" />
+            <TextBlock Text="{Binding GLInfoText}" />
+        </Grid>
+    </DockPanel>
+</Window>
