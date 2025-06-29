@@ -5,7 +5,7 @@ on: [workflow_call]
 jobs:
   format-check:
     permissions: {} # Remove all permissions
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
