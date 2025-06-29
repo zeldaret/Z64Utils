@@ -12,9 +12,6 @@ public partial class ROMRAMConversionsWindowViewModel : ObservableObject
     private Z64Game _game;
 
     [ObservableProperty]
-    private int _inputAddressTypeIndex;
-
-    [ObservableProperty]
     private string _inputAddressStr = "";
 
     [ObservableProperty]
@@ -25,7 +22,7 @@ public partial class ROMRAMConversionsWindowViewModel : ObservableObject
         ROM,
         VROM,
         VRAM,
-    }; // keep in sync with the ComboBoxItem elements in the view axaml
+    };
 
     [ObservableProperty]
     private InputAddressTypeEnum _inputAddressType;
@@ -40,12 +37,6 @@ public partial class ROMRAMConversionsWindowViewModel : ObservableObject
         {
             switch (e.PropertyName)
             {
-                case nameof(InputAddressTypeIndex):
-                    Utils.Assert(InputAddressTypeIndex >= 0 && InputAddressTypeIndex < 3);
-                    InputAddressType = Enum.GetValues<InputAddressTypeEnum>()[
-                        InputAddressTypeIndex
-                    ];
-                    break;
                 case nameof(InputAddressStr):
                     string inAddrStr = InputAddressStr;
                     inAddrStr = inAddrStr.ToUpper();
