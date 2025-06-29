@@ -211,7 +211,9 @@ public partial class MainWindowViewModel : ObservableObject
         if (file == null)
             return;
 
-        int? segment = await PickSegmentID(new());
+        int suggestedSegmentID = 6;
+
+        int? segment = await PickSegmentID(new() { SegmentID = suggestedSegmentID });
         if (segment == null)
             return;
 
@@ -323,7 +325,20 @@ public partial class MainWindowViewModelRomFile
     private async Task OpenObjectAnalyzer()
     {
         Utils.Assert(_parentVM.PickSegmentID != null);
-        int? segmentID = await _parentVM.PickSegmentID(new());
+
+        int? suggestedSegmentID = null;
+        if (Name.StartsWith("object_"))
+            suggestedSegmentID = 6;
+        else if (Name.Contains("_room_"))
+            suggestedSegmentID = 3;
+        else if (Name.EndsWith("_scene"))
+            suggestedSegmentID = 2;
+        else if (Name == "gameplay_keep")
+            suggestedSegmentID = 4;
+        else if (Name.StartsWith("gameplay_"))
+            suggestedSegmentID = 5;
+
+        int? segmentID = await _parentVM.PickSegmentID(new() { SegmentID = suggestedSegmentID });
         Logger.Debug("segmentID={segmentID}", segmentID);
         if (segmentID != null)
             _parentVM.OpenObjectAnalyzerByZ64File(File, (int)segmentID);

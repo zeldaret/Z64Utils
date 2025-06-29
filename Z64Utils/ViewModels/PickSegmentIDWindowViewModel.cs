@@ -8,10 +8,10 @@ public partial class PickSegmentIDWindowViewModel : ObservableObject
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
     [ObservableProperty]
-    private string _segmentIDStr = "6";
+    private string _segmentIDStr = "";
 
     [ObservableProperty]
-    private bool _invalidSegmentID = false;
+    private bool _invalidSegmentID = true;
 
     public int? SegmentID
     {
