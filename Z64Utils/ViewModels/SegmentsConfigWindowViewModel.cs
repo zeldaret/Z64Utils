@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Z64;
 
 namespace Z64Utils.ViewModels;
@@ -64,7 +65,8 @@ public partial class SegmentConfigControlViewModel : ObservableObject
         Description = _parentVM.Memory.Segments[segmentNumber].Label;
     }
 
-    public async void EditCommand()
+    [RelayCommand]
+    private async Task Edit()
     {
         Utils.Assert(_parentVM.PickSegmentContent != null);
         var newSegmentContent = await _parentVM.PickSegmentContent(new(_game));
@@ -339,7 +341,8 @@ public partial class FileSCPSCCViewModel
         _parentVM.IsSegmentPickComplete = false;
     }
 
-    public async void OpenFileCommand()
+    [RelayCommand]
+    private async Task OpenFile()
     {
         Utils.Assert(_parentVM.GetOpenFile != null);
         var file = await _parentVM.GetOpenFile();

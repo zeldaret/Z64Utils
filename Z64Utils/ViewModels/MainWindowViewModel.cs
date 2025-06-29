@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Z64;
 
 namespace Z64Utils.ViewModels;
@@ -15,11 +16,6 @@ public partial class MainWindowViewModel : ObservableObject
 
     private Z64Game? _game;
     public Z64Game? Game => _game;
-
-    // this may not be needed on Windows, test eventually
-    // bug on Linux? idk if this issue is relevant:
-    // https://github.com/AvaloniaUI/Avalonia/issues/2958
-    private bool FilePickerActive;
 
     // Provided by the view
     public Func<Task<IStorageFile?>>? GetOpenROM;
@@ -48,22 +44,13 @@ public partial class MainWindowViewModel : ObservableObject
         };
     }
 
-    public async Task OpenROMCommand()
+    [RelayCommand]
+    private async Task OpenROM()
     {
         try
         {
-            Utils.Assert(!FilePickerActive);
-            FilePickerActive = true;
-            IStorageFile? file;
-            try
-            {
-                Utils.Assert(GetOpenROM != null);
-                file = await GetOpenROM();
-            }
-            finally
-            {
-                FilePickerActive = false;
-            }
+            Utils.Assert(GetOpenROM != null);
+            var file = await GetOpenROM();
             Logger.Debug("file={filePath}", file?.TryGetLocalPath());
 
             if (file == null)
@@ -74,7 +61,7 @@ public partial class MainWindowViewModel : ObservableObject
             {
                 // TODO not entirely sure about this IStorageFile -> path
                 string path = file.Path.LocalPath;
-                OpenROM(path);
+                OpenROMImpl(path);
             }
         }
         catch (Exception e)
@@ -88,15 +75,9 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    // avalonia bug?: CanOpenROMCommand is not used if it takes no argument
-    public bool CanOpenROMCommand(object arg)
-    {
-        return !FilePickerActive;
-    }
-
     // TODO figure out how to make this method async
     // (currently hidden in Z64Game)
-    public void OpenROM(string path)
+    public void OpenROMImpl(string path)
     {
         ProgressText = $"new Z64Game({path})";
         _game = new Z64Game(path);
@@ -105,7 +86,8 @@ public partial class MainWindowViewModel : ObservableObject
         UpdateRomFiles();
     }
 
-    public async void ExportFSCommand()
+    [RelayCommand(CanExecute = nameof(CanExportFS))]
+    private async Task ExportFS()
     {
         Utils.Assert(GetOpenFolderForExportFS != null);
         Utils.Assert(_game != null);
@@ -125,12 +107,13 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    public bool CanExportFSCommand(object arg)
+    private bool CanExportFS()
     {
         return _game != null;
     }
 
-    public async Task SaveAsCommand()
+    [RelayCommand(CanExecute = nameof(CanSaveAs))]
+    private async Task SaveAs()
     {
         Utils.Assert(GetOpenROMForSave != null);
         Utils.Assert(_game != null);
@@ -142,12 +125,13 @@ public partial class MainWindowViewModel : ObservableObject
         File.WriteAllBytes(file.Path.LocalPath, _game.Rom.RawRom);
     }
 
-    public bool CanSaveAsCommand(object arg)
+    private bool CanSaveAs()
     {
         return _game != null;
     }
 
-    public async void ImportFileNameListCommand()
+    [RelayCommand(CanExecute = nameof(CanImportFileNameList))]
+    private async Task ImportFileNameList()
     {
         Utils.Assert(GetOpenFile != null);
         Utils.Assert(_game != null);
@@ -158,12 +142,13 @@ public partial class MainWindowViewModel : ObservableObject
         UpdateRomFiles();
     }
 
-    public bool CanImportFileNameListCommand(object arg)
+    private bool CanImportFileNameList()
     {
         return _game != null;
     }
 
-    public async void ExportFileNameListCommand()
+    [RelayCommand(CanExecute = nameof(CanExportFileNameList))]
+    private async Task ExportFileNameList()
     {
         Utils.Assert(GetOpenFileForSave != null);
         Utils.Assert(_game != null);
@@ -173,7 +158,7 @@ public partial class MainWindowViewModel : ObservableObject
         Z64Version.ExportFileList(_game, f.Path.LocalPath);
     }
 
-    public bool CanExportFileNameListCommand(object arg)
+    private bool CanExportFileNameList()
     {
         return _game != null;
     }
@@ -202,19 +187,21 @@ public partial class MainWindowViewModel : ObservableObject
         return _game != null;
     }
 
-    public void TextureViewerCommand()
+    [RelayCommand(CanExecute = nameof(CanTextureViewer))]
+    private void TextureViewer()
     {
         Utils.Assert(_game != null);
         Utils.Assert(OpenTextureViewer != null);
         OpenTextureViewer(new TextureViewerWindowViewModel(_game));
     }
 
-    public bool CanTextureViewerCommand(object arg)
+    private bool CanTextureViewer()
     {
         return _game != null;
     }
 
-    public async void ObjectAnalyzerCommand()
+    [RelayCommand]
+    private async Task ObjectAnalyzer()
     {
         Utils.Assert(GetOpenFile != null);
         Utils.Assert(PickSegmentID != null);
@@ -302,7 +289,7 @@ public partial class MainWindowViewModel : ObservableObject
     }
 }
 
-public class MainWindowViewModelRomFile
+public partial class MainWindowViewModelRomFile
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -332,7 +319,8 @@ public class MainWindowViewModelRomFile
         _parentVM = parentVM;
     }
 
-    public async void OpenObjectAnalyzerCommand()
+    [RelayCommand]
+    private async Task OpenObjectAnalyzer()
     {
         Utils.Assert(_parentVM.PickSegmentID != null);
         int? segmentID = await _parentVM.PickSegmentID(new());
@@ -341,7 +329,8 @@ public class MainWindowViewModelRomFile
             _parentVM.OpenObjectAnalyzerByZ64File(File, (int)segmentID);
     }
 
-    public async void InjectFileCommand()
+    [RelayCommand]
+    private async Task InjectFile()
     {
         Utils.Assert(_parentVM.GetOpenFile != null);
         Utils.Assert(_parentVM.Game != null);
@@ -356,7 +345,8 @@ public class MainWindowViewModelRomFile
         _parentVM.UpdateRomFiles();
     }
 
-    public async void SaveFileCommand()
+    [RelayCommand]
+    private async Task SaveFile()
     {
         Utils.Assert(_parentVM.GetOpenFileForSave != null);
         Utils.Assert(File.Valid());
@@ -373,7 +363,8 @@ public class MainWindowViewModelRomFile
         return File.Valid() && !File.Deleted;
     }
 
-    public async void RenameFileCommand()
+    [RelayCommand]
+    private async Task RenameFile()
     {
         Utils.Assert(_parentVM.GetRenamedFileName != null);
         Utils.Assert(_parentVM.Game != null);

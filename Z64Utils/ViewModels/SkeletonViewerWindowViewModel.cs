@@ -11,6 +11,7 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Common;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using OpenTK.Mathematics;
 using RDP;
 using Syroot.BinaryData;
@@ -330,7 +331,8 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         };
     }
 
-    public async void LoadROMFileAnimationsCommand()
+    [RelayCommand(CanExecute = nameof(CanLoadROMFileAnimations))]
+    private async Task LoadROMFileAnimations()
     {
         Utils.Assert(_game != null);
         Utils.Assert(PickROMFile != null);
@@ -352,12 +354,13 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         await LoadExternalFileAnimationsImpl(extFile.Data);
     }
 
-    public bool CanLoadROMFileAnimationsCommand(object arg)
+    private bool CanLoadROMFileAnimations()
     {
         return _game != null;
     }
 
-    public async Task LoadExternalFileAnimationsCommand()
+    [RelayCommand]
+    private async Task LoadExternalFileAnimations()
     {
         Utils.Assert(GetOpenFile != null);
         var file = await GetOpenFile();
@@ -399,7 +402,8 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         });
     }
 
-    public void LoadPlayerAnimationsCommand()
+    [RelayCommand(CanExecute = nameof(CanLoadPlayerAnimations))]
+    private void LoadPlayerAnimations()
     {
         Utils.Assert(_game != null);
 
@@ -445,7 +449,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         });
     }
 
-    public bool CanLoadPlayerAnimationsCommand(object arg)
+    private bool CanLoadPlayerAnimations()
     {
         return _game != null;
     }
@@ -460,7 +464,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
             Skel = Z64Skeleton.Get(Renderer.Memory, skeletonHolder);
     }
 
-    void UpdateLimbNodes()
+    private void UpdateLimbNodes()
     {
         Utils.Assert(Skel != null);
 
@@ -484,7 +488,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         SkeletonRootLimbNode = new() { skeletonRootLimbNode };
     }
 
-    void UpdateLimbsDLists()
+    private void UpdateLimbsDLists()
     {
         Utils.Assert(Renderer != null);
         Utils.Assert(Skel != null);
@@ -536,7 +540,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     }
 
     [MemberNotNull(nameof(CurPose))]
-    void SetIdentityPose()
+    private void SetIdentityPose()
     {
         Utils.Assert(Skel != null);
         CurPose = new Matrix4[Skel.Limbs.Count];
@@ -546,7 +550,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         }
     }
 
-    void UpdateCurPose()
+    private void UpdateCurPose()
     {
         if (CurAnim == null && CurPlayerAnim == null)
         {
@@ -592,7 +596,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         }
     }
 
-    public void UpdateDisplayElements()
+    private void UpdateDisplayElements()
     {
         DisplayElements.Clear();
 

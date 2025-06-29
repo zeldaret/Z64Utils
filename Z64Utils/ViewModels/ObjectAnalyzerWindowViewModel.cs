@@ -118,7 +118,8 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         return HasFile();
     }
 
-    public async Task ImportJSONCommand()
+    [RelayCommand(CanExecute = nameof(CanImportJSON))]
+    private async Task ImportJSON()
     {
         Utils.Assert(OpenJSONFile != null);
         Utils.Assert(HasFile());
@@ -140,12 +141,13 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         UpdateMap();
     }
 
-    public bool CanImportJSONCommand(object? parameter)
+    private bool CanImportJSON()
     {
         return HasFile();
     }
 
-    public async Task ExportJSONCommand()
+    [RelayCommand(CanExecute = nameof(CanExportJSON))]
+    private async Task ExportJSON()
     {
         Utils.Assert(HasFile());
         Utils.Assert(OpenJSONFileForSave != null);
@@ -159,7 +161,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         File.WriteAllText(fJSON.Path.LocalPath, json);
     }
 
-    public bool CanExportJSONCommand(object? parameter)
+    private bool CanExportJSON()
     {
         return HasFile();
     }

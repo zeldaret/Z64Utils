@@ -31,7 +31,7 @@ public partial class App : Application
                 Logger.Debug("romPath={romPath}", romPath);
                 if (romPath != null)
                 {
-                    winVM.OpenROM(romPath);
+                    winVM.OpenROMImpl(romPath);
                     var objectAnalyzerFileNames = Program.ParsedArgs?.ObjectAnalyzerFileNames;
                     if (objectAnalyzerFileNames != null)
                     {
