@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NLog;
 
 namespace Common
 {
@@ -145,6 +146,23 @@ namespace Common
                     Debugger.Break();
                 throw new AssertFailedException();
             }
+        }
+
+        private static void ReportErrorToLogs(
+            string? message = null,
+            string? monospaceMessage = null
+        )
+        {
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Error(message);
+            logger.Error(monospaceMessage);
+        }
+
+        public static Action<string?, string?> ReportErrorImpl = ReportErrorToLogs;
+
+        public static void ReportError(string? message = null, string? monospaceMessage = null)
+        {
+            ReportErrorImpl(message, monospaceMessage);
         }
     }
 }

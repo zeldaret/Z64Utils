@@ -16,6 +16,7 @@ using F3DZEX.Command;
 using RDP;
 using Z64;
 using Z64Utils.ViewModels.OHED;
+using Z64Utils.Views;
 
 namespace Z64Utils.ViewModels;
 
@@ -49,6 +50,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     // Provided by the view
     public Func<Task<IStorageFile?>>? OpenJSONFile;
     public Func<Task<IStorageFile?>>? OpenJSONFileForSave;
+    public Func<Task<IStorageFile?>>? OpenXMLFile;
     public Action<DListViewerWindowViewModel>? OpenDListViewer;
     public Action<SkeletonViewerWindowViewModel>? OpenSkeletonViewer;
     public Action<CollisionViewerWindowViewModel>? OpenCollisionViewer;
@@ -162,6 +164,43 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
     }
 
     private bool CanExportJSON()
+    {
+        return HasFile();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanImportXML))]
+    private async Task ImportXML()
+    {
+        Utils.Assert(OpenXMLFile != null);
+        Utils.Assert(HasFile());
+        Utils.Assert(_file.Valid());
+
+        var fXML = await OpenXMLFile();
+        if (fXML == null)
+            return;
+
+        var xml = File.ReadAllText(fXML.Path.LocalPath);
+
+        try
+        {
+            _object = Z64Object.FromXml(xml, _file.Data);
+        }
+        catch (Z64Object.Z64ObjectFromXmlException e)
+        {
+            Logger.Error(e);
+            Utils.ReportError(e.Message);
+            return;
+        }
+
+        ObjectHolderEntryDetailsViewModel = null;
+        ObjectHolderEntryDataBytes = null;
+        ObjectHolderEntryFirstByteAddress = 0;
+        ObjectHolderEntries.Clear();
+
+        UpdateMap();
+    }
+
+    private bool CanImportXML()
     {
         return HasFile();
     }

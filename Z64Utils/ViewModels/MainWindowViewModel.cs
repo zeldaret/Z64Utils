@@ -66,11 +66,8 @@ public partial class MainWindowViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            // FIXME this isn't MVVM
             Logger.Error(e, "An error occured opening the ROM");
-            var ewin = new Z64Utils.Views.ErrorWindow();
-            ewin.SetMessage("An error occured opening the ROM", e.ToString());
-            ewin.Show();
+            Utils.ReportError("An error occured opening the ROM", e.ToString());
             throw;
         }
     }

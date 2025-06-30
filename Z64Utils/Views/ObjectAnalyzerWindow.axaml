@@ -16,6 +16,7 @@
                 <MenuItem Header="Analyze DLists" Command="{Binding AnalyzeDListsCommand}" />
                 <MenuItem Header="Import JSON" Command="{Binding ImportJSONCommand}" />
                 <MenuItem Header="Export JSON" Command="{Binding ExportJSONCommand}" />
+                <MenuItem Header="Import XML" Command="{Binding ImportXMLCommand}" />
                 <MenuItem Header="Reset" Command="{Binding ResetCommand}" />
             </MenuItem>
             <MenuItem Header="Settings">
