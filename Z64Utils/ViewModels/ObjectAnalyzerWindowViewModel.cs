@@ -638,6 +638,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
         var skeletonHolder = (Z64Object.SkeletonHolder)ohe.ObjectHolder;
         skelvVM.SetSkeleton(skeletonHolder);
         skelvVM.SetAnimations(
+            _object,
             _object
                 .Entries.FindAll(oh => oh.GetEntryType() == Z64Object.EntryType.AnimationHeader)
                 .Cast<Z64Object.AnimationHolder>()

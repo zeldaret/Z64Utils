@@ -104,9 +104,10 @@
                 <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
                 <DockPanel Grid.Row="2">
                     <TextBlock DockPanel.Dock="Top">Animations</TextBlock>
+                    <TextBox DockPanel.Dock="Top" Text="{Binding AnimationFilterText}" />
                     <DataGrid
                         Name="AnimationEntriesDataGrid"
-                        ItemsSource="{Binding AnimationEntries}"
+                        ItemsSource="{Binding FilteredAnimationEntries}"
                         IsReadOnly="True"
                         CanUserResizeColumns="True"
                         GridLinesVisibility="All"
@@ -115,6 +116,7 @@
                     >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="Offset" Binding="{Binding Offset}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>

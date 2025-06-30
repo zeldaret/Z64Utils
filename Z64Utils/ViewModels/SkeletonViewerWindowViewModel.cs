@@ -58,6 +58,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     public interface IAnimationEntry
     {
         string Name { get; }
+        string Offset { get; }
         void OnSelected();
     }
 
@@ -70,16 +71,19 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     {
         private SkeletonViewerWindowViewModel _parentVM;
         public string Name { get; }
+        public string Offset { get; }
         public Z64Object.AnimationHolder AnimationHolder { get; }
 
         public RegularAnimationEntry(
             SkeletonViewerWindowViewModel parentVM,
             string name,
+            uint offset,
             Z64Object.AnimationHolder animationHolder
         )
         {
             _parentVM = parentVM;
             Name = name;
+            Offset = $"0x{offset:X6}";
             AnimationHolder = animationHolder;
         }
 
@@ -96,10 +100,11 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         public ExternalRegularAnimationEntry(
             SkeletonViewerWindowViewModel parentVM,
             string name,
+            uint offset,
             Z64Object.AnimationHolder animationHolder,
             Dictionary<int, F3DZEX.Memory.Segment> externalData
         )
-            : base(parentVM, name, animationHolder)
+            : base(parentVM, name, offset, animationHolder)
         {
             ExternalData = externalData;
         }
@@ -109,16 +114,19 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     {
         private SkeletonViewerWindowViewModel _parentVM;
         public string Name { get; }
+        public string Offset { get; }
         public Z64Object.PlayerAnimationHolder PlayerAnimationHolder { get; }
 
         public PlayerAnimationEntry(
             SkeletonViewerWindowViewModel parentVM,
             string name,
+            uint offset,
             Z64Object.PlayerAnimationHolder playerAnimationHolder
         )
         {
             _parentVM = parentVM;
             Name = name;
+            Offset = $"0x{offset:X6}";
             PlayerAnimationHolder = playerAnimationHolder;
         }
 
@@ -135,17 +143,23 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
         public ExternalPlayerAnimationEntry(
             SkeletonViewerWindowViewModel parentVM,
             string name,
+            uint offset,
             Z64Object.PlayerAnimationHolder playerAnimationHolder,
             Dictionary<int, F3DZEX.Memory.Segment> externalData
         )
-            : base(parentVM, name, playerAnimationHolder)
+            : base(parentVM, name, offset, playerAnimationHolder)
         {
             ExternalData = externalData;
         }
     }
 
+    public ObservableCollection<IAnimationEntry> AnimationEntries { get; } = new();
+
     [ObservableProperty]
-    private ObservableCollection<IAnimationEntry> _animationEntries = new();
+    string _animationFilterText = "";
+
+    [ObservableProperty]
+    private IEnumerable<IAnimationEntry> _filteredAnimationEntries = new List<IAnimationEntry>();
 
     [ObservableProperty]
     private double _playAnimTickPeriodMs;
@@ -255,7 +269,15 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                         PlayAnimTickPeriodMs = 1;
                     _playAnimTimer.Interval = TimeSpan.FromMilliseconds(PlayAnimTickPeriodMs);
                     break;
+                case nameof(AnimationFilterText):
+                    UpdateFilteredAnimationEntries();
+                    break;
             }
+        };
+        AnimationEntries.CollectionChanged += (sender, e) =>
+        {
+            Logger.Debug("AnimationEntries.CollectionChanged");
+            UpdateFilteredAnimationEntries();
         };
         SelectedLimbNodes.CollectionChanged += (sender, e) =>
         {
@@ -395,6 +417,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     new ExternalRegularAnimationEntry(
                         this,
                         "ext_" + eAnim.Name,
+                        (uint)extObj.OffsetOf(eAnim),
                         eAnim,
                         externalData
                     )
@@ -477,6 +500,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                     new ExternalPlayerAnimationEntry(
                         this,
                         "ext_" + ePlayerAnim.Name,
+                        (uint)gKeepObj.OffsetOf(ePlayerAnim),
                         ePlayerAnim,
                         externalData
                     )
@@ -558,16 +582,23 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
             LimbsDLists = null;
     }
 
-    public void SetAnimations(IEnumerable<Z64Object.AnimationHolder> animationHolders)
+    public void SetAnimations(
+        Z64Object obj,
+        IEnumerable<Z64Object.AnimationHolder> animationHolders
+    )
     {
-        ObservableCollection<IAnimationEntry> newAnimations = new(
-            animationHolders.Select(animationHolder => new RegularAnimationEntry(
-                this,
-                animationHolder.Name,
-                animationHolder
-            ))
-        );
-        AnimationEntries = newAnimations;
+        AnimationEntries.Clear();
+        foreach (var animationHolder in animationHolders)
+        {
+            AnimationEntries.Add(
+                new RegularAnimationEntry(
+                    this,
+                    animationHolder.Name,
+                    (uint)obj.OffsetOf(animationHolder),
+                    animationHolder
+                )
+            );
+        }
     }
 
     [MemberNotNull(nameof(CurPose))]
@@ -671,6 +702,17 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     public void StopPlayingAnim()
     {
         _playAnimTimer.IsEnabled = false;
+    }
+
+    private void UpdateFilteredAnimationEntries()
+    {
+        var filter = AnimationFilterText.ToLower();
+        if (filter == "")
+            FilteredAnimationEntries = new List<IAnimationEntry>(AnimationEntries);
+        else
+            FilteredAnimationEntries = AnimationEntries.Where(a =>
+                a.Name.ToLower().Contains(filter) || a.Offset.ToLower().Contains(filter)
+            );
     }
 
     public void OnAnimationEntrySelected(IAnimationEntry animationEntry)
