@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Common;
 using Z64Utils.ViewModels;
 using Z64Utils.Views;
 
@@ -21,6 +22,13 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            Utils.ReportErrorImpl = (message, monospaceMessage) =>
+            {
+                var errWin = new ErrorWindow();
+                errWin.SetMessage(message, monospaceMessage);
+                errWin.Show();
+            };
+
             var winVM = new MainWindowViewModel();
             var win = new MainWindow() { DataContext = winVM };
             desktop.MainWindow = win;
@@ -41,8 +49,11 @@ public partial class App : Application
                         );
                         foreach (var name in objectAnalyzerFileNames)
                         {
-                            // TODO un-hardcode segment 6
-                            var oavm = winVM.OpenObjectAnalyzerByFileName(name, 6);
+                            // TODO un-hardcode segment ids
+                            var segment = 6;
+                            if (name == "gameplay_keep")
+                                segment = 4;
+                            var oavm = winVM.OpenObjectAnalyzerByFileName(name, segment);
 
                             if (oavm == null)
                             {

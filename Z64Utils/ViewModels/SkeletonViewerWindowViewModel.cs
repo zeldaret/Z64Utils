@@ -184,6 +184,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     public Func<ROMFilePickerViewModel, Task<ROMFilePickerViewModel.ROMFile?>>? PickROMFile;
     public Func<PickSegmentIDWindowViewModel, Task<int?>>? PickSegmentID;
     internal Func<Task<IStorageFile?>>? GetOpenFile;
+    public Func<Task<IStorageFile?>>? OpenGameplayKeepXMLFile;
 
     public SkeletonViewerWindowViewModel(Z64Game? game)
     {
@@ -405,27 +406,62 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanLoadPlayerAnimations))]
     private void LoadPlayerAnimations()
     {
+        LoadPlayerAnimationsImpl(gKeepData =>
+        {
+            var gKeepObj = new Z64Object(_game, gKeepData, "gameplay_keep");
+            Z64ObjectAnalyzer.FindDlists(gKeepObj, gKeepData, 4, new());
+            Z64ObjectAnalyzer.AnalyzeDlists(gKeepObj, gKeepData, 4);
+            return Task.FromResult<Z64Object?>(gKeepObj);
+        });
+    }
+
+    private bool CanLoadPlayerAnimations()
+    {
+        return _game != null;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanLoadPlayerAnimationsWithGameplayKeepXML))]
+    private void LoadPlayerAnimationsWithGameplayKeepXML()
+    {
+        Utils.Assert(OpenGameplayKeepXMLFile != null);
+        LoadPlayerAnimationsImpl(async gKeepData =>
+        {
+            var fXML = await OpenGameplayKeepXMLFile();
+            if (fXML == null)
+                return null;
+
+            var xml = File.ReadAllText(fXML.Path.LocalPath);
+
+            return Z64Object.FromXml(xml, gKeepData);
+        });
+    }
+
+    private bool CanLoadPlayerAnimationsWithGameplayKeepXML()
+    {
+        return _game != null;
+    }
+
+    private async void LoadPlayerAnimationsImpl(Func<byte[], Task<Z64Object?>> gKeepObjFactory)
+    {
         Utils.Assert(_game != null);
 
         Z64File? gKeepFile = _game.GetFileByName("gameplay_keep");
         if (gKeepFile == null || !gKeepFile.Valid())
         {
-            Logger.Error("gameplay_keep not found/invalid");
-            // TODO show error
+            Utils.ReportError("gameplay_keep not found/invalid");
             return;
         }
 
         Z64File? link_animetionFile = _game.GetFileByName("link_animetion");
         if (link_animetionFile == null || !link_animetionFile.Valid())
         {
-            Logger.Error("link_animetion not found/invalid");
-            // TODO show error
+            Utils.ReportError("link_animetion not found/invalid");
             return;
         }
 
-        var gKeepObj = new Z64Object(_game, gKeepFile.Data, "gameplay_keep");
-        Z64ObjectAnalyzer.FindDlists(gKeepObj, gKeepFile.Data, 4, new());
-        Z64ObjectAnalyzer.AnalyzeDlists(gKeepObj, gKeepFile.Data, 4);
+        var gKeepObj = await gKeepObjFactory(gKeepFile.Data);
+        if (gKeepObj == null)
+            return;
 
         var externalData = new Dictionary<int, F3DZEX.Memory.Segment>()
         {
@@ -447,11 +483,6 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
                 );
             }
         });
-    }
-
-    private bool CanLoadPlayerAnimations()
-    {
-        return _game != null;
     }
 
     public void SetSkeleton(Z64Object.SkeletonHolder skeletonHolder)

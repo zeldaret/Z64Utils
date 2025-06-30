@@ -37,6 +37,7 @@ public partial class SkeletonViewerWindow : Window
             _viewModel.PickROMFile = OpenPickROMFile;
             _viewModel.PickSegmentID = OpenPickSegmentID;
             _viewModel.GetOpenFile = ShowDialogOpenFileAsync;
+            _viewModel.OpenGameplayKeepXMLFile = OpenGameplayKeepXMLFile;
             _viewModel.RenderContextChanged += OnRenderContextChanged;
         };
 
@@ -134,6 +135,37 @@ public partial class SkeletonViewerWindow : Window
                 FileTypeFilter = new List<FilePickerFileType>()
                 {
                     new FilePickerFileType("Any file") { Patterns = new[] { "*" } },
+                },
+            }
+        );
+
+        if (files.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            Utils.Assert(files.Count == 1);
+            return files[0];
+        }
+    }
+
+    private async Task<IStorageFile?> OpenGameplayKeepXMLFile()
+    {
+        Utils.Assert(StorageProvider.CanOpen);
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new()
+            {
+                Title = "Open gameplay_keep XML",
+                SuggestedFileName = "gameplay_keep.xml",
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>()
+                {
+                    new("XML file")
+                    {
+                        Patterns = new[] { "*.xml" },
+                        MimeTypes = new[] { "application/xml" },
+                    },
                 },
             }
         );

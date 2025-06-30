@@ -20,6 +20,8 @@
                     Command="{Binding LoadExternalFileAnimationsCommand}" />
                 <MenuItem Header="Load Player Animations"
                     Command="{Binding LoadPlayerAnimationsCommand}" />
+                <MenuItem Header="Load Player Animations With gameplay keep XML"
+                    Command="{Binding LoadPlayerAnimationsWithGameplayKeepXMLCommand}" />
             </MenuItem>
         </Menu>
         <StackPanel DockPanel.Dock="Top">

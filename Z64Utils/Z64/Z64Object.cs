@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml;
 using Common;
 using F3DZEX;
 using F3DZEX.Command;
@@ -3106,6 +3108,345 @@ namespace Z64
                     ((TextureHolder)obj.Entries[i]).Tlut = tlut;
                 }
             }
+            return obj;
+        }
+
+        public class Z64ObjectFromXmlException : Exception
+        {
+            public Z64ObjectFromXmlException(string message)
+                : base(message) { }
+        }
+
+        public static Z64Object FromXml(string xml, byte[] data)
+        {
+            var obj = new Z64Object();
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+            var root = xmlDoc.DocumentElement;
+            if (root == null)
+                throw new Z64ObjectFromXmlException("No root element");
+            if (root.Name != "Root")
+                throw new Z64ObjectFromXmlException(
+                    $"Root element is not <Root> but <{root.Name}>"
+                );
+
+            var fileElems = new List<XmlElement>();
+            foreach (var n in root)
+            {
+                if (n is XmlElement e)
+                {
+                    if (!new[] { "File", "ExternalFile" }.Contains(e.Name))
+                    {
+                        throw new Z64ObjectFromXmlException(
+                            $"Unexpected child of <Root>: <{e.Name}>"
+                                + " (expected <File> or <ExternalFile>)"
+                        );
+                    }
+                    if (e.Name == "File")
+                        fileElems.Add(e);
+                }
+            }
+
+            if (fileElems.Count == 0)
+                throw new Z64ObjectFromXmlException("Found no <File> element");
+            if (fileElems.Count > 1)
+                throw new Z64ObjectFromXmlException("Found more than one <File> element (TODO)");
+
+            var fileElem = fileElems[0];
+
+            var tlutAssociations = new List<(TextureHolder, int tlutOffset)>();
+
+            foreach (var n in fileElem)
+            {
+                if (n is XmlElement e)
+                {
+                    var nameAttr = e.Attributes["Name"];
+                    if (nameAttr == null)
+                    {
+                        throw new Z64ObjectFromXmlException(
+                            $"Resource of type {e.Name} has no name"
+                        );
+                    }
+                    var name = nameAttr.Value;
+
+                    int GetAttributeIntHex(string attrName)
+                    {
+                        var attr = e.Attributes[attrName];
+                        if (attr == null)
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource {name} has no {attrName}"
+                            );
+                        int val;
+                        // Allow decimal when it's a single digit
+                        if (attr.Value.Length == 1 && int.TryParse(attr.Value, out val))
+                            return val;
+                        if (
+                            attr.Value.Length < 2
+                            || (attr.Value[..2] != "0x" && attr.Value[..2] != "0X")
+                            || !int.TryParse(
+                                attr.Value[2..],
+                                NumberStyles.HexNumber,
+                                CultureInfo.InvariantCulture,
+                                out val
+                            )
+                        )
+                        {
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource {name} has bad {attrName} {attr.Value}"
+                            );
+                        }
+                        return val;
+                    }
+
+                    int GetAttributeInt(string attrName)
+                    {
+                        var attr = e.Attributes[attrName];
+                        if (attr == null)
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource {name} has no {attrName}"
+                            );
+                        if (!int.TryParse(attr.Value, out var val))
+                        {
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource {name} has bad {attrName} {attr.Value}"
+                            );
+                        }
+                        return val;
+                    }
+
+                    var offset = GetAttributeIntHex("Offset");
+
+                    switch (e.Name)
+                    {
+                        case "Blob":
+                            obj.AddUnknow(GetAttributeIntHex("Size"), name, offset);
+                            break;
+
+                        case "DList":
+                            // TODO rework Z64Object to no longer require DList size?
+                            var dlistLastOffset = offset;
+                            while (
+                                dlistLastOffset < data.Length
+                                && data[dlistLastOffset] != (int)CmdID.G_ENDDL
+                            )
+                                dlistLastOffset += 8;
+                            if (dlistLastOffset >= data.Length)
+                            {
+                                throw new Z64ObjectFromXmlException(
+                                    $"Could not find end of DList resource {name}"
+                                );
+                            }
+                            obj.AddDList(dlistLastOffset + 8 - offset, name, offset);
+                            break;
+
+                        case "Mtx":
+                            obj.AddMtx(1, name, offset);
+                            break;
+
+                        case "Texture":
+                            var formatAttr = e.Attributes["Format"];
+                            if (formatAttr == null)
+                            {
+                                throw new Z64ObjectFromXmlException(
+                                    $"Texture resource {name} has no Format"
+                                );
+                            }
+                            if (
+                                !Enum.TryParse<N64TexFormat>(
+                                    formatAttr.Value.ToUpper(),
+                                    out var format
+                                )
+                            )
+                            {
+                                throw new Z64ObjectFromXmlException(
+                                    $"Texture resource {name} has bad Format {formatAttr.Value}"
+                                );
+                            }
+
+                            var textureHolder = obj.AddTexture(
+                                GetAttributeInt("Width"),
+                                GetAttributeInt("Height"),
+                                format,
+                                name,
+                                offset
+                            );
+
+                            if (format == N64TexFormat.CI4 || format == N64TexFormat.CI8)
+                            {
+                                if (e.Attributes["TlutOffset"] != null)
+                                {
+                                    tlutAssociations.Add(
+                                        (textureHolder, GetAttributeIntHex("TlutOffset"))
+                                    );
+                                }
+                            }
+                            break;
+
+                        case "Array":
+                            var count = GetAttributeInt("Count");
+
+                            var childrenElems = e.ChildNodes.OfType<XmlElement>();
+                            if (childrenElems.Count() != 1)
+                            {
+                                throw new Z64ObjectFromXmlException(
+                                    $"Array resource {name} does not have exactly one child element"
+                                );
+                            }
+                            var childElem = childrenElems.First();
+                            switch (childElem.Name)
+                            {
+                                case "Vtx":
+                                    try
+                                    {
+                                        obj.AddVertices(count, name, offset);
+                                    }
+                                    catch (Z64ObjectException ex)
+                                    {
+                                        throw new Z64ObjectFromXmlException(
+                                            "Could not add <Array> of <Vtx> resource\n" + ex.Message
+                                        );
+                                    }
+                                    break;
+                                case "Vector":
+                                    // TODO
+                                    break;
+                                case "Scalar":
+                                    // TODO
+                                    break;
+                                default:
+                                    throw new Z64ObjectFromXmlException(
+                                        $"Array resource {name} has unknown child {childElem.Name}"
+                                    );
+                            }
+                            break;
+
+                        case "Scene":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        case "Room":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        case "Collision":
+                            obj.AddCollisionHeader(name, offset);
+                            break;
+
+                        case "Cutscene":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        case "Path":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        case "Skeleton":
+                            var typeAttr = e.Attributes["Type"];
+                            if (typeAttr == null)
+                            {
+                                throw new Z64ObjectFromXmlException(
+                                    $"Skeleton resource {name} has no Type"
+                                );
+                            }
+                            // TODO use LimbType too
+                            switch (typeAttr.Value)
+                            {
+                                case "Normal":
+                                    obj.AddSkeleton(name, offset);
+                                    break;
+                                case "Flex":
+                                    obj.AddFlexSkeleton(name, offset);
+                                    break;
+                                default:
+                                    // TODO implement other skeleton types
+                                    throw new Z64ObjectFromXmlException(
+                                        $"Skeleton resource {name} has unimplemented/unknown Type {typeAttr.Value}"
+                                    );
+                            }
+                            break;
+
+                        case "LimbTable":
+                            obj.AddSkeletonLimbs(GetAttributeInt("Count"), name, offset);
+                            break;
+
+                        case "Limb":
+                            var limbTypeAttr = e.Attributes["LimbType"];
+                            if (limbTypeAttr == null)
+                            {
+                                throw new Z64ObjectFromXmlException(
+                                    $"Limb resource {name} has no LimbType"
+                                );
+                            }
+                            EntryType limbType;
+                            switch (limbTypeAttr.Value)
+                            {
+                                case "Standard":
+                                    limbType = EntryType.StandardLimb;
+                                    break;
+                                case "LOD":
+                                    limbType = EntryType.LODLimb;
+                                    break;
+                                default:
+                                    // TODO implement other limb types
+                                    throw new Z64ObjectFromXmlException(
+                                        $"Limb resource {name} has unimplemented/unknown LimbType {limbTypeAttr.Value}"
+                                    );
+                            }
+                            obj.AddSkeletonLimb(limbType, name, offset);
+                            break;
+
+                        case "Animation":
+                            obj.AddAnimation(name, offset);
+                            break;
+
+                        case "CurveAnimation":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        case "LegacyAnimation":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        case "PlayerAnimation":
+                            obj.AddPlayerAnimation(name, offset);
+                            break;
+
+                        case "PlayerAnimationData":
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource type not implemented: {e.Name}"
+                            );
+
+                        default:
+                            throw new Z64ObjectFromXmlException($"Unknown resource type: {e.Name}");
+                    }
+                }
+            }
+
+            foreach ((var textureHolder, var tlutOffset) in tlutAssociations)
+            {
+                var tlutHolder = obj.GetHolderAtOffset(tlutOffset);
+                if (tlutHolder == null || tlutHolder.GetEntryType() != EntryType.Texture)
+                {
+                    throw new Z64ObjectFromXmlException(
+                        $"Texture resource {textureHolder.Name} has a TlutOffset that does not map to a Texture"
+                    );
+                }
+                Utils.Assert(tlutHolder is TextureHolder);
+                textureHolder.Tlut = (TextureHolder)tlutHolder;
+            }
+
+            var objSize = obj.GetSize();
+            if (objSize < data.Length)
+                obj.AddUnknow(data.Length - objSize, "pad", objSize);
+            obj.SetData(data);
+
             return obj;
         }
     }

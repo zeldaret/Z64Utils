@@ -26,6 +26,7 @@ public partial class ObjectAnalyzerWindow : Window
                 return;
             _viewModel.OpenJSONFile = OpenJSONFile;
             _viewModel.OpenJSONFileForSave = OpenJSONFileForSave;
+            _viewModel.OpenXMLFile = OpenXMLFile;
             _viewModel.OpenDListViewer = OpenDListViewer;
             _viewModel.OpenSkeletonViewer = OpenSkeletonViewer;
             _viewModel.OpenCollisionViewer = OpenCollisionViewer;
@@ -81,6 +82,36 @@ public partial class ObjectAnalyzerWindow : Window
                 },
             }
         );
+    }
+
+    private async Task<IStorageFile?> OpenXMLFile()
+    {
+        Utils.Assert(StorageProvider.CanOpen);
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new()
+            {
+                Title = "Import from XML",
+                AllowMultiple = false,
+                FileTypeFilter = new List<FilePickerFileType>()
+                {
+                    new("XML file")
+                    {
+                        Patterns = new[] { "*.xml" },
+                        MimeTypes = new[] { "application/xml" },
+                    },
+                },
+            }
+        );
+
+        if (files.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            Utils.Assert(files.Count == 1);
+            return files[0];
+        }
     }
 
     private void OpenDListViewer(DListViewerWindowViewModel vm)
