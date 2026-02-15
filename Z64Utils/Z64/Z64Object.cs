@@ -3431,6 +3431,13 @@ namespace Z64
                                 $"Resource type not implemented: {e.Name}"
                             );
 
+                        case "TextureAnimation":
+                        case "KeyFrameAnimation":
+                        case "KeyFrameSkel":
+                            // TODO implement these (MM) resource types
+                            // Don't throw an exception to allow to load MM xmls anyway
+                            break;
+
                         default:
                             throw new Z64ObjectFromXmlException($"Unknown resource type: {e.Name}");
                     }
