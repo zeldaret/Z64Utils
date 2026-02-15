@@ -3227,11 +3227,19 @@ namespace Z64
                             // TODO rework Z64Object to no longer require DList size?
                             var dlistLastOffset = offset;
                             while (
-                                dlistLastOffset < data.Length
-                                && data[dlistLastOffset] != (int)CmdID.G_ENDDL
+                                dlistLastOffset + 1 < data.Length
+                                && !(
+                                    // SPEndDisplayList
+                                    data[dlistLastOffset] == (int)CmdID.G_ENDDL
+                                    || (
+                                        // SPBranchList (for example MM's gLinkHumanSheathedRazorSwordDL)
+                                        data[dlistLastOffset] == (int)CmdID.G_DL
+                                        && data[dlistLastOffset + 1] == 1
+                                    )
+                                )
                             )
                                 dlistLastOffset += 8;
-                            if (dlistLastOffset >= data.Length)
+                            if (dlistLastOffset + 1 >= data.Length)
                             {
                                 throw new Z64ObjectFromXmlException(
                                     $"Could not find end of DList resource {name}"
@@ -3423,6 +3431,13 @@ namespace Z64
                                 $"Resource type not implemented: {e.Name}"
                             );
 
+                        case "TextureAnimation":
+                        case "KeyFrameAnimation":
+                        case "KeyFrameSkel":
+                            // TODO implement these (MM) resource types
+                            // Don't throw an exception to allow to load MM xmls anyway
+                            break;
+
                         default:
                             throw new Z64ObjectFromXmlException($"Unknown resource type: {e.Name}");
                     }
@@ -3445,6 +3460,64 @@ namespace Z64
             var objSize = obj.GetSize();
             if (objSize < data.Length)
                 obj.AddUnknow(data.Length - objSize, "pad", objSize);
+            obj.SetData(data);
+
+            List<ColHeaderHolder> colHeaderHolders = new();
+            obj.Entries.ForEach(holder =>
+            {
+                if (holder is ColHeaderHolder colHeader)
+                    colHeaderHolders.Add(colHeader);
+            });
+            foreach (var colHeader in colHeaderHolders)
+            {
+                string namePrefix;
+                if (colHeader.Name.EndsWith("Col"))
+                {
+                    // namePrefix = name without the Col suffix
+                    namePrefix = colHeader.Name[..^3];
+                }
+                else
+                {
+                    namePrefix = colHeader.Name + "_";
+                }
+
+                int surfaceTypesSize = (int)(
+                    colHeader.PolyListSeg.SegmentOff - colHeader.SurfaceTypeSeg.SegmentOff
+                );
+                int camDataSize = (int)(
+                    colHeader.SurfaceTypeSeg.SegmentOff - colHeader.CamDataSeg.SegmentOff
+                );
+
+                colHeader.VerticesHolder = obj.AddCollisionVertices(
+                    colHeader.NbVertices,
+                    name: $"{namePrefix}VtxList",
+                    off: (int)colHeader.VertexListSeg.SegmentOff
+                );
+                colHeader.PolygonsHolder = obj.AddCollisionPolygons(
+                    colHeader.NbPolygons,
+                    name: $"{namePrefix}PolyList",
+                    off: (int)colHeader.PolyListSeg.SegmentOff
+                );
+                colHeader.SurfaceTypesHolder = obj.AddCollisionSurfaceTypes(
+                    surfaceTypesSize / CollisionSurfaceTypesHolder.ENTRY_SIZE,
+                    name: $"{namePrefix}SurfaceTypes",
+                    off: (int)colHeader.SurfaceTypeSeg.SegmentOff
+                );
+
+                if (colHeader.CamDataSeg.VAddr != 0)
+                    colHeader.CamDataHolder = obj.AddCollisionCamData(
+                        camDataSize / CollisionCamDataHolder.ENTRY_SIZE,
+                        name: $"{namePrefix}BgCamList",
+                        off: (int)colHeader.CamDataSeg.SegmentOff
+                    );
+
+                if (colHeader.WaterBoxSeg.VAddr != 0)
+                    colHeader.WaterBoxHolder = obj.AddWaterBoxes(
+                        colHeader.NbWaterBoxes,
+                        name: $"{namePrefix}WaterBoxes",
+                        off: (int)colHeader.WaterBoxSeg.SegmentOff
+                    );
+            }
             obj.SetData(data);
 
             return obj;

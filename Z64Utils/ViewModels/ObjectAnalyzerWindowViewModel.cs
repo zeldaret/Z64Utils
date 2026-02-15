@@ -375,9 +375,16 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
             if (analyze)
             {
                 var config = new Z64ObjectAnalyzer.Config();
-                Z64ObjectAnalyzer.FindDlists(_object, file.Data, segment, config);
+                try
+                {
+                    Z64ObjectAnalyzer.FindDlists(_object, file.Data, segment, config);
 
-                Z64ObjectAnalyzer.AnalyzeDlists(_object, file.Data, segment);
+                    Z64ObjectAnalyzer.AnalyzeDlists(_object, file.Data, segment);
+                }
+                catch (Exception e)
+                {
+                    Utils.ReportError("Failed to automatically analyze the object", e.ToString());
+                }
             }
 
             UpdateMap();
