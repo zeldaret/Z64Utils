@@ -3227,11 +3227,19 @@ namespace Z64
                             // TODO rework Z64Object to no longer require DList size?
                             var dlistLastOffset = offset;
                             while (
-                                dlistLastOffset < data.Length
-                                && data[dlistLastOffset] != (int)CmdID.G_ENDDL
+                                dlistLastOffset + 1 < data.Length
+                                && !(
+                                    // SPEndDisplayList
+                                    data[dlistLastOffset] == (int)CmdID.G_ENDDL
+                                    || (
+                                        // SPBranchList (for example MM's gLinkHumanSheathedRazorSwordDL)
+                                        data[dlistLastOffset] == (int)CmdID.G_DL
+                                        && data[dlistLastOffset + 1] == 1
+                                    )
+                                )
                             )
                                 dlistLastOffset += 8;
-                            if (dlistLastOffset >= data.Length)
+                            if (dlistLastOffset + 1 >= data.Length)
                             {
                                 throw new Z64ObjectFromXmlException(
                                     $"Could not find end of DList resource {name}"
