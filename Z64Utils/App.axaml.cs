@@ -65,11 +65,6 @@ public partial class App : Application
                                 continue;
                             }
 
-                            // TODO put find and analyze behind more command line args
-                            // TODO don't use the Command funcs themselves?
-                            oavm.FindDListsCommand();
-                            oavm.AnalyzeDListsCommand();
-
                             var dListViewerOHEName = Program.ParsedArgs?.DListViewerOHEName;
                             if (dListViewerOHEName != null)
                             {
