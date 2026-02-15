@@ -3462,6 +3462,64 @@ namespace Z64
                 obj.AddUnknow(data.Length - objSize, "pad", objSize);
             obj.SetData(data);
 
+            List<ColHeaderHolder> colHeaderHolders = new();
+            obj.Entries.ForEach(holder =>
+            {
+                if (holder is ColHeaderHolder colHeader)
+                    colHeaderHolders.Add(colHeader);
+            });
+            foreach (var colHeader in colHeaderHolders)
+            {
+                string namePrefix;
+                if (colHeader.Name.EndsWith("Col"))
+                {
+                    // namePrefix = name without the Col suffix
+                    namePrefix = colHeader.Name[..^3];
+                }
+                else
+                {
+                    namePrefix = colHeader.Name + "_";
+                }
+
+                int surfaceTypesSize = (int)(
+                    colHeader.PolyListSeg.SegmentOff - colHeader.SurfaceTypeSeg.SegmentOff
+                );
+                int camDataSize = (int)(
+                    colHeader.SurfaceTypeSeg.SegmentOff - colHeader.CamDataSeg.SegmentOff
+                );
+
+                colHeader.VerticesHolder = obj.AddCollisionVertices(
+                    colHeader.NbVertices,
+                    name: $"{namePrefix}VtxList",
+                    off: (int)colHeader.VertexListSeg.SegmentOff
+                );
+                colHeader.PolygonsHolder = obj.AddCollisionPolygons(
+                    colHeader.NbPolygons,
+                    name: $"{namePrefix}PolyList",
+                    off: (int)colHeader.PolyListSeg.SegmentOff
+                );
+                colHeader.SurfaceTypesHolder = obj.AddCollisionSurfaceTypes(
+                    surfaceTypesSize / CollisionSurfaceTypesHolder.ENTRY_SIZE,
+                    name: $"{namePrefix}SurfaceTypes",
+                    off: (int)colHeader.SurfaceTypeSeg.SegmentOff
+                );
+
+                if (colHeader.CamDataSeg.VAddr != 0)
+                    colHeader.CamDataHolder = obj.AddCollisionCamData(
+                        camDataSize / CollisionCamDataHolder.ENTRY_SIZE,
+                        name: $"{namePrefix}BgCamList",
+                        off: (int)colHeader.CamDataSeg.SegmentOff
+                    );
+
+                if (colHeader.WaterBoxSeg.VAddr != 0)
+                    colHeader.WaterBoxHolder = obj.AddWaterBoxes(
+                        colHeader.NbWaterBoxes,
+                        name: $"{namePrefix}WaterBoxes",
+                        off: (int)colHeader.WaterBoxSeg.SegmentOff
+                    );
+            }
+            obj.SetData(data);
+
             return obj;
         }
     }
