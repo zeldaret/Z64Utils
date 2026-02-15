@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +29,7 @@ namespace Z64Utils
         static extern int LoadNvApi32();
 
         public const int EXIT_SUCCESS = 0;
+        public const int EXIT_FAILURE = 1;
 
         public class ParsedArgsData
         {
@@ -93,7 +95,12 @@ namespace Z64Utils
             catch (Exception e)
             {
                 Logger.Fatal(e);
-                throw;
+
+                // If we re-throw the exception it just makes the program crash
+                // and doesn't give time to NLog to write to the log file.
+                if (Debugger.IsAttached)
+                    throw;
+                return EXIT_FAILURE;
             }
             finally
             {
