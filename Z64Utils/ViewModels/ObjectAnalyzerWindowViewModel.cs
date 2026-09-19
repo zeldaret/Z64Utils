@@ -183,7 +183,7 @@ public partial class ObjectAnalyzerWindowViewModel : ObservableObject
 
         try
         {
-            _object = Z64Object.FromXml(xml, _file.Data);
+            _object = Z64Object.FromXml(xml, _file.Data, _game?.Version);
         }
         catch (Z64Object.Z64ObjectFromXmlException e)
         {
