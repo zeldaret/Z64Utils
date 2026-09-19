@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Common;
@@ -3117,7 +3118,7 @@ namespace Z64
                 : base(message) { }
         }
 
-        public static Z64Object FromXml(string xml, byte[] data)
+        public static Z64Object FromXml(string xml, byte[] data, Z64Version? version)
         {
             var obj = new Z64Object();
 
@@ -3157,9 +3158,52 @@ namespace Z64
 
             var tlutAssociations = new List<(TextureHolder, int tlutOffset)>();
 
+            var resources = new List<XmlElement>();
             foreach (var n in fileElem)
             {
                 if (n is XmlElement e)
+                {
+                    if (e.Name == "Version")
+                    {
+                        if (version == null || version.VersionNameDecomp == null)
+                        {
+                            throw new Z64ObjectFromXmlException(
+                                "XML has version-specific content but the version information does not provide a version name"
+                            );
+                        }
+                        var versionPatternAttr = e.Attributes["Pattern"];
+                        if (versionPatternAttr == null)
+                        {
+                            throw new Z64ObjectFromXmlException(
+                                "XML <Version> element has no Pattern attribute"
+                            );
+                        }
+                        if (
+                            Regex.IsMatch(
+                                version.VersionNameDecomp,
+                                $"^{versionPatternAttr.Value}$"
+                            )
+                        )
+                        {
+                            foreach (var vn in e)
+                            {
+                                if (vn is XmlElement ve)
+                                {
+                                    resources.Add(ve);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        resources.Add(e);
+                    }
+                }
+            }
+
+            int prevResourceEndOffset = 0;
+            foreach (var e in resources)
+            {
                 {
                     var nameAttr = e.Attributes["Name"];
                     if (nameAttr == null)
@@ -3215,7 +3259,48 @@ namespace Z64
                         return val;
                     }
 
-                    var offset = GetAttributeIntHex("Offset");
+                    var offsetAttr = e.Attributes["Offset"];
+                    int offset;
+                    if (offsetAttr != null)
+                    {
+                        var offsetStr = offsetAttr.Value;
+                        bool offsetIsRelativeToPrevResourceEnd = false;
+                        if (offsetStr.StartsWith(".+"))
+                        {
+                            offsetStr = offsetStr[2..];
+                            offsetIsRelativeToPrevResourceEnd = true;
+                        }
+                        int val;
+                        // Allow decimal when it's a single digit
+                        if (offsetStr.Length == 1 && int.TryParse(offsetStr, out val)) { }
+                        else if (
+                            offsetStr.Length < 2
+                            || (offsetStr[..2] != "0x" && offsetStr[..2] != "0X")
+                            || !int.TryParse(
+                                offsetStr[2..],
+                                NumberStyles.HexNumber,
+                                CultureInfo.InvariantCulture,
+                                out val
+                            )
+                        )
+                        {
+                            throw new Z64ObjectFromXmlException(
+                                $"Resource {name} has bad Offset {offsetAttr.Value}"
+                            );
+                        }
+                        if (offsetIsRelativeToPrevResourceEnd)
+                        {
+                            offset = prevResourceEndOffset + val;
+                        }
+                        else
+                        {
+                            offset = val;
+                        }
+                    }
+                    else
+                    {
+                        offset = prevResourceEndOffset;
+                    }
 
                     switch (e.Name)
                     {
@@ -3441,6 +3526,7 @@ namespace Z64
                         default:
                             throw new Z64ObjectFromXmlException($"Unknown resource type: {e.Name}");
                     }
+                    prevResourceEndOffset = obj.GetSize();
                 }
             }
 

@@ -455,7 +455,7 @@ public partial class SkeletonViewerWindowViewModel : ObservableObject
 
             var xml = File.ReadAllText(fXML.Path.LocalPath);
 
-            return Z64Object.FromXml(xml, gKeepData);
+            return Z64Object.FromXml(xml, gKeepData, _game?.Version);
         });
     }
 
