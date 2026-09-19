@@ -160,6 +160,10 @@ namespace Z64
         [JsonPropertyName("version_name")]
         public string? VersionName { get; set; }
 
+        // The version name in the decomp project, such as ntsc-1.0 or gc-eu-mq for OoT
+        [JsonPropertyName("version_name_decomp")]
+        public string? VersionNameDecomp { get; set; }
+
         [JsonPropertyName("version_game")]
         public Z64GameType Game { get; set; }
 
